@@ -1,0 +1,1745 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="LinuxDoc-Tools 0.9.66">
+ <TITLE>Ayam: Miscellaneous</TITLE>
+ <LINK HREF="ayam-9.html" REL=next>
+ <LINK HREF="ayam-7.html" REL=previous>
+ <LINK HREF="ayam.html#toc8" REL=contents>
+</HEAD>
+<BODY>
+<script type="text/javascript" src="ll.js"></script>
+<A HREF="ayam-9.html">Next</A>
+<A HREF="ayam-7.html">Previous</A>
+<A HREF="ayam.html#toc8">Contents</A>
+<HR>
+<H2><A NAME="s8">8.</A> <A HREF="ayam.html#toc8">Miscellaneous</A></H2>
+
+<P>This section contains all information about Ayam not fitting into
+the other main sections.</P>
+
+<H2><A NAME="undos"></A> <A NAME="ss8.1">8.1</A> <A HREF="ayam.html#toc8.1">The Undo System</A>
+</H2>
+
+<P>With the help of the undo system mistakes made while modelling may
+be corrected.<BR>
+Note, that only modifications of objects can be undone. This includes changes
+made by interactive modelling actions, changes made using property GUIs,
+but also changes to views (type changes or changes to the camera settings
+associated with a view, unless explicitly disabled using the view attribute
+<CODE>"EnableUndo"</CODE>).<BR>
+It is currently <EM>not</EM> possible to undo any changes to the object
+hierarchy, including clipboard (e.g.&nbsp;cut, paste) and drag and drop
+operations. If an object is deleted, it is gone! If an object is,
+accidentally, moved using drag and drop, undo will <EM>not</EM> help.</P>
+<P>The undo system works by storing copies of the different states of changed
+objects in an undo buffer. It is possible to step backwards through the
+saved states using <CODE>&lt;Ctrl+z&gt;</CODE> (undo) but also forward
+using <CODE>&lt;Ctrl+y&gt;</CODE> (redo).</P>
+<P>The storage space occupied by the undo buffer may be adjusted using the
+preferences option <CODE>"Modelling/UndoLevels"</CODE>. A value of 0
+completely disables the undo system.<SMALL TITLE="Since 1.21."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+The value 1 means that there is always one state of the scene that can
+be restored, plus, a potential undo operation can also always be
+undone using redo.</P>
+<P>The changes that would be undone or redone are shown in abbreviated form
+in the default prompt of the Ayam console and also in
+the main menu entries <CODE>"Edit/Undo"</CODE> and
+<CODE>"Edit/Redo"</CODE>.<SMALL TITLE="Since 1.14."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>Several actions will completely clear the undo buffer (i.e.&nbsp;no undo is
+possible after one of those actions):
+New Scene, Open (Replace) Scene, and Close View.</P>
+<P>Furthermore, undo/redo operations will also modify objects that
+reside in the object clipboard (if they have saved states in the undo buffer).
+This means that the following sequence of operations leads to a sphere
+placed at <CODE>"0,0,0"</CODE>:
+<HR>
+<PRE>
+create Sphere (at 0,0,0)
+move Sphere (to 1,1,0)
+cut Sphere (to clipboard)
+undo
+paste Sphere (from clipboard)
+</PRE>
+<HR>
+</P>
+
+
+<H2><A NAME="toolobj"></A> <A NAME="ss8.2">8.2</A> <A HREF="ayam.html#toc8.2">The Modelling Concept Tool-Objects</A>
+</H2>
+
+<P>This section introduces the modelling concept <EM>Tool-Objects</EM>,
+as used in Ayam.</P>
+<P>In a standard modelling application, to create a surface of revolution,
+one would either first create a curve then call the revolve tool to get
+an appropriate surface (losing the curve as object, or even keeping it,
+but without relation to the surface), or call the revolve tool first,
+which would then require the user to draw a curve with similar results:
+the created surface will typically lose the relation to the surface of
+revolution tool and the curve (even if kept intact) will lose the relation
+to the surface. There is no easy way to change parameters for the surface
+creation or to change the geometry of the curve later on without doing it
+all over again.</P>
+<P>The modelling concept Tool-Objects overcomes these drawbacks by
+transforming the revolve <EM>tool</EM> into a scene <EM>object</EM>.</P>
+<P>The following example hierarchy shows two objects in a parent-child relation:
+<BLOCKQUOTE><CODE>
+<PRE>
++-Tool_Object(Revolve)
+  |         ^
+  |         :
+  |   &lt;Notification>
+  |         :
+  \-Parameter_Object(NCurve)
+</PRE>
+</CODE></BLOCKQUOTE>
+
+The parent object is called <EM>Tool-Object</EM> and the child object is
+called <EM>Parameter-Object</EM>. There is a flow of information from the
+parameter object to the tool object. This information flow is controlled
+by the so called <EM>Notification</EM> mechanism. The notification mechanism
+makes sure that whenever the parameter objects change, the tool object is
+informed so that it may adapt to the changes.
+For interactive modelling actions, the notification will be carried out
+while dragging the mouse or after release of the mouse button (i.e.&nbsp;after
+the modelling action finished),
+depending on the main preference setting <CODE>"LazyNotify"</CODE>.</P>
+<P>In the example above, a NURBS curve is the parameter object and the
+tool object is creating a surface of revolution from the curve data.
+The NURBS curve and parameters of the Revolve object may change at any
+time. When saved to an Ayam scene file, no surface data will be written,
+leading to very small files that additionally contain a modelling history
+and capture design intent to a certain degree.</P>
+<P>Tool objects may be parameter objects of other tool objects:
+<BLOCKQUOTE><CODE>
+<PRE>
++-Tool_Object(ExtrNP)
+  +-Parameter_and_Tool_Object(Revolve)
+    \-Parameter_Object(NCurve)
+</PRE>
+</CODE></BLOCKQUOTE>
+
+and there may be more than one parameter object per tool object:
+<BLOCKQUOTE><CODE>
+<PRE>
++-Tool_Object(Skin)
+  |-Parameter_Object_1(NCurve)
+  |-Parameter_Object_2(NCurve)
+  | ...
+  \-Parameter_Object_n(NCurve)
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+<P>Tool objects create new geometric objects from the information delivered
+by the parameter object(s) or they modify the parameter object(s) and
+deliver them to their respective parent object.</P>
+<P>The pure hierarchical dependency scheme may be broken up by instance objects:
+<BLOCKQUOTE><CODE>
+<PRE>
++-Tool_Object(Revolve)
+  \-Parameter_Object(NCurve) --------------.
++-Tool_Object(Revolve)                     | !
+  \-Parameter_Object(Instance_of_NCurve) &lt;-'
+</PRE>
+</CODE></BLOCKQUOTE>
+
+In the scene above, the second Revolve tool object depends on the shape
+of the first parameter object. The Instance object transports the data
+from one part of the hierarchy to another.
+The notification mechanism is aware of this and initiates updates
+in the scene hierarchy wherever needed and efficiently (not updating any
+objects twice) according to the <CODE>"CompleteNotify"</CODE> main preference
+setting. In the example above, due to complete notification, the second
+Revolve object will get updated automatically whenever the original
+NCurve object changes.</P>
+<P>Two other mechanisms exist, that help tool objects to get the information
+they need and to increase flexibility in hierarchy building and modelling:
+<EM>Provision</EM> and <EM>Conversion</EM>. Both mechanisms are quite similar
+and convert objects temporarily/transparently (provision) or finally
+(conversion) from one type to another, e.g.&nbsp;they convert an ICurve
+(interpolating curve) to a plain NCurve (NURBS curve).</P>
+<P>Due to the provision mechanism, an ICurve object could be used instead
+of an NCurve as parameter object in all examples above easily.
+And with the help of the conversion mechanism, the Revolve
+tool objects could be converted to plain NPatch objects (e.g.&nbsp;for
+modelling operations not available to Revolve objects).</P>
+<P>Note that instance objects are subject to a second round of provision,
+i.e.&nbsp;the master does not need to be of the wanted type but rather
+provide the wanted type.</P>
+<P>Even though, theoretically, every tool could be implemented as tool object,
+this has not been done in Ayam (mainly, because this would unnecessarily
+increase the code base). Only the most often used tools that convey and
+capture much design intent were implemented as tool objects (those are
+surface or curve creating tools). But also seldom used tools can be elevated
+to nearly full tool object capabilities through the employment of the concept
+of scripting objects
+(see section 
+<A HREF="ayam-4.html#scriptobj">Script Object</A>).</P>
+<P>This can be done easily by e.g.&nbsp;creating Script objects of type <CODE>"Modify"</CODE>
+that call those tools from their script (after possible conversion of the
+provided object(s) to a proper type, the tool may need to operate on).
+Even property GUIs to let the user adjust tool parameters as they know it
+from the other Ayam objects can be added and different tools can be combined
+in single objects with normal script code for unmatched flexibility.
+But let us see a simple example first:
+<BLOCKQUOTE><CODE>
+<PRE>
++-Skin
+  +-Script
+    \-ExtrNC
+</PRE>
+</CODE></BLOCKQUOTE>
+
+In the scene hierarchy above, the Script object could be simply reverting the
+extracted curve with code like this:
+<HR>
+<PRE>
+convOb -inplace; revertC
+</PRE>
+<HR>
+
+effectively elevating the tool <CODE>"revertC"</CODE> to an object.</P>
+<P>A more useful example can be found in the Marsrakete sample scene
+(as available from the Ayam home page). Here, a curve extracted
+from a patch is trimmed to the right length using a script like this:
+<HR>
+<PRE>
+convOb -inplace; trimNC 0.0 0.5
+</PRE>
+<HR>
+.
+See section 
+<A HREF="ayam-4.html#scriptobjex">Script Object Example</A> for
+information on how this script might be expanded to support a
+GUI and more error checking.</P>
+
+<H2><A NAME="scenefile"></A> <A NAME="ss8.3">8.3</A> <A HREF="ayam.html#toc8.3">Scene File Management</A>
+</H2>
+
+<P>This section contains exhaustive information on what exactly happens, when
+Ayam reads or writes a scene file.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="opensf"></A> Opening Scene Files</H3>
+
+<P>When reading a scene using <CODE>"File/Open"</CODE> or the
+MRU (most recently used) list:
+<OL>
+<LI> Ayam will first check the scene changed state of the currently
+loaded scene and warn the user, if the current scene contains unsaved
+changes,</LI>
+<LI> then Ayam will clear the undo buffer and the current scene
+(the clipboard content is not touched, except for instance objects,
+whose masters are cleared with the scene: those instance objects will
+be deleted from the clipboard),</LI>
+<LI> if the new file appears not to be an Ayam scene file (judged solely
+by the file name extension) Ayam will try to import the file using
+an import plugin responsible for the file (automatically loading the
+matching plugin if not already loaded),</LI>
+<LI> Ayam will change the application working directory to the
+directory of the scene file,</LI>
+<LI> now, a backup copy of the file to read will be made (depending
+on the preference setting <CODE>"Main/BakOnReplace"</CODE>), a potentially
+existing old backup copy will be silently overwritten,
+note: even if the backup fails, scene reading continues,</LI>
+<LI> the header of the scene file will be read to derive the scene
+file format version,</LI>
+<LI> the file will be read with all objects, <B>*</B></LI>
+<LI> after reading of all objects, all instances will be connected to
+their masters using the information stored in <CODE>"OI"</CODE> tags; if a master
+can not be found in the scene, the respective instance object(s) will be
+removed,</LI>
+<LI> all objects will be connected to their materials using the
+information stored in <CODE>"MI"</CODE> tags; if no matching material can
+be found, the connection will not be established,</LI>
+<LI> a complete notification will be run,</LI>
+<LI> if the file contains a Root object with <CODE>"SaveMainGeom"</CODE>
+and/or <CODE>"SavePaneLayout"</CODE> tags, the respective window/widget
+geometries from the tags will be re-established,</LI>
+<LI> if no errors occurred during reading, the current scene name
+will be set to that of the file,
+otherwise the current scene name will be reset to "unnamed" (to avoid
+clobbering good scene files that failed to load for some reason with a
+single, maybe even unintentional, press of <CODE>&lt;Ctrl+s&gt;</CODE>),</LI>
+<LI> the file name will be put to the first most recently used
+files entry in the file menu,</LI>
+<LI> the scene changed state will be reset to "unchanged",</LI>
+<LI> if a Root object was read, a save views flag will be set,
+otherwise it will be cleared and following save operations will not save
+the root and any views (i.e.&nbsp;scene files without root and views
+stay scene files without root and views, even if new views
+are opened and parameterised).</LI>
+</OL>
+</P>
+<P><B>*</B> When reading objects from a file:
+<OL>
+<LI> if a view object is read, a new view window will be opened
+(except for the first three view objects in single window GUI mode,
+where only the configuration of the view objects read will be copied
+to the already existing view objects of the three internal views),</LI>
+<LI> if an object is of a currently undefined type (i.e.&nbsp;defined
+by a plugin), Ayam will derive a potential plugin name from the
+object type name and attempt to load the plugin, then scene reading
+continues,</LI>
+<LI> if a material object is read, Ayam will immediately register
+it; if this registration fails (because there is already a material
+with that name registered; this material can <EM>only</EM> be in the
+clipboard, as all other objects were deleted before opening the file),
+the new material object will be renamed by appending a number and the
+registration is attempted again, those steps will be repeated until
+successful (prior to version 1.21
+Ayam did not attempt to rename the material and other objects were
+then connected to the already existing material),</LI>
+<LI> if loading of an object fails, Ayam skips to the next object
+and continues to read from the file.</LI>
+</OL>
+</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="insertsf"></A> Inserting Scene Files</H3>
+
+<P>In contrast to reading scenes via <CODE>"File/Open"</CODE> or the MRU list,
+reading scenes via <CODE>"File/Insert"</CODE> does some things differently:
+<OL>
+<LI> the current scene will not be cleared before reading the file,</LI>
+<LI> the current level will not be reset before reading the file;
+if the scene file to be inserted contains no root and no views,
+the new objects will be created in the current level, otherwise the
+objects will be created in the topmost level of the scene, which will
+also be the new current level in any case (after reading),</LI>
+<LI> no backup copy will be made of the file to be inserted,</LI>
+<LI> if a material is missing from the file, and a matching (by name)
+material exists in the scene, the objects will be connected to this
+material,</LI>
+<LI> view windows will be opened for every view object read
+(the internal views will not be changed),</LI>
+<LI> the current directory will only be changed during the file
+read operation,</LI>
+<LI> the current file name will not be changed,</LI>
+<LI> the scene changed state will be set to "changed",</LI>
+<LI> the save views flag will not be changed, this means that
+inserting a scene file without root and views into an empty scene
+(e.g.&nbsp;directly after application startup or after <CODE>"File/New"</CODE>)
+and then saving the scene, will enrich this scene file with root
+and views (in contrast to loading this scene via <CODE>"File/Open"</CODE>).</LI>
+</OL>
+</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="savesf"></A> Saving Scene Files</H3>
+
+<P>When saving a scene using <CODE>"File/Save"</CODE>:
+<OL>
+<LI> Ayam will first check the current scene file name, if the name is
+"unnamed", a new file name will be requested,</LI>
+<LI> if the file to save to appears not to be an Ayam scene file
+(judged solely by the file name extension) Ayam will try to export the
+current scene using an export plugin responsible for the file type
+instead of saving to an Ayam scene file (automatically loading the
+matching plugin if not already loaded),</LI>
+<LI> the geometry of the main window and internal widgets is saved
+to <CODE>"SaveMainGeom"</CODE> and/or <CODE>"SavePaneLayout"</CODE> tags (if present
+in the Root object),</LI>
+<LI> <CODE>"OI"</CODE> tags and <CODE>"MI"</CODE> tags will be created to allow
+instances to be connected to their respective masters and objects
+to their materials, when reading the scene file again,</LI>
+<LI> then, all objects from the scene will be saved to the file;
+if the save views flag was cleared while reading the previous scene file,
+root and views will be omitted (i.e.&nbsp;scene files without root and views
+stay scene files without root and views, even if new views
+were opened and parameterised while the scene was loaded),</LI>
+<LI> if no errors occurred during writing of the scene file, the file name
+will be put to the first most recently used files entry in the file menu
+(also depending on the preference setting <CODE>"SaveAddsMRU"</CODE>),
+and the scene changed state will be set to "unchanged",</LI>
+<LI> if errors occurred, the current scene changed state will be kept.</LI>
+</OL>
+</P>
+
+
+<H2><A NAME="ayamrc"></A> <A NAME="ss8.4">8.4</A> <A HREF="ayam.html#toc8.4">Ayamrc File</A>
+</H2>
+
+<P>To customize Ayam beyond the capabilities of the preferences dialog,
+the <EM>ayamrc</EM> file may be used.
+This file is either pointed to by the environment
+variable <CODE>AYAMRC</CODE> or is determined as following:
+<UL>
+<LI>On Unix it is <CODE>"~/.ayamrc"</CODE>, where <CODE>"~"</CODE>
+denotes the home directory of the current user.</LI>
+<LI>On the Win32 platform (Windows95 - XP) it is
+<CODE>"$(HOME)/ayamrc"</CODE> if the environment variable
+<CODE>HOME</CODE> exists, else <CODE>"$(TEMP)/ayamrc"</CODE>.</LI>
+<LI>On Mac OS X Aqua (not X11!) it is
+<CODE>"~/Library/Preferences/.ayamrc"</CODE>, where <CODE>"~"</CODE>
+denotes the home directory of the current user.</LI>
+<LI>On Mac OS X X11 (not Aqua!) it is
+<CODE>"~/.ayamrc"</CODE>, where <CODE>"~"</CODE>
+denotes the home directory of the current user.</LI>
+</UL>
+</P>
+<P>The <EM>ayamrc</EM> file is read on each start of Ayam and saved again on exit
+(if the preference setting <CODE>"Main/AutoSavePrefs"</CODE> is enabled).</P>
+<P>The <EM>ayamrc</EM> file contains:
+<OL>
+<LI>preference settings (including some hidden settings that require
+just occasional tweaking and are not reachable using the GUI preference
+editor),</LI>
+<LI>position and size of the main window and the toolbox window,</LI>
+<LI>position and size of various dialog windows (if the preference
+setting <CODE>"SaveDialogGeom"</CODE> is set accordingly),</LI>
+<LI>keyboard shortcuts to menu entries and modelling actions,</LI>
+<LI>RiOption and RiAttribute databases.</LI>
+</OL>
+</P>
+<P>You may edit the file with any text editor (while Ayam is <EM>not</EM>
+running), but keep in mind, that the file will be parsed by Tcl.
+Should you, for some reason, destroy your <EM>ayamrc</EM> file so that Ayam does
+not start correctly anymore you can always start Ayam
+with the command line option <CODE>"-failsafe"</CODE>.
+When the application is left the next time, or the main menu entry
+<CODE>"File/Save Prefs"</CODE> is invoked, a correct <EM>ayamrc</EM> file will be
+created again.
+All preference settings will be reset to factory defaults and all your
+edits of the <EM>ayamrc</EM> file will be lost, however.</P>
+<P>Another way to reset the <EM>ayamrc</EM> file is to simply delete the file manually
+or using the main menu entry <CODE>"Special/Reset Preferences"</CODE>.</P>
+<P>To reset single elements to factory defaults, just remove the corresponding
+lines from the <EM>ayamrc</EM> file.</P>
+<P>Finally, resetting single preference settings without a text editor is
+also possible with the help of the scripting interface by manipulating
+the global <CODE>"ayprefs"</CODE> array. The following example leads to a reset
+of the tolerance preference setting to its factory default for the
+<EM>next</EM> start of Ayam.
+<BLOCKQUOTE><CODE>
+<CODE>&raquo;&thinsp;unset ayprefs(Tolerance)</CODE>
+</CODE></BLOCKQUOTE>
+
+After unsetting single elements of the preferences array, Ayam should
+be restarted.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3>Changing Keyboard Shortcuts</H3>
+
+<P>You may adapt the keyboard shortcuts used in the GUI to your special
+needs using the <EM>ayamrc</EM> file. Note that if you do that, the GUI (the menu
+entries and the <CODE>"Show Shortcuts"</CODE> window) will adapt to your
+changes but certainly neither this documentation, nor the reference card
+(unless recreated using the script <CODE>"refcard.tcl"</CODE>), nor the tutorials.</P>
+<P>Ayam does <EM>not</EM> check for clashes in key bindings. This means, the last
+set binding for a key will be used.</P>
+<P>On Unix, the output of the program <CODE>"xev"</CODE> and the
+manual page for the <CODE>"bind"</CODE> command of Tk provide helpful
+information about which strings may be used to describe
+key presses.
+You can also directly use the Ayam console to infer key names, just enter:
+<BLOCKQUOTE><CODE>
+<CODE>&raquo;&thinsp;toplevel .keytest; bind .keytest &lt;Key&gt; {puts %K}</CODE>
+</CODE></BLOCKQUOTE>
+
+into the Ayam console.
+Now you can activate the new top level window and type on your keyboard
+while the Ayam console prints the names of the keys.</P>
+<P>For convenience, the special string <CODE>"Ctrl"</CODE> will be replaced by
+<CODE>"Control"</CODE> before a shortcut is handed to the <CODE>bind</CODE> command.</P>
+<P>Example:
+<HR>
+<PRE>
+set aymainshortcuts(Prefs) {Ctrl-p}
+</PRE>
+<HR>
+
+sets the keyboard shortcut for opening of the preferences editor
+to <CODE>&lt;Ctrl+p&gt;</CODE>.
+See the <EM>ayamrc</EM> file itself for a complete listing of available shortcuts.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="hidprefs"></A> Hidden Preference Settings</H3>
+
+<P>The <EM>ayamrc</EM> file currently contains the following adjustable hidden
+preference settings:
+<UL>
+<LI><CODE>"AALineWidth"</CODE>, line width used for drawing the lines of
+unselected objects (blue lines in standard color configuration)
+when anti-aliasing is enabled.
+The default value is 1.3. Ayam is not checking, whether the specified
+value is supported by the OpenGL implementation used.
+</LI>
+<LI><CODE>"AAFudge"</CODE>, offset added to any line ends to accommodate
+for different OpenGL implementations wrt.&nbsp;anti-aliasing (default 1.0).
+</LI>
+<LI><CODE>"AASelLineWidth"</CODE>, line width used for drawing the lines of
+selected objects (white lines in standard color configuration)
+when anti-aliasing is enabled.
+The default value is 1.5 (a tad higher than <CODE>"AALineWidth"</CODE> above,
+to make the perceived line width equal compared to normal lines, in the
+case of drawing a selected curve over a unselected resulting surface).
+Ayam is not checking, whether the specified
+value is supported by the OpenGL implementation used.
+</LI>
+<LI><CODE>"AddViewParams"</CODE> allows to add custom parameters to the
+view OpenGL widget creation, like e.g.&nbsp;<CODE>"-stereo true"</CODE>. The default
+value is <CODE>""</CODE> (empty string).
+</LI>
+<LI><CODE>"ALFileTypes"</CODE>, <CODE>"ALPlugins"</CODE> two lists that describe
+file name extensions and corresponding plugins that import and export
+files of the type designated by the file name extensions.
+The default values of these options are<BR>
+&nbsp;&nbsp;<CODE>{ ".rib" ".3dm" ".obj" ".3dmf" ".mop" ".dxf" ".x3d" }</CODE><BR> and <BR>
+&nbsp;&nbsp;<CODE>{ "rrib" "onio" "objio" "mfio" "mopsi" "dxfio" "x3dio" }</CODE>
+</LI>
+<LI><CODE>"AllowWarp"</CODE>: controls whether the mouse pointer should be
+moved to the new position of points snapped to the grid while editing
+(valid values: 0, 1; default: 1 &ndash; yes).
+</LI>
+<LI><CODE>"AskScriptDisable"</CODE> controls the warning dialog that
+appears if scenes with Script objects or tags are loaded. The default
+value is 1 &ndash; yes, warn about Script objects and tags.
+Valid values are 0 and 1.
+</LI>
+<LI><CODE>"AUCommands"</CODE>, commands that will be run in the console
+when <CODE>&lt;Shift+Return&gt;</CODE> is used instead of <CODE>&lt;Return&gt;</CODE>.
+See also section 
+<A HREF="ayam-6.html#sciupd">Updating the GUI</A>.
+The default value is <CODE>"uS;rV;"</CODE>, leading to a complete
+update of the object hierarchy, the property GUI, and all view
+windows.
+</LI>
+<LI><CODE>"AvoidPwlCurve"</CODE>, determines whether NURBS drawing and
+tesselation avoid the use of the GLU <CODE>"PwlCurve"</CODE>-function to specify
+polygonal trim curves. This function uses less memory and is faster than
+the alternative but can lead to a tesselation that is clearly too coarse
+for the desired tesselation quality
+(valid values: 0, 1; default: 1 &ndash; yes).</LI>
+</UL>
+</P>
+<P>
+<A NAME="hidprefsb"></A> 
+<UL>
+<LI><CODE>"BackupExt"</CODE>: is the file name extension to be used for backup
+files. Default values are <CODE>"~"</CODE> for Unix and
+<CODE>".bak"</CODE> for Win32.
+</LI>
+<LI><CODE>"Balloon"</CODE>: time in ms until the tooltip window appears
+(default: 1500 - 1.5s).</LI>
+</UL>
+</P>
+<P>
+<A NAME="hidprefsc"></A> 
+<UL>
+<LI><CODE>"Cat"</CODE>: name of a program that can read from and write to
+a pipe (used by the Rendering GUI) (default: <CODE>"cat"</CODE>)
+(a setting of <CODE>"cat"</CODE> will be
+automatically replaced by <CODE>"cat.exe"</CODE> on Win32).
+</LI>
+<LI><CODE>"ConsoleTakeFocus"</CODE>: can be used to exclude the console
+from focus traversal via <CODE>&lt;Tab&gt;</CODE> when set to 0. The default
+value is 1. Valid values are 0 and 1.
+</LI>
+<LI><CODE>"ConsoleCursorEnd"</CODE>, if switched
+on, the first click into the console will move the cursor to the input
+prompt, ready for command input, instead of moving the cursor to the
+point of the click. This option is enabled by default.
+Valid values are 0 and 1.
+</LI>
+<LI><CODE>"ConvertTags"</CODE>, a comma separated list of tag names.
+These tags will be copied verbatim to converted and provided
+objects. If any of <CODE>"BP"</CODE> or <CODE>"CP"</CODE> are in this list,
+the conversion of tool objects with caps or bevels to NPatch objects
+does not generate multiple objects in a Level object but just one object
+with all caps and bevels<SMALL TITLE="Since 1.24."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>.
+Default value: <CODE>"TP,TC,BP,CP"</CODE>.
+</LI>
+<LI><CODE>"CullFaces"</CODE>, enables culling/discarding of back facing
+polygons prior to display with OpenGL. This can improve the visual
+quality of shaded surfaces at their edges. Note however, that culling
+back faces can also disrupt the CSG preview
+using AyCSG. Default value: 0 &ndash; no.
+Valid values are 0 and 1.
+</LI>
+<LI><CODE>"CycleHiddenWire"</CODE>, determines whether the slow <CODE>"HiddenWire"</CODE>
+drawing mode is included in the list of modes that are cycled by keyboard
+(via <CODE>"Ctrl+PageUp"/"Ctrl+PageDown"</CODE>), default: 0 &ndash; no.
+Valid values are 0 and 1.
+</LI>
+<LI><CODE>"CyclePerspective"</CODE>, determines whether the <CODE>"Perspective"</CODE>
+view type is included in the list of types that are cycled by keyboard
+(via <CODE>"PageUp"/"PageDown"</CODE>), default: 0 &ndash; no.
+Valid values are 0 and 1.</LI>
+</UL>
+</P>
+<P>
+<A NAME="hidprefsd"></A> 
+<UL>
+<LI><CODE>"DailyTips"</CODE>: a list of strings that appear as tips
+on startup in the console (default: large).
+</LI>
+<LI><CODE>"DisableFailedScripts"</CODE>: specifies whether scripts in
+Script objects or BNS/ANS tags should be disabled when they
+fail (default: 1 &ndash; yes).
+Valid values are 0 and 1.
+</LI>
+<LI><CODE>"DisplayPath"</CODE>: is the display search path to be used in
+the viewport rendering mode, it should point to the
+<CODE>"fifodspy.so"</CODE> or <CODE>"fifodspy.dll"</CODE> file, respectively.</LI>
+</UL>
+</P>
+<P>
+<A NAME="hidprefse"></A> 
+<UL>
+<LI><CODE>"EFlush"</CODE>: time in ms between two flushes of the error message
+buffer (default: 2000 - 2s).</LI>
+</UL>
+</P>
+<P>
+<A NAME="hidprefsf"></A> 
+<UL>
+<LI><CODE>"FDShowHidden"</CODE>: controls whether the standard file dialog on
+Unix shows hidden files (default 1 &ndash; yes).
+Valid values are 0 and 1.
+</LI>
+<LI><CODE>"FDShowHiddenBtn"</CODE>: controls whether the standard file dialog on
+Unix shows an extra button that toggles display of hidden files (default 0).
+Valid values are 0 and 1.
+</LI>
+<LI><CODE>"FixDialogTitles"</CODE>, this option prepends the title of a message box
+that is normally displayed in the window frame of the message box to the
+message in the box. This may be necessary because on some systems the title
+string might be displayed in an unreadable font or not at all.
+On Mac OS X Aqua (not X11!) this option is enabled by default.
+On all other systems this option is disabled by default.
+Valid values are 0 and 1.
+</LI>
+<LI><CODE>"FixImageButtons"</CODE>, enables a workaround for buttons
+(e.g.&nbsp;in the toolbox) that stay depressed when used.
+Valid values are 0 and 1. This option is disabled
+by default on all platforms.
+</LI>
+<LI><CODE>"FixX11Menu"</CODE> enables a workaround for non-sticky menus
+on X11 (displaced menus do not stay open). This option is enabled
+by default and not used on the Win32 and Aqua platforms.
+</LI>
+<LI><CODE>"FlashObjects"</CODE> enables flashing of objects while object
+picking. When enabled, this option needs a considerable amount of resources
+due to constant picking operations while the mouse pointer travels over the
+view window and also leads to a lot of visual noise. Therefore it
+is disabled by default.
+</LI>
+<LI><CODE>"FocusFollowsMouse"</CODE> controls whether mouse wheel events
+in a view window that has not the keyboard input focus should
+move the focus to that window. Valid values are 0 and 1. This option is
+enabled by default but due to the nature of the focus wheel interaction
+only useful on X11 and Aqua.
+</LI>
+</UL>
+</P>
+<P>
+<A NAME="hidprefsi"></A> 
+<UL>
+<LI><CODE>"IconGamma"</CODE>: this setting may be used to adapt the contrast
+of all icons (in view menu and the toolbox) to your display gamma. If you
+are on a SGI it is recommended to set this to about "0.7". The default
+value <CODE>""</CODE> (empty string) leads to no changes of any icon images.</LI>
+</UL>
+</P>
+<P>
+<A NAME="hidprefsk"></A> 
+<UL>
+<LI><CODE>"KeepNTmpFiles"</CODE>: how many
+incarnations of the scene in RIB form (which actually may be split
+in more than one file due to e.g.&nbsp;instances) created when directly
+rendering from a view window should be kept on disk (default: 5)
+</LI>
+<LI><CODE>"KeepParamGUI"</CODE>: determines wether the intermediate parameter
+GUIs should be kept open after a parameter has been entered or
+rather disappear immediately.
+The default value is 0 &ndash; the GUIs disappear immediately.
+See also
+section 
+<A HREF="ayam-3.html#ipgui">Intermediate Parameter GUIs</A>.
+</LI>
+<LI><CODE>"Kill"</CODE>: name of a program that kills other processes and accepts
+a process id as argument; used by the Rendering GUI to cancel rendering
+processes
+(default: Unix <CODE>"kill"</CODE>, Win32 <CODE>"w32kill"</CODE> &ndash;
+an internal kill command that has been introduced in Ayam 1.4).</LI>
+</UL>
+</P>
+<P>
+<A NAME="hidprefsl"></A> 
+<UL>
+<LI><CODE>"LineWidth"</CODE>, line width used for drawing the lines of
+unselected objects (blue lines in standard color configuration).
+The default value is 1.0. Ayam is not checking, whether the specified
+value is supported by the OpenGL implementation used.
+</LI>
+<LI><CODE>"ListTypes"</CODE> determines, whether the type of an
+object should be displayed in braces in the tree view or listbox.
+Valid values are 0 and 1. The default value is 1 &ndash; yes, list the types.
+</LI>
+<LI><CODE>"LoadEnv"</CODE>, controls whether the environment scene
+file should be read on each application start.
+Valid values are 0 and 1.
+The default value is 0 &ndash; no file will be read.
+Saving an environment scene file
+via the menu entry <CODE>"Special/Save Environment"</CODE> or
+setting a value different from an empty string (<CODE>""</CODE>) to the
+<CODE>"EnvFile"</CODE> preference setting will set this option to 1 automatically.</LI>
+</UL>
+</P>
+<P>
+<A NAME="hidprefsm"></A> 
+<UL>
+<LI><CODE>"MarkHidden"</CODE> determines, whether hidden objects
+should be marked (using a preceding exclamation mark)
+in the tree view or object listbox.
+Valid values are 0 and 1. The default value is 1 &ndash; yes, mark hidden
+objects.
+</LI>
+<LI><CODE>"MaxTagLen"</CODE>: the maximum number of characters to be displayed
+in the buttons in the Tag Property GUI (default: 30).</LI>
+</UL>
+</P>
+<P>
+<A NAME="hidprefsn"></A> 
+<UL>
+<LI><CODE>"NewLoadsEnv"</CODE>, if this is switched on, Ayam will read
+the scene file specified by <CODE>"EnvFile"</CODE> when the scene is
+cleared using the main menu entry <CODE>"File/New"</CODE>.
+Valid values are 0 and 1. The default value is 1 &ndash; yes, load the
+environment file on <CODE>"File/New"</CODE>.
+</LI>
+<LI><CODE>"NormalizeDigits"</CODE>, determines the number of digits to the right
+of the decimal point, the normalizing processes should leave
+intact (default: 6).
+</LI>
+<LI><CODE>"NormalizeMark"</CODE>, controls whether the mark coordinate values
+should be normalized after setting the mark from the center of
+selected points
+(valid values: 0, 1; default: 1 &ndash; yes).
+</LI>
+<LI><CODE>"NormalizePoints"</CODE>, controls whether the coordinate values
+of points modified by interactive modelling actions should be normalized
+(valid values: 0, 1; default: 1 &ndash; yes).
+</LI>
+<LI><CODE>"NormalizeTrafos"</CODE>, controls whether the transformation
+attribute values should be normalized after interactive modelling actions
+(valid values: 0, 1; default: 1 &ndash; yes).</LI>
+</UL>
+</P>
+<P>
+<A NAME="hidprefsp"></A> 
+<UL>
+<LI><CODE>"PanDist"</CODE>: the distance about which panning in views by
+keyboard occurs; positive values are absolute in pixels, negative values are
+relative to the current window dimension; a value of <CODE>-10</CODE> means a
+tenth of the current window width/height. The default value is <CODE>-10</CODE>.
+</LI>
+<LI><CODE>"PaneMargins"</CODE> is a list of currently five floating
+point values that are used as a safety margin for the panes
+when they are resized (1: console vs.&nbsp;hierarchy, 2: hierarchy vs.&nbsp;upper-views,
+3: lower-view vs.&nbsp;property, 4: property vs.&nbsp;hierarchy,
+5: upper-view-2 vs.&nbsp;upper-view-1).
+These values control the minimum size of a pane expressed in an
+inverse (1/x) and relative way:
+the smaller the number, the bigger the margin. The safety margin
+of the uppermost horizontal pane (that divides the upper internal
+views from the hierarchy and the third view) is e.g.&nbsp;a bit larger
+so that the main menu may not be obscured easily (the corresponding
+value is 5.0). The default value for the console (20.0) leads to a
+small margin, so that the console may be shrunk to 2 or even 1 lines
+of text. The default values are<BR>
+&nbsp;&nbsp;<CODE>{ 20.0 5.0 10.0 10.0 10.0 }</CODE>
+</LI>
+<LI><CODE>"PickCycleMax"</CODE>: the maximum number of objects for pick
+cycling. If <CODE>"PickCycle"</CODE> is enabled and there are more candidates
+for a selection than specified by this option, the object selection listbox
+will take over regardless. The default value is 5.<SMALL TITLE="Since 1.26."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+</LI>
+<LI><CODE>"PickTolerance"</CODE>: the tolerance used to determine whether an object
+should be picked or not (default: 5); this setting determines the size
+of a rectangular area around the picked point in pixels, all objects that
+are inside or touch this area are considered picked.
+</LI>
+<LI><CODE>"PolyOffset0"</CODE>, <CODE>"PolyOffset1"</CODE> two float values, that
+control the offsetting of shaded surfaces in the shade and draw
+drawing mode (so that the curves always appear on top of the surfaces).
+Default values are 1.0, 1.0.
+</LI>
+<LI><CODE>"Prompt"</CODE>: controls the prompt for the Ayam console.
+See also section 
+<A HREF="ayam-2.html#cons">The Console</A>. If this
+option is set to an empty string, a default of
+<BLOCKQUOTE><CODE>
+<CODE>\[Undo:$ay(undoo)/Redo:$ay(redoo)\]\[Repeat:$ay(repo)\].../[file tail [pwd]]&gt;</CODE>
+</CODE></BLOCKQUOTE>
+
+will be used, which displays the name of the operations that can be
+undone and redone, the tool to be repeated, and the last component of
+the current directory of Ayam like this:
+<BLOCKQUOTE><CODE>
+<CODE>[Undo:None/Redo:None][Repeat:None].../scn&gt;</CODE>
+</CODE></BLOCKQUOTE>
+
+
+<P>If this option would be set to <CODE>"[pwd]&gt;"</CODE> the prompt would display
+the full path name of the current directory instead.</P>
+<P>To display the value of an arbitrary Tcl variable in the prompt
+(e.g.&nbsp;designating the current level in the scene hierarchy) a write trace
+must be bound to that variable.
+The write trace in turn must call the procedure <CODE>"ayam_updateprompt"</CODE>
+and may e.g.&nbsp;be established using a small script like this:
+<BLOCKQUOTE><CODE>
+<CODE>trace variable &lt;vname&gt; ayam_updateprompt</CODE>
+</CODE></BLOCKQUOTE>
+</P>
+
+</LI>
+<LI><CODE>"PVTexCoordName"</CODE>, default name for texture coordinate PV
+tags, the default value is "st".
+</LI>
+<LI><CODE>"PVNormalName"</CODE>, default name for vertex normal PV
+tags, the default value is "N".
+</LI>
+<LI><CODE>"PVColorName"</CODE>, default name for vertex color PV
+tags, the default value is "Cs".</LI>
+</UL>
+</P>
+<P>
+<A NAME="hidprefsr"></A> 
+<UL>
+<LI><CODE>"RotateCrossSection"</CODE>, controls whether the creation
+of sweeps should rotate the cross section curve to the YZ-plane.
+If set to 0, no rotation occurs, if set to 1, the rotation
+will be attempted without any checks, and if set to 2 (this is
+the default<SMALL TITLE="Since 1.25."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>) the cross section
+is checked and a requester is raised offering to rotate the curve
+only if it is not already in the proper plane.
+See also section 
+<A HREF="ayam-5.html#sweept">Sweep Tool</A>.</LI>
+</UL>
+</P>
+<P>
+<A NAME="hidprefss"></A> 
+<UL>
+<LI><CODE>"SafeAutoFocus"</CODE> disables AutoFocus
+(see section 
+<A HREF="ayam-2.html#prefgui">GUI preference settings</A>)
+when certain dialog windows are open, so that they do not get
+shuffled under other windows by accidental mouse movements on systems
+where the window manager does only auto raise in conjunction with
+auto focus.
+Valid values are 0 and 1. This option is enabled by default on Win32.
+</LI>
+<LI><CODE>"SDMode"</CODE>, silhouette detection mode for the hidden wire
+drawing mode, 0 &ndash; off, 1 &ndash; z-buffer, 2 &ndash; color,
+3 &ndash; z-buffer and color. The default is 3.<SMALL TITLE="Since 1.21."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+</LI>
+<LI><CODE>"SelBndFactor"</CODE>, floating point value to multiply with
+the line width of selected lines when drawing selected boundary
+curves.<SMALL TITLE="Since 1.30."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+The default value is 1.5. Ayam is not checking, whether the resulting
+value is supported by the OpenGL implementation used.
+</LI>
+<LI><CODE>"SelectLast"</CODE> determines whether clicks into the tree
+widget (but not on any node) should select the last object of the current
+level.
+Valid values are 0 and 1. Default 1 &ndash; yes.<SMALL TITLE="Since 1.22."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+</LI>
+<LI><CODE>"SelLineWidth"</CODE>, line width used for drawing the lines of
+selected objects (white lines in standard color configuration).
+The default value is 1.0. Ayam is not checking, whether the specified
+value is supported by the OpenGL implementation used.
+</LI>
+<LI><CODE>"SelXOR_R"</CODE>, <CODE>"SelXOR_G"</CODE>, <CODE>"SelXOR_B"</CODE>: determine
+a color value that is used for drag selection rectangles.
+Note that the color is not used directly but combined with the
+color value of already drawn pixels by XOR. The default values
+are 255 for the red, 128 for the green, and 0 for the blue component.
+</LI>
+<LI><CODE>"ShiftTab"</CODE>, allows to set a specific keyboard symbol for
+systems where pressing the Shift together with the Tab key does not
+produce "&lt;Shift-Tab&gt;" (the default) but some other symbol like
+e.g.&nbsp;"&lt;ISO_Left_Tab&gt;" (many, but not all, modern X11 systems often use
+this).
+</LI>
+<LI><CODE>"SimpleToolGUI"</CODE> controls whether the standard UI elements
+(as known from the property GUIs) should be used in tool dialogs or
+just simple entry widgets.
+Valid values are 0 and 1. Default 0, use standard UI elements.<SMALL TITLE="Since 1.22."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+</LI>
+<LI><CODE>"StripShaderArch"</CODE> determines whether a second extension
+(the architecture) should be stripped from the file names of compiled
+shaders when scanning for shaders.
+Valid values are 0 and 1. Default 1 &ndash; yes.<SMALL TITLE="Since 1.22."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+</LI>
+<LI><CODE>"SwapMB"</CODE>, allows to swap mouse buttons 2 and 3
+on Mac OS X Aqua (not X11!) for the mouse bindings specified in
+<CODE>"SwapMBSC"</CODE> below, because on Mac OS X Aqua, traditionally, the
+naming of the middle and rightmost mouse button is reversed compared to
+X11/Win32.<BR>
+This option is enabled by default on Mac OS X Aqua and allows to use
+the same set of mouse bindings (the same <EM>ayamrc</EM> file) for X11 and
+Aqua without sacrificing user experience. The middle mouse button,
+by default, zooms the view, and the right one moves the view.
+Valid values are 0 and 1.
+</LI>
+<LI><CODE>"SwapMBSC"</CODE> contains the mouse bindings to be swapped,
+when <CODE>"SwapMB"</CODE> above is activated.
+The default value of this option is<BR>
+&nbsp;&nbsp;<CODE>{ "ayviewshortcuts(MoveVButton)" "ayviewshortcuts(ZoomVButton)" }</CODE></LI>
+</UL>
+</P>
+<P>
+<A NAME="hidprefst"></A> 
+<UL>
+<LI><CODE>"toolBoxList"</CODE>: a list of sections or groups of buttons
+describing the appearance of the toolbox window (default, using all
+available sections: <CODE>{trafo trafo2 solids misco nurbs toolobjs points
+nctools1 nctools2 camera misc}</CODE>).
+See also section 
+<A HREF="ayam-2.html#toolb">The Toolbox Window</A>.
+</LI>
+<LI><CODE>"ToolBoxShrink"</CODE>, controls whether the toolbox window
+should shrink wrap around its contents after a resize operation.
+This option is not used in single window GUI mode.
+Valid values are 0 and 1. Default is 1 &ndash; yes.
+</LI>
+<LI><CODE>"ToolBoxTrans"</CODE>, decides if the toolbox window should
+be made transient. It will then, depending on the window manager or its
+configuration, get a different or no decoration, no icon (or no entry in the
+task bar on Win32), and will always be iconified when the main window
+gets iconified. Not used in single window GUI mode.
+Valid values are 0 and 1. The default value is 1 &ndash; yes.</LI>
+</UL>
+</P>
+<P>
+<A NAME="hidprefsu"></A> 
+<UL>
+<LI><CODE>"UseInternalFD"</CODE> switches to an internal file dialog for loading
+of plugins. This option is only used on Mac OS X Aqua (not X11!), because
+there the normal file dialog will not enter application bundle directory
+structures. This option is enabled by default on Mac OS X Aqua and not
+used on any other platform. (valid values: 0, 1; default: 0 &ndash; no)
+See also the documentation of a related helper
+script 
+<A HREF="ayam-6.html#intfdtcl">Switch File Dialogs to Tcl</A>.</LI>
+</UL>
+</P>
+
+
+<P>
+<A NAME="hidprefsw"></A> 
+<UL>
+<LI><CODE>"WarnPnts"</CODE> controls the warning messages for missing
+selected points (valid values: 0, 1;
+default: 1 &ndash; yes).<SMALL TITLE="Since 1.27."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+</LI>
+<LI><CODE>"WarnPropPasteToSel"</CODE>: should
+<CODE>"Special/Clipboard/Paste Property to Selected"</CODE> raise a warning
+requester? (valid values: 0, 1; default: 1 &ndash; yes)
+</LI>
+<LI><CODE>"WarnUnknownTag"</CODE> controls the warning messages for
+unknown tag types (valid values: 0, 1; default: 1 &ndash; yes).
+</LI>
+<LI><CODE>"Wait"</CODE>: set this to <CODE>"waitPid"</CODE> to enable a work around
+for zombie processes created by the Rendering GUI.
+This is e.g.&nbsp;necessary for the Linux platform.
+</LI>
+<LI><CODE>"WheelRoll"</CODE>, a float value that controls the amount of
+rolling (expressed in degrees) to apply when rolling the view with
+the mouse wheel.
+</LI>
+<LI><CODE>"WheelZoom"</CODE>, a float value that controls the zoom factor
+for view windows when either the mouse wheel is used or the
+<CODE>&lt;+&gt;</CODE>/<CODE>&lt;-&gt;</CODE> keys; the default value is 0.5.
+A value of 0.75 leads to more fine grained zoom control but slower zooming
+and a value of 0.25 to coarse but fast zooming.
+</LI>
+</UL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="rioptdb"></A> RiOption and RiAttributes Database</H3>
+
+<P>With the <EM>ayamrc</EM> file, also the database of RiOptions and RiAttributes may
+be adapted to the current target RenderMan rendering system.</P>
+<P>Renderer specific options and attributes can then be added
+to the scenes using tags and the main menu entries
+<CODE>"Special/Tags/Add RiOption"</CODE> and
+<CODE>"Special/Tags/Add RiAttribute"</CODE>,
+see also sections
+<A HREF="ayam-4.html#riatag">RiAttribute Tag</A> and
+<A HREF="ayam-4.html#riotag">RiOption Tag</A>.</P>
+<P>The syntax for a new RiOption is quite simple as the following example shows:
+<HR>
+<PRE>
+set riopt(runtime) {
+ { verbosity s { "silent" "normal" "stats" "debug" } }
+}
+</PRE>
+<HR>
+
+This snippet sets the section <CODE>"runtime"</CODE> and adds a single
+option, <CODE>"verbosity"</CODE>, to it. The option is declared to be of type
+string using <CODE>"s"</CODE> and provided with a list of default values:
+<CODE>"{ "silent" "normal" "stats" "debug" }"</CODE>.</P>
+<P>To add another option to this section, say the option <CODE>"op"</CODE>
+which shall be an integer value, the aforementioned snippet needs to
+be changed to:
+<HR>
+<PRE>
+set riopt(runtime) {
+ { verbosity s { "silent" "normal" "stats" "debug"} }
+ { op i }
+}
+</PRE>
+<HR>
+
+As you can see, it is not mandatory to provide default values.
+Be sure to correctly close all the curly braces, otherwise the next
+start of Ayam may fail.</P>
+<P>Available types of parameters are:
+<UL>
+<LI>i: a scalar integer value,</LI>
+<LI>j: a pair of integer values,</LI>
+<LI>f: a scalar float value,</LI>
+<LI>g: a pair of float values,</LI>
+<LI>s: a string value,</LI>
+<LI>p: a point in space (simply three float values), the default
+values (if provided) are three float values in curly braces, such as
+<CODE>{0.0 1.0 0.0}</CODE>,</LI>
+<LI>c: a color, the default values (if provided) are three float
+values in curly braces, such as <CODE>{1.0 1.0 1.0}</CODE>.</LI>
+</UL>
+</P>
+
+
+
+<H2><A NAME="comlineargs"></A> <A NAME="ss8.5">8.5</A> <A HREF="ayam.html#toc8.5">Command Line Arguments</A>
+</H2>
+
+<P>This section documents the command line arguments supported by Ayam.
+<UL>
+<LI><CODE>"-help"</CODE>: if this option is present, Ayam does not start
+but instead display a short help message about the available command
+line arguments.
+</LI>
+<LI><CODE>"-guiscale x"</CODE>: this argument sets the
+GUI scale factor, which must be a floating point value between
+1.0 and 3.0, values outside this range will be silently
+clamped to this range.
+See also section 
+<A HREF="ayam-2.html#guiscaling">GUI Scaling</A>.
+</LI>
+<LI><CODE>"-nosplash"</CODE>: if this option is present, Ayam will not
+show the splash screen upon start.
+</LI>
+<LI><CODE>"-noview"</CODE>: if this option is present, Ayam will not
+attempt to open a view window (only relevant in single window GUI mode,
+see section 
+<A HREF="ayam-2.html#ayamgui">The Ayam GUI</A>).
+</LI>
+<LI><CODE>"-failsafe"</CODE>: if this option is present, Ayam will not
+load the ayamrc file and also no environment scene file;
+see also section 
+<A HREF="#ayamrc">Ayamrc File</A>.</LI>
+</UL>
+</P>
+<P>Command line arguments that follow any of these options are considered
+to be file names of Ayam scene files. All these scene files will be loaded
+upon application start.<BR>
+If multiple scene file arguments are specified, the second up until the
+last scene files will be inserted into the scene from the first
+argument, i.e. different argument orders lead to different resulting
+scene hierarchies.
+See also sections
+<A HREF="#scenefile">Scene File Management</A>
+and
+<A HREF="ayam-2.html#mmfile">File Menu</A>.</P>
+
+
+
+<H2><A NAME="envvars"></A> <A NAME="ss8.6">8.6</A> <A HREF="ayam.html#toc8.6">Environment Variables</A>
+</H2>
+
+<P>This section documents the environment variables used by Ayam.
+<UL>
+<LI><CODE>"AYAMRC"</CODE>: designates the full filename of the <EM>ayamrc</EM> file
+(see section 
+<A HREF="#ayamrc">Ayamrc File</A>).</LI>
+<LI><CODE>"HOME"</CODE>: path to the <EM>ayamrc</EM> file (used on Win32 if
+<CODE>"AYAMRC"</CODE> is not set).</LI>
+<LI><CODE>"TEMP"</CODE>: path to the <EM>ayamrc</EM> file (used on Win32 if
+<CODE>"AYAMRC"</CODE> and <CODE>"HOME"</CODE> are not set); also initial value of the
+<CODE>"TmpDir"</CODE> preference setting (used on Win32 if no <EM>ayamrc</EM> file exists,
+that specifies <CODE>"TmpDir"</CODE>).</LI>
+<LI><CODE>"AYNOSPLASH"</CODE>: if this variable is set to 1, the splash
+screen will not be shown.</LI>
+<LI><CODE>"BROWSER"</CODE>: filename of the preferred WWW browser (used to
+display the documentation URL).</LI>
+<LI><CODE>"NETSCAPE"</CODE>: (if <CODE>"BROWSER"</CODE> does not exist) filename
+of the Netscape WWW browser (used to display the documentation URL).</LI>
+<LI><CODE>"SHADERS"</CODE>: initial value of <CODE>"Shaders"</CODE> preference
+setting (used if no <EM>ayamrc</EM> file exists).</LI>
+</UL>
+</P>
+
+
+
+<H2><A NAME="plugov"></A> <A NAME="ss8.7">8.7</A> <A HREF="ayam.html#toc8.7">Plugins Overview</A>
+</H2>
+
+<P>This section serves as a overview of the various plugins available
+in Ayam.</P>
+<P>There are currently five major types of plugins for Ayam:
+<DL>
+<DT><B>shader parsing plugins</B><DD>
+<P>aysdr, ayslb, ayslc, ayslo, ayslo3d, ayslx, ayso.</P>
+<P>See also section 
+<A HREF="#spplugins">Shader Parsing Plugins</A>.</P>
+
+<DT><B>custom objects</B><DD>
+<P>metaobj, sdnpatch, sfcurve, sdcurve, bcurve, csphere.</P>
+<P>See also section 
+<A HREF="ayam-4.html#customobj">Custom Objects</A>.</P>
+
+<DT><B>import/export plugins</B><DD>
+<P>dxfio, mfio, mopsi, objio, onio, rrib, x3dio.</P>
+<P>See also section 
+<A HREF="ayam-7.html#impex">Import and Export</A>.</P>
+
+<DT><B>scripting language plugins</B><DD>
+<P>
+<UL>
+<LI>jsinterp &ndash; JavaScript scripting interface
+(see section 
+<A HREF="ayam-6.html#jsinterp">JavaScript Scripting Interface</A>),</LI>
+<LI>luainterp &ndash; Lua scripting interface
+(see section 
+<A HREF="ayam-6.html#luainterp">Lua Scripting Interface</A>).</LI>
+</UL>
+</P>
+
+<DT><B>modelling helper plugins</B><DD>
+<P>
+<UL>
+<LI>AyCSG &ndash; CSG rendering
+(see section 
+<A HREF="#aycsg">CSG preview using the AyCSG plugin</A>),</LI>
+<LI>IDR &ndash; Importance Driven Rendering
+(see section 
+<A HREF="#idr">Importance Driven Rendering</A>),</LI>
+<LI>aydnd &ndash; inter-application drag and drop,</LI>
+<LI>subdiv &ndash; Catmull-Clark and Loop subdivision for the SDMesh
+object (see section 
+<A HREF="ayam-4.html#sdmeshobj">SDMesh Object</A>).</LI>
+</UL>
+</P>
+
+</DL>
+</P>
+
+
+
+<H2><A NAME="spplugins"></A> <A NAME="ss8.8">8.8</A> <A HREF="ayam.html#toc8.8">Shader Parsing Plugins</A>
+</H2>
+
+<P>The following plugins are provided to allow
+parsing of compiled shaders:<SMALL TITLE="Since 1.3."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+<CODE>"ayslb"</CODE> for Air, <CODE>"ayslx"</CODE> for Aqsis,
+<CODE>"ayso"</CODE> for RDC, <CODE>"ayslo"</CODE> for PRMan, <CODE>"ayslo3d"</CODE> for 3Delight,
+<CODE>"aysdr"</CODE> for Pixie<SMALL TITLE="Since 1.6."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+, and <CODE>"aygso"</CODE> for Gelato<SMALL TITLE="Since 1.11."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>.</P>
+<P>After loading of one of the aforementioned plugins, Ayam will
+be able to parse shaders compiled with the shader compiler
+of the respective renderer.</P>
+<P>There can only be one active shader parsing plugin. You can not
+first load ayslb and then ayslx and expect Ayam to parse slb
+<EM>and</EM> slx shaders.</P>
+<P>A shader parsing plugin may be loaded
+automatically on startup of Ayam using one of the provided Tcl scripts:
+<CODE>"loadayslb.tcl"</CODE>, <CODE>"loadayslo.tcl"</CODE>, <CODE>"loadayslo3d.tcl"</CODE>,
+<CODE>"loadayslx.tcl"</CODE>, <CODE>"loadayso.tcl"</CODE>, <CODE>"loadaysdr.tcl"</CODE>,
+and <CODE>"loadaygso.tcl"</CODE>.
+To automatically load a plugin simply add the appropriate
+script to the preference setting
+<CODE>"Main/Scripts"</CODE> using the <CODE>"Add"</CODE> button in the
+preferences editor.</P>
+<P>Additionally, those scripts may be further adapted to
+set a different <CODE>"Shaders"</CODE> preference setting or to immediately
+scan for shaders after loading of the plugin. For that, just remove
+the leading hash-marks (#) from the corresponding lines in the script.
+Note that changing the scripts for immediate shader parsing is not
+necessary if the shader parsing plugin is loaded automatically on startup
+of Ayam, as the loading of the scripts (and therefore also of the
+plugin) will happen before the Ayam startup
+sequence executes the initial shader scanning pass.
+The shader search path used for the initial shader scanning pass
+is taken from the <CODE>"Shaders"</CODE> preference setting.</P>
+<P>If a shader parsing plugin is loaded manually or via unchanged
+load script, the shaders search path must be adapted manually.
+Furthermore a shader scan must be initiated manually too.
+Both actions may be carried out using the preferences editor. Scanning
+for shaders may also be started using the main menu:
+<CODE>"Special/Scan Shaders"</CODE>.</P>
+<P>To better accommodate the fast changing world of RenderMan renderers,
+since Ayam 1.11 all shader parsing plugins are Ayam version independent
+(but still renderer version dependent <EM>and</EM> Tcl version dependent).
+This allows to distribute updated shader parsing plugins without updating
+Ayam too and thus in a higher frequency.
+Furthermore, compiling a shader parsing plugin is now much easier.</P>
+<P>For shader parsing without plugins, see also
+section 
+<A HREF="ayam-6.html#slxmltcl">Shader Parsing</A>.</P>
+
+
+
+<H2><A NAME="ai"></A> <A NAME="ss8.9">8.9</A> <A HREF="ayam.html#toc8.9">Automatic Instancing</A>
+</H2>
+
+<P>
+<CENTER>
+<IMG SRC="pics/ai.gif" HEIGHT=98 WIDTH=210  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Automatic Instancing Dialog</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P><EM>Automatic Instancing</EM> is available via the main menu
+entry: <CODE>"Special/Instances/Automatic Instancing"</CODE>.
+When this menu entry is selected a small parameter dialog will
+appear, see also the image above.</P>
+<P>Automatic Instancing creates instances from all instantiable
+objects using a simple algorithm that recursively compares
+objects (see also section 
+<A HREF="ayam-4.html#instanceobj">Instance object</A>).
+Two objects are considered to be instantiable when all
+their attributes, except for the transformation attributes, are the same.
+The comparison of materials and tags may be turned off.
+Also the scope of the automatic instantiation can be set to
+the selected objects, the current level, or all objects
+in the scene (regardless of current level and selection).<SMALL TITLE="Since 1.21."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>The instancing algorithm is able to create instances of grouping objects
+too (objects with child objects, e.g.&nbsp;levels or tool-objects
+like revolve).
+However, in order for two grouping objects to be instantiated
+not only all child objects and the grouping objects
+have to be instantiable, but the child objects also
+have to be in the right order. It is not sufficient,
+that for every child of the potential master, a matching
+child of the potential instance exists.
+Instantiation of grouping objects may drastically decrease
+the total number of objects in a scene.</P>
+<P>Note that before the automatic instantiation starts, all currently
+existing instances will be resolved.<BR>
+After instantiation some statistics will be displayed in the console.</P>
+<P>More information about this subject can be found in:</P>
+<P><I>Schultz, R., and Schumann, H.: "Automatic Instancing of
+Hierarchically Organized Objects", in: Kunii T.L. (ed.): Spring
+Conference on Computer Graphics (SCCG 2001) Conference Proceedings, Budmerice,
+Slovakia, 25-28 April 2001, ISBN 80-223-1606-7</I></P>
+
+<H2><A NAME="idr"></A> <A NAME="ss8.10">8.10</A> <A HREF="ayam.html#toc8.10">Importance Driven Rendering (IDR)</A>
+</H2>
+
+<P>The importance driven rendering plugin may be used to drastically
+reduce rendering times while developing a scene.
+It works in three main steps:
+<OL>
+<LI>Importance values are assigned to elements of the scene.</LI>
+<LI>Two rendering passes are started according to the
+assigned importance values. Elements of different importance
+values are mutually masked out using <CODE>"RiMatte"</CODE> statements.</LI>
+<LI>The resulting partial images are composed to a single
+resulting image, which is then displayed.</LI>
+</OL>
+
+The parameterisation of the two rendering passes ensures, that
+the total rendering time is lower than the rendering time of
+a single pass with high quality.</P>
+<P>Many options exist to assign importance and parameterise the
+rendering passes:</P>
+<P>Elements of the scenes may be geometric objects, regions in image space,
+or regions in object space.
+Importance values are currently just binary values.
+Assignment may take place manually (using IDR tags) or half-automatic
+by derivation of importance from currently selected or changed
+objects. To avoid inconsistency in the resulting images, importance
+values may be propagated between (geometrically or hierarchically) near
+objects, or between objects that are related (e.g.&nbsp;from a material to a
+geometric object).</P>
+<P>Parameterisation of the two rendering passes currently includes selection of
+a different renderer and the possibility to reduce rendering resolution and
+shading rate. To further reduce rendering times for raytracing
+renderers, the size of the region to render may be automatically adapted to
+the elements of the current importance value (including an optimisation
+run that balances renderer startup times and times needed to render
+regions not originally occupied by two regions to merge).</P>
+<P>Furthermore, caching of partial images is possible. However, the implementation
+of this feature is not very sophisticated at the moment, as it
+uses the Unix text tool <CODE>"diff"</CODE> to decide whether two RIB streams are
+identical and hence need no re-rendering.</P>
+<P>To start using IDR:
+<OL>
+<LI>load a scene (e.g.&nbsp;the cactus example scene),</LI>
+<LI>load the IDR plugin (menu <CODE>"File/Load Plugin"</CODE>),</LI>
+<LI>open the IDR control window using the main menu
+<CODE>"Custom/Open IDR"</CODE>,</LI>
+<LI>set the assign mode to <CODE>"Selection"</CODE>,</LI>
+<LI>select an object in the scene (e.g.&nbsp;the object named <CODE>"Pot"</CODE>),</LI>
+<LI>then press the <CODE>"Render!"</CODE> button.</LI>
+</OL>
+
+Compare the rendering time with a full render from the view window.</P>
+<P>IDR requires that at least the renderer of the second rendering pass
+honours RiMatte. Since rgl does not honour RiMatte, it is sometimes
+necessary to simply exclude objects of different importance value.
+No wrong images are to be expected from this, as rgl does not calculate
+other than local lighting effects.</P>
+<P>More information about this subject can be found in:</P>
+<P><I>Schultz, R., and Schumann, H.: "Importance Driven
+Rendering - Using Importance Information in the Rendering Process",
+in: Hamza M., Sarfraz M. (ed.): Computer Graphics and Imaging (CGIM 2001)
+Conference Proceedings, Honolulu, Hawaii, 13-16 August 2001,
+ISBN 0-88986-303-2</I></P>
+
+<H2><A NAME="aycsg"></A> <A NAME="ss8.11">8.11</A> <A HREF="ayam.html#toc8.11">CSG preview using the AyCSG plugin</A>
+</H2>
+
+<P>
+<CENTER>
+<IMG SRC="pics/csgex.gif" HEIGHT=222 WIDTH=440  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">CSG preview example (left without, right with CSG)</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The AyCSG plugin may be used to resolve and preview CSG operations.
+For this, the plugin uses image based CSG rendering algorithms provided
+by the OpenCSG library by Florian Kirsch. The OpenCSG library, currently,
+supports the <EM>Goldfeather</EM> and the <EM>SCS</EM> algorithm. The latter
+only works properly with convex primitives. Since both, Goldfeather and SCS,
+are image based rendering algorithms, there is no limit in geometric object
+types that may be used in CSG hierarchies. You may e.g.&nbsp;use Quadrics, NURBS,
+and Metaballs in every possible combination. You just have to make sure,
+that every CSG primitive describes a closed space.</P>
+<P>In order for the CSG rendering algorithms to work properly, the depth
+complexity (convexity) of a primitive must be known.
+The depth complexity of a primitive determines the maximum number
+of forward oriented surfaces any ray through this primitive would pass.
+A regular sphere has a depth complexity of 1, a torus of 2, but do
+not confuse depth complexity with genus, they are different values.
+A 3D representation of the letter A e.g.&nbsp;has a genus of
+1 but a depth complexity of 3.
+The depth complexity of a primitive can be stored in a <CODE>"DC"</CODE> tag.
+A torus would e.g.&nbsp;get a tag named <CODE>"DC"</CODE> with the value <CODE>"2"</CODE>.
+If no <CODE>"DC"</CODE> tag is present for a primitive, a default value for
+the depth complexity of <CODE>"1"</CODE> will be used.
+If the depth complexity is not specified correctly, rendering
+errors, like missing parts of surfaces, will occur.</P>
+<P>Note that the correct operation of AyCSG not only depends on the
+depth complexity but also the winding order of the OpenGL primitives
+(triangles or quads) used for drawing of the CSG primitives. The
+winding order has to be consistent in a scene, so that the rendering
+algorithm can decide what is inside and what is outside by looking
+at a single OpenGL primitive. For all quadric primitives of Ayam
+the winding order is always consistent. However, for NURBS patches
+the winding order depends on the orientation of the patch dimensions.
+If NURBS patches are used in CSG operations one, consequently, may
+need to revert the patches (e.g.&nbsp;using the <CODE>"RevertU"</CODE> tool,
+see 
+<A HREF="ayam-5.html#revertut">Revert U tool</A>).
+If the winding order of some of the primitives in a CSG hierarchy
+is not right, the respective primitives will not be effective
+in the CSG operations to the extent that the rendered image becomes
+completely empty.</P>
+<P>The AyCSG rendering obeys the <CODE>"Draw Selection only"</CODE> and
+<CODE>"Draw Level only"</CODE> view options as well as the hide attribute
+of objects. If the CSG rendering fails for complete complex scenes,
+you might still get a preview of the important CSG using objects by
+selecting them and enabling the <CODE>"Draw Selection only"</CODE> view
+option.</P>
+<P>Also note that CSG rendering requires fast graphics hardware
+(the more fillrate, the better). Furthermore, your OpenGL subsystem
+has to support the PBuffers extension and, depending on the
+rendering options chosen, a stencil buffer. Speedups may be
+achieved using the <CODE>"GL_ARB_occlusion_query"</CODE> or
+<CODE>"GL_NV_occlusion_query"</CODE> extensions (if available to you).</P>
+<P>Once the AyCSG plugin is loaded successfully you can render the CSG
+preview in any view window using the keyboard shortcut
+<CODE>&lt;Ctrl+C&gt;</CODE> or using the new button in the menu
+bar of every view window (see image below).
+If you hold down <CODE>&lt;Shift&gt;</CODE>
+while pressing the button the view will start to continually render CSG
+(the button stays pressed to signify this) until you click onto
+the button again.</P>
+<P>
+<CENTER>
+<IMG SRC="pics/aycsgic.gif" HEIGHT=181 WIDTH=205  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">View With AyCSG Icon</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The AyCSG plugin supports the following options, that are available
+through the main menu entry <CODE>"Custom/AyCSG Preferences"</CODE>:
+<UL>
+<LI><CODE>"Algorithm"</CODE> allows to switch between the Goldfeather and
+SCS algorithm. Note again that the SCS algorithm only works correctly
+for convex primitives. The <CODE>"Automatic"</CODE> setting chooses one
+of the algorithms based on whether concave primitives (depth complexity
+&gt; 1) are present or not.
+As this decision is made based on the depth complexity from DC tags,
+the only valid setting for the <CODE>"DCSampling"</CODE> preference below is then
+<CODE>"NoDCSampling"</CODE>.
+</LI>
+<LI><CODE>"DCSampling"</CODE> determines a depth complexity sampling
+strategy. Quoting from the OpenCSG documentation, the following options
+are available:
+
+<P><CODE>"NoDCSampling"</CODE>: Does not employ the depth complexity. This essentially
+makes the algorithm O(n^2), but with low constant costs.
+This is the standard Goldfeather algorithm, DC tags <EM>must</EM> be present
+for primitives with a depth complexity greater than one, or rendering
+errors may occur.</P>
+
+<P><CODE>"OcclusionQuery"</CODE>: Uses occlusion queries to profit implicitly from
+depth complexity without calculating it. This is especially useful for the
+SCS algorithm where this strategy is applied at shape level, resulting in
+a O(n&times;k') algorithm (where k' &lt;= k), without significant
+constant overhead.
+This strategy requires hardware occlusion queries, i.e.&nbsp;the OpenGL
+extension <CODE>"GL_ARB_occlusion_query"</CODE> or
+<CODE>"GL_NV_occlusion_query"</CODE>.
+If this is enabled (and the <CODE>"Algorithm"</CODE> is set to Goldfeather),
+DC tags need <EM>not</EM> to be present.</P>
+
+<P><CODE>"DCSampling"</CODE>: Calculates the depth complexity k using the stencil
+buffer. This makes the algorithm O(n&times;k), but with high constant costs.
+In case of the Goldfeather algorithm, the literature denotes this as
+layered Goldfeather algorithm.
+Note that this option requires a stencil buffer which must be enabled
+on the creation of a view window using additional view parameters
+(preferences option <CODE>"AddViewParams"</CODE>, see also the section on
+<A HREF="#hidprefs">hidden preference settings</A>).
+If stencil buffers are not enabled, the AyCSG plugin will automatically
+add the relevant option to the Ayam preferences but this only has an effect
+on newly created view windows (i.e.&nbsp;you might also want to restart Ayam,
+if you switch to this sampling strategy).
+If <CODE>"DCSampling"</CODE> is enabled (and the <CODE>"Algorithm"</CODE> is set to
+Goldfeather), DC tags need <EM>not</EM> to be present as the
+depth complexity of primitives is calculated internally.</P>
+
+</LI>
+<LI><CODE>"OffscreenType"</CODE>: This option allows to switch between two
+offscreen rendering techniques, PBuffers and Frame Buffer Objects;
+depending on your graphics hardware and driver, one or the other
+might work better for you.
+</LI>
+<LI><CODE>"Optimization"</CODE>: Currently unused.
+</LI>
+<LI><CODE>"CalcBBS"</CODE> determines whether bounding boxes should be
+calculated and used for speed up (not working at the moment).</LI>
+</UL>
+</P>
+
+
+<P>The following table shows an overview of the available options their
+restrictions and implied requirements.
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+<B>Algorithm</B></TD><TD><B>DCSampling</B></TD><TD><B>Concave Primitives</B></TD><TD><B>DC Tags needed</B></TD><TD><B>Requirements</B></TD></TR><TR><TD>
+Goldfeather</TD><TD>OcclusionQuery</TD><TD>Yes</TD><TD>No</TD><TD>occlusion query extension</TD></TR><TR><TD>
+Goldfeather</TD><TD>DCSampling</TD><TD>Yes</TD><TD>No</TD><TD>stencil buffer</TD></TR><TR><TD>
+Goldfeather</TD><TD>NoDCSampling</TD><TD>Yes</TD><TD>Yes</TD><TD>None</TD></TR><TR><TD>
+Automatic</TD><TD>NoDCSampling</TD><TD>Yes</TD><TD>Yes</TD><TD>None</TD></TR><TR><TD>
+SCS</TD><TD>NoDCSampling</TD><TD>No</TD><TD>No</TD><TD>None</TD></TR><TR><TD>
+SCS</TD><TD>OcclusionQuery</TD><TD>No</TD><TD>No</TD><TD>None</TD></TR><TR><TD>
+SCS</TD><TD>DCSampling</TD><TD>No</TD><TD>No</TD><TD>stencil buffer
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">AyCSG Options Overview</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The default settings are to use the Goldfeather algorithm with
+occlusion queries, as this combination allows complex CSG hierarchies,
+has widespread hardware support, requires no exotic view argument
+modifications, and also no DC tags.<SMALL TITLE="Since 1.25."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>See also:
+<I>Kirsch F. and Doellner J.: "Rendering Techniques for Hardware-Accelerated
+Image-Based CSG", in: Skala V. (ed.): Journal of WSCG'04, 221-228,
+ISSN 1213-6972</I></P>
+
+
+
+<H2><A NAME="incds"></A> <A NAME="ss8.12">8.12</A> <A HREF="ayam.html#toc8.12">Increasing Drawing Speed</A>
+</H2>
+
+<P>In case of sluggish response of the user interface of Ayam
+(not accounting for long tree update operations) several
+things to increase drawing speed can be done:
+<UL>
+<LI>Hide objects or complete object hierarchies
+using <CODE>"Hide"</CODE> in the <CODE>"Tools"</CODE> menu.</LI>
+<LI>Disable drawing of true NURBS curves/surfaces, if you can. Use the
+ControlHull display modes<BR>
+(hit <CODE>"&lt;F4&gt;"</CODE> to toggle).</LI>
+<LI>If you need to see curves/surfaces, try to increase the
+(GLU) sampling tolerance of the objects (use a value of about 60.0,
+hit <CODE>"&lt;F3&gt;"</CODE> multiple times).</LI>
+<LI>Switch the primary modelling view to draw just the selected
+object(s) or the current level.</LI>
+<LI>Iconify views you do not need, they will not be redrawn then.</LI>
+<LI>Switch off automatic redrawing of slow redrawing (e.g.&nbsp;shaded)
+views, and control their redraw by pressing <CODE>&lt;Ctrl+d&gt;</CODE> manually.</LI>
+<LI>Do not create unnecessary caps, they are trimmed NURBS patches
+that render very slowly.</LI>
+<LI>Disable <CODE>"UseMatColor"</CODE>.</LI>
+</UL>
+</P>
+
+<H2><A NAME="modsanv"></A> <A NAME="ss8.13">8.13</A> <A HREF="ayam.html#toc8.13">Modelling Without Views</A>
+</H2>
+
+<P>To work with very large/complex scenes, it may be necessary to turn off
+all views. In Ayam this can be done in the multi window GUI mode
+(see section 
+<A HREF="ayam-2.html#prefgui">GUI preference settings</A>).
+If there are many objects, it is also advisable to switch the object
+selection widget from tree view mode to list box mode (menu:
+<CODE>"Special/Toggle TreeView"</CODE>).</P>
+<P>Modelling without views does not work on Apple Mac OS X Aqua if
+GLU functionality is involved (as every GLU functionality on Mac OS X
+needs a GL context). GLU is needed for the PolyMesh and NURBS
+tesselation.</P>
+
+<H2><A NAME="defi"></A> <A NAME="ss8.14">8.14</A> <A HREF="ayam.html#toc8.14">Restrictions and Implementation Deficiencies</A>
+</H2>
+
+<P>Due to the way Ayam is implemented, several restrictions and
+deficiencies exist:
+<UL>
+<LI>Almost all strings in Ayam (scene file names, object names,
+material names) are restricted to be 7-bit ASCII. If the scene is
+not to be transported between platforms (e.g.&nbsp;between UNIX and Win32),
+using 8-bit ASCII should be fine, however.</LI>
+<LI>The maximum scene depth (i.e.&nbsp;the maximum number of nested levels)
+depends on the maximum stack size of the operating system Ayam is
+running on (due to the use of recursion almost everywhere when traversing
+the scene, e.g.&nbsp;for drawing purposes).</LI>
+<LI>Ayam internally operates on double precision math, however,
+no control over roundoff error in lengthy calculations exists.
+Saving of scene files only uses the precision dictated by the current
+standard C library. This may degrade the precision of the models.
+The usage of double precision numbers via the Tcl scripting interface or
+the GUI also can reduce model precision due to
+double-string-double-conversions (the precision of those conversion
+operations can be adjusted by the user via the <CODE>"TclPrecision"</CODE>
+preference setting, however).</LI>
+<LI>The maximum array size Ayam can handle is 2GB (this is also true
+on 64Bit platforms), therefore, the maximum NURBS patch dimensions are
+for example 8192*8192, the maximum number of control points in a PolyMesh
+or SDMesh is 89.478.485 (without vertex normals, with vertex normals
+only half as many) resulting, in the worst case, in 29.826.162 triangles
+(without vertex normals).
+None of these limits are actively enforced.</LI>
+<LI>Materials may only be assigned to complete objects, not to
+certain parts of objects.</LI>
+<LI>Undo/Redo are not possible for scene structure changes.</LI>
+<LI>In the user interface, colors are always represented as
+three 8-bit RGB values, even though the RenderMan interface allows
+e.g.&nbsp;for different color sample numbers or floating point samples
+instead of integers to be used for colors.</LI>
+<LI>There are no acceleration structures for e.g.&nbsp;drawing and object
+tree updates. This limits the number of objects that Ayam can handle
+simultaneously without big lags in redraws or after scene structure
+changes to about 1000. However, Ayam objects should be high-level objects,
+not single polygons, anyway, i.e.&nbsp;one usually gets away with about 100
+objects for moderately complex scenes, the geometry-heavy Marsrakete
+uses just 62 objects.</LI>
+<LI>It is not possible to create a X11 using executable on the Win32
+platform.</LI>
+</UL>
+</P>
+<P>Ayam user interface deficiencies:
+<UL>
+<LI>The application state is often communicated via window title
+strings only. But certain window systems do not display those
+titles well, and they are not to be seen in the single window GUI
+mode at all.</LI>
+</UL>
+</P>
+
+<H2><A NAME="fun"></A> <A NAME="ss8.15">8.15</A> <A HREF="ayam.html#toc8.15">How to Join the Fun</A>
+</H2>
+
+<P>Helping to make Ayam even better will spice up your life too.
+Here is how to do it:
+<OL>
+<LI>Write/translate tutorials.</LI>
+<LI>Translate some balloon help texts. Create a new translation script file
+by entering into the Ayam console
+<BLOCKQUOTE><CODE>
+&raquo;&thinsp;ms_create lang
+</CODE></BLOCKQUOTE>
+
+(replacing <CODE>lang</CODE> with a two character language designation like <CODE>it</CODE>
+for italian).
+Now edit/translate the new script file. Test it out by adding it to the
+<CODE>"Scripts"</CODE> preference setting.</LI>
+<LI>Create and submit example objects, scenes, and images.</LI>
+<LI>Implement custom objects like trees, landscape, sky, XSplines,
+T-Splines, or whatever you can think of. Note that the license of Ayam
+does not prevent you from implementing your custom object as shareware
+or even commercial software. However, free software is preferred for
+obvious reasons.</LI>
+<LI>Donate source to improve several critical parts of the modeler,
+some ideas are: better (more exact) lighting simulation (is this
+possible to do with OpenGL at all?), transformation widgets,
+true support for subdivision surfaces, lift some deficiencies (see above),
+import/export plugins.
+The project page of Ayam on SourceForge lists some more tasks and
+you are always welcome to discuss such matters in the public forum.</LI>
+</OL>
+</P>
+<P>Please do not implement custom objects like simple triangles or polygons.
+This would be something that really is not intended by the Ayam Team,
+and it would surely show the limits of the current design of all code
+operating on the scene structure.</P>
+<P>Ayam objects should be high-level objects!</P>
+<P>Reading the last paragraph you might think that we are a bit biased
+against polygonal models. We are not. Polygonal models are the only
+way to preview complex geometry using hardware accelerated graphics,
+for the moment. But even while RenderMan supports rendering of
+polygonal models, their use as a primitive is not recommended for
+good reasons. In other words, use polygonal models in the modeler
+as quick representation of your higher level objects, but please,
+if you are going to actually render something, do not use that
+polygonal representation.
+If you want to go a complete polygonal way instead, voila, there
+are good modelers out there.</P>
+
+<H2><A NAME="secref"></A> <A NAME="ss8.16">8.16</A> <A HREF="ayam.html#toc8.16">References</A>
+</H2>
+
+<P>Suggested reading:
+<UL>
+<LI>Advanced RenderMan: Creating CGI for Motion Pictures by
+Tony Apodaca and Larry Gritz (Morgan-Kaufmann, 1999)</LI>
+<LI>The RenderMan Companion: A Programmer's Guide
+to Realistic Computer Graphics by Steve Upstill (Addison-Wesley,
+1989)</LI>
+<LI>Textures and Modelling: A Procedural Approach by Ebert,
+Musgrave, Peachey, Perlin, and Worley (Academic Press, 1994)</LI>
+</UL>
+</P>
+<P>WWW resources related to Ayam:
+<UL>
+<LI>If you are reading this document from a local file system,
+maybe an updated version is available from the internet:
+
+<A HREF="http://ayam.sourceforge.net/docs/ayam.html">http://ayam.sourceforge.net/docs/ayam.html</A>
+
+
+
+
+</LI>
+<LI>Ayam Tutorial #1:
+
+<A HREF="http://ayam.sourceforge.net/tut1/tutorial1.html">http://ayam.sourceforge.net/tut1/tutorial1.html</A>
+
+
+
+
+</LI>
+<LI>The Ayam FAQ:
+
+<A HREF="http://ayam.sourceforge.net/faq.html">http://ayam.sourceforge.net/faq.html</A>
+
+
+
+</LI>
+</UL>
+</P>
+<P>WWW resources related to RenderMan:
+<UL>
+<LI>The RenderMan Repository: <CODE>http://www.renderman.org/</CODE><BR>
+The original resource is now unfortunately offline, try your luck with the
+
+<A HREF="https://web.archive.org/web/20111212202636/http://www.renderman.org:80/">Internet Archive copy from 12. Dec 2011</A>.</LI>
+<LI>The RenderMan Academy: <CODE>http://www.rendermanacademy.com/</CODE><BR>
+The original resource is now unfortunately offline, try your luck with the
+
+<A HREF="https://web.archive.org/web/20071219192035/http://www.rendermanacademy.com:80/">Internet Archive copy from 19. Dec 2007</A>.</LI>
+</UL>
+</P>
+
+
+
+<H2><A NAME="ss8.17">8.17</A> <A HREF="ayam.html#toc8.17">Acknowledgements</A>
+</H2>
+
+<P>First of all, I would like to express a big "Thank you!"
+to Bernd (Pink) Sieker. He is the first real Mops user
+and beta tester, who urged me during the last years
+via E-Mail and on IRC to fix this particular bug, add some
+essential features, move the lights again etc. pp. in countless
+iterations.
+Bernd, without your help I surely would not be that far, thanks!</P>
+<P>Furthermore, I would like to thank the following people:
+<UL>
+<LI>Hynek Schlawack: Ayam Makefile configuration GUI</LI>
+<LI>Florian Kirsch: OpenCSG</LI>
+<LI>Bertrand Coconnier: implementation of object picking</LI>
+<LI>Hermann Birkholz: initial implementation of the tree widget, shadow map
+support, AI, and IDR</LI>
+<LI>Frank (Copper) Pagels: MetaBalls custom object, TTF parser,
+providing a lot of good music</LI>
+<LI>Alain Siksik: French translation of documentation</LI>
+<LI>Stephen Echavia: Icons</LI>
+<LI>Larry Gritz: BMRT</LI>
+<LI>Benjamin Bederson, Brian Paul et. al.: The Togl Widget</LI>
+<LI>Jeffrey Hobbs: tkMegaWidget set</LI>
+<LI>Jan Nijtmans: Tcl/Tk PlusPatches, tcl2c, Wrap</LI>
+<LI>Georgios Petasis: tkdnd</LI>
+<LI>Thomas E. Burge: The Affine Toolkit</LI>
+<LI>Apple, Duet Development Corp.: 3DMF parser</LI>
+<LI>Mark J. Kilgard: GLUT</LI>
+<LI>Les A. Piegl and Wayne Tiller: The NURBS Book</LI>
+<LI>W. T. Hewitt and D. Yip: The NURBS Procedure Library</LI>
+<LI>Philippe Lavoie: The NURBS++ Library</LI>
+<LI>Tom Cashman: snurbs (Subdivision NURBS) library</LI>
+<LI>George W. Hart: Conway notation polyhedron generator</LI>
+<LI>Everyone involved in the development of Tcl/Tk, OpenGL, The RenderMan
+Interface</LI>
+</UL>
+</P>
+
+
+
+<H2><A NAME="ss8.18">8.18</A> <A HREF="ayam.html#toc8.18">Trademarks</A>
+</H2>
+
+<P>OpenGL (R) is a registered trademark of Silicon Graphics, Inc.</P>
+<P>The RenderMan (R) Interface Procedures and Protocol are:
+Copyright 1988, 1989, 2000 Pixar
+All Rights Reserved</P>
+<P>RenderMan (R) is a registered trademark of Pixar</P>
+<P>The Affine Libraries and Tools are
+Copyright (c) 1995, 1996, 1997, 1998 Thomas E. Burge
+All rights reserved.</P>
+<P>Affine (R) is a registered trademark of Thomas E. Burge.</P>
+<P>TIFF Software is
+Copyright (c) 1988-1997 Sam Leffler
+Copyright (c) 1991-1997 Silicon Graphics, Inc.</P>
+<P>Dime is
+Copyright (c) 1998-1999 Systems In Motion, SA
+All rights reserved.</P>
+<P>AutoCAD (R) is a registered trademark of Autodesk, Inc.</P>
+<P>DXF (R) is a registered trademark of Autodesk, Inc.</P>
+
+
+<HR>
+<A HREF="ayam-9.html">Next</A>
+<A HREF="ayam-7.html">Previous</A>
+<A HREF="ayam.html#toc8">Contents</A>
+</BODY>
+</HTML>
+
+

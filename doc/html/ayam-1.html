@@ -1,0 +1,203 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="LinuxDoc-Tools 0.9.66">
+ <TITLE>Ayam: Introduction</TITLE>
+ <LINK HREF="ayam-2.html" REL=next>
+
+ <LINK HREF="ayam.html#toc1" REL=contents>
+</HEAD>
+<BODY>
+<script type="text/javascript" src="ll.js"></script>
+<A HREF="ayam-2.html">Next</A>
+Previous
+<A HREF="ayam.html#toc1">Contents</A>
+<HR>
+<H2><A NAME="s1">1.</A> <A HREF="ayam.html#toc1">Introduction</A></H2>
+
+<P>This section contains general information about this manual and Ayam.</P>
+
+<H2><A NAME="ss1.1">1.1</A> <A HREF="ayam.html#toc1.1">About this Manual</A>
+</H2>
+
+<P>As this document is a reference manual, it is
+probably pointless to read it from the beginning to the end
+(except maybe for the next section, explaining the basics of the
+user interface).
+Instead, just look up the documentation of the things you are interested
+in via the table of contents or the index. Cross references will then
+guide you to other important parts of the documentation.
+Again: this manual has a rather large index, please use it
+(see section 
+<A HREF="ayam-9.html#index">Index</A>)!</P>
+<P>This document is organized in the following way:</P>
+<P>After this first introductory section, the user interface of Ayam is
+explained and basic handling instructions for the application are
+given in the second section.<BR>
+In the third section all interactive modelling actions are documented.<BR>
+The fourth section details all object types and object properties,
+followed by documentation on all NURBS modelling tools in the fifth
+section.<BR>
+In the sixth section the Tcl scripting interface is explained and the
+following seventh section has all information about the import and export
+plugins.<BR>
+The eighth section is the dreaded miscellaneous section that
+contains documentation not fitting elsewhere.</P>
+<P>In this manual, the following typographic conventions are used:
+<UL>
+<LI>keyboard shortcuts: <CODE>&lt;Ctrl+c&gt;</CODE> (press control <EM>and</EM>
+c key), for shortcuts like <CODE>&lt;Ctrl+Shift+t&gt;</CODE> an abbreviated
+version: <CODE>&lt;Ctrl+T&gt;</CODE> will be used;</LI>
+<LI>names (of object types, menu entries, properties, or property elements):
+<CODE>"A Name"</CODE>;</LI>
+<LI>Tcl code examples:
+<HR>
+<PRE>
+set riopt(runtime) { a b }
+</PRE>
+<HR>
+</LI>
+<LI>Object hierarchies:
+<BLOCKQUOTE><CODE>
+<PRE>
++-Parent_Object(Type)
+| |-First_Child_Object(Type)
+| |-Second_Child_Object(Type)
+| |-[Third_Child_Object_may_be_present_or_not(Type)]
+| |-Empty_Level(Level)
+| +-Sub_Level(Level)
+| | |-First_Child_Object_of_Sub_Level(Type)
+| | \-Last_Child_Object_of_Sub_Level(Type)
+| \-Last_Child_Object(Type)
++-Next_Parent_Object(Type)
+</PRE>
+</CODE></BLOCKQUOTE>
+</LI>
+<LI>Commands:<BR>
+&raquo;&thinsp;command arguments
+</LI>
+<LI>Historical annotations appear when the mouse pointer hovers over the asterisk:&nbsp;<SMALL TITLE="Since 1.19."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+</LI>
+</UL>
+</P>
+
+
+
+<H2><A NAME="ss1.2">1.2</A> <A HREF="ayam.html#toc1.2">About Ayam</A>
+</H2>
+
+<P>Ayam is a free 3D modelling environment for the RenderMan Interface,
+distributed under the modified BSD licence (no advertisement clause).</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3>History</H3>
+
+<P>Ayam is in development since 1997 and was formerly known as
+<CODE>"The Mops"</CODE>. Ayam formed the software base of the
+authors PhD work. New versions of Ayam were released in
+approximately half year intervals since.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3>Features Overview</H3>
+
+<P>Here is a short summary of the Ayam feature set:
+<UL>
+<LI>RIB (RenderMan Interface Bytestream) export and import.</LI>
+<LI>Support for NURBS curves, interpolating and approximating curves,
+(trimmed) NURBS surfaces, interpolating surfaces, bilinear and bicubic
+patches and patch meshes,
+Boxes, Quadrics (Sphere, Disk, Cylinder, Cone, Hyperboloid, Paraboloid
+and Torus), MetaBalls, polygonal meshes, subdivision meshes and more.</LI>
+<LI>All primitives may be combined with the common
+CSG-operations: Intersection, Difference, and Union.</LI>
+<LI>NURBS modelling includes extrude, revolve, sweep, birail, skin,
+and gordon operations (with caps, holes, and bevels) realized as
+Tool-Objects (see also section
+<A HREF="ayam-8.html#toolobj">The Modelling Concept Tool-Objects</A>).</LI>
+<LI>Wavefront OBJ export and import, Rhino 3DM export and import,
+AutoCAD DXF export and import, Web3D X3D export and import, Apple
+Quicktime 3D Metafile (3DMF) export and import.</LI>
+<LI>Custom objects that may freely implement their representations
+(using OpenGL and RIB) and even small GUIs to edit their type specific
+parameters may be written by the user and dynamically loaded at runtime.</LI>
+<LI>Scripting interfaces: Tcl, JavaScript, Lua.</LI>
+<LI>Script objects.</LI>
+<LI>Miscellaneous: (automatic) instancing, arbitrary number of modelling
+views, object clipboard, independent property clipboard, console,
+n-level undo.</LI>
+</UL>
+</P>
+<P>Since Ayam 1.12, dynamic loading of custom objects and certain plugins
+are also available on the Win32 platform (they were not available
+before).</P>
+<P>Ayam is primarily aimed at the Linux, IRIX, and Win32 platforms.
+On those platforms BMRT (Blue Moon Rendering Tools, a RenderMan
+compliant renderer by Larry Gritz) is available.
+Even though the distribution of BMRT is stopped it is still
+the recommended renderer for Ayam.
+Despite of this, Ayam may be used on many more platforms with any
+RenderMan compliant renderer.</P>
+<P>For platforms where BMRT is not available (e.g.&nbsp;FreeBSD or NetBSD), Ayam
+may be compiled with code from the Affine Toolkit with limited
+functionality (see also the file INSTALL).
+In this case, no parsing of slc compiled shaders will be possible.</P>
+<P>Since Ayam 1.6 it is also possible to completely replace the BMRT shader
+parsing and RIB writing code with code from the Aqsis project, thus
+completely eliminating the need for BMRT. Furthermore, shader parsing
+plugins are available for all major RenderMan compliant renderers allowing
+a tight integration of Ayam with any of those renderers.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="coords"></A> Coordinate Systems and Units</H3>
+
+<P>Ayam uses a right-handed coordinate system as used by OpenGL
+but as opposed to RenderMan (the latter is using a left-handed
+coordinate system).</P>
+<P>In the default modelling view of type <CODE>"Front"</CODE>, the positive
+X-axis points to the right, the positive Y-axis points upwards
+and the Z-axis points outside the screen, to the user.
+See also the following image.</P>
+<P>
+<CENTER>
+<IMG SRC="pics/rhcs.gif" HEIGHT=180 WIDTH=236  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Right Handed Coordinate System</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>All coordinate values in Ayam are dimensionless. It is up to the
+user to define what a value of 1.0 means: e.g.&nbsp;one centimeter
+or one meter.</P>
+<P>Due to the limited precision of floating point arithmetics used in Ayam,
+coordinate values should be defined in the range between -10.0 and 10.0
+for most accurate results.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="rats"></A> Rational Style</H3>
+
+<P>Ayam stores rational coordinates in <EM>euclidean</EM> rational style,
+i.e.&nbsp;the weight of a control point is not pre-multiplied with the
+coordinates (this will be done internally when handing the coordinates
+over for drawing or export purposes).</P>
+<P>In Ayam versions prior to 1.19 the weights were always multiplied
+with the coordinate values (i.e.&nbsp;<EM>homogeneous</EM> rational coordinates)
+to allow faster drawing with OpenGL/GLU, which expects rational
+coordinate values to be delivered this way.
+But a negative side effect of this approach was that modification
+of coordinates or weights for modelling purposes was unnecessarily
+complicated.<BR>
+Ayam can still display the coordinates in both styles, controlled by
+the preference option <CODE>"RationalPoints"</CODE> (see also section
+<A HREF="ayam-2.html#prefmodel">Modelling Preferences</A>), but internally
+the coordinates are kept in euclidean rational style.<BR>
+Scene files from older versions of Ayam are converted automatically to the
+new rational style when read by Ayam 1.19 and above, but loading of
+scene files written by Ayam 1.19 and above into older versions of
+Ayam requires manual intervention (e.g.&nbsp;by means of a script).</P>
+
+<HR>
+<A HREF="ayam-2.html">Next</A>
+Previous
+<A HREF="ayam.html#toc1">Contents</A>
+</BODY>
+</HTML>
+
+

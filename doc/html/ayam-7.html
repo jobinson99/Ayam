@@ -1,0 +1,1311 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="LinuxDoc-Tools 0.9.66">
+ <TITLE>Ayam: Import and Export</TITLE>
+ <LINK HREF="ayam-8.html" REL=next>
+ <LINK HREF="ayam-6.html" REL=previous>
+ <LINK HREF="ayam.html#toc7" REL=contents>
+</HEAD>
+<BODY>
+<script type="text/javascript" src="ll.js"></script>
+<A HREF="ayam-8.html">Next</A>
+<A HREF="ayam-6.html">Previous</A>
+<A HREF="ayam.html#toc7">Contents</A>
+<HR>
+<H2><A NAME="impex"></A> <A NAME="s7">7.</A> <A HREF="ayam.html#toc7">Import and Export</A></H2>
+
+<P>This section contains the documentation of all import and export
+modules of Ayam.</P>
+
+<H2><A NAME="impexpl"></A> <A NAME="ss7.1">7.1</A> <A HREF="ayam.html#toc7.1">Import and Export Plugin Management</A>
+</H2>
+
+<P>Except for RIB export, all import/export modules of Ayam
+are plugins that need to be loaded into the application before possible
+usage.
+Loading of an import/export plugin may be done in three different ways:
+<OL>
+<LI><EM>explicitly</EM> via the main menu entry <CODE>"File/Load Plugin"</CODE>,</LI>
+<LI><EM>automatically</EM> on application startup via a script (by adding
+e.g.&nbsp;<CODE>"plugins/loaddxfio.tcl"</CODE> to the <CODE>"Scripts"</CODE> preference
+setting),</LI>
+<LI><EM>implicitly</EM> via normal scene IO.
+<P>Implicit loading means one can simply use the main menu entries
+<CODE>"File/Open"</CODE> and <CODE>"File/Save as"</CODE> (or the corresponding
+keyboard shortcuts) and specify a filename with the appropriate
+extension (e.g.&nbsp;<CODE>".dxf"</CODE>).<SMALL TITLE="Since 1.13."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+Ayam will then load the matching plugin
+(<CODE>"dxfio"</CODE>) and will also open the import (or export) options dialog with
+the <CODE>"FileName"</CODE> option already set to the filename chosen before.
+Of course, implicit plugin loading requires that the
+<CODE>"Plugins"</CODE> preferences are correctly set.</P>
+</LI>
+</OL>
+</P>
+
+<H2><A NAME="impexft"></A> <A NAME="ss7.2">7.2</A> <A HREF="ayam.html#toc7.2">Import and Export Plugin Overview</A>
+</H2>
+
+<P>The following table lists the Ayam features supported by the various
+import plugins.</P>
+<P>
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+<B>Feature</B></TD><TD><B>RIB</B></TD><TD><B>OBJ</B></TD><TD><B>3DMF(Apple)</B></TD><TD><B>DXF</B></TD><TD><B>3DM(Rhino)</B></TD><TD><B>X3D</B></TD></TR><TR><TD>
+Quadrics</TD><TD>Yes</TD><TD>No</TD><TD>Yes</TD><TD>No</TD><TD>Yes</TD><TD>Yes</TD></TR><TR><TD>
+Trimmed NURBS</TD><TD>Yes</TD><TD>Yes</TD><TD>Yes</TD><TD>No</TD><TD>Yes</TD><TD>Yes</TD></TR><TR><TD>
+Parametrics</TD><TD>No</TD><TD>No</TD><TD>No</TD><TD>No</TD><TD>No</TD><TD>Yes</TD></TR><TR><TD>
+Curves</TD><TD>No</TD><TD>Yes</TD><TD>Yes</TD><TD>Yes</TD><TD>Yes</TD><TD>Yes</TD></TR><TR><TD>
+Transformations</TD><TD>Yes</TD><TD>No</TD><TD>Yes</TD><TD>No</TD><TD>No</TD><TD>Yes</TD></TR><TR><TD>
+Hierarchy</TD><TD>Yes</TD><TD>No</TD><TD>Yes</TD><TD>No</TD><TD>No</TD><TD>Yes</TD></TR><TR><TD>
+Instances</TD><TD>Yes</TD><TD>No</TD><TD>No</TD><TD>No</TD><TD>No</TD><TD>No</TD></TR><TR><TD>
+CSG</TD><TD>Yes</TD><TD>No</TD><TD>No</TD><TD>No</TD><TD>No</TD><TD>No
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">Ayam Features Supported by Various Import Plugins</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>Not all features of Ayam are supported in the various export
+options. The following table gives an overview of the supported
+features per export file format.</P>
+
+
+<P>
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+<B>Feature</B></TD><TD><B>RIB</B></TD><TD><B>OBJ</B></TD><TD><B>3DMF(Apple)</B></TD><TD><B>DXF</B></TD><TD><B>3DM(Rhino)</B></TD><TD><B>X3D</B></TD></TR><TR><TD>
+Quadrics</TD><TD>Yes</TD><TD>No<SUP>a</SUP></TD><TD>Some<SUP>d</SUP></TD><TD>No<SUP>b</SUP></TD><TD>Some<SUP>d</SUP></TD><TD>Some<SUP>d</SUP></TD></TR><TR><TD>
+Trimmed NURBS</TD><TD>Yes</TD><TD>Yes</TD><TD>Yes</TD><TD>No<SUP>b</SUP></TD><TD>Yes<SUP>c</SUP></TD><TD>Yes</TD></TR><TR><TD>
+Parametrics</TD><TD>No<SUP>a</SUP></TD><TD>No<SUP>a</SUP></TD><TD>No<SUP>a</SUP></TD><TD>No<SUP>b</SUP></TD><TD>Some<SUP>e</SUP></TD><TD>Some<SUP>e</SUP></TD></TR><TR><TD>
+Curves</TD><TD>No</TD><TD>Yes</TD><TD>Yes</TD><TD>Yes</TD><TD>Yes</TD><TD>Yes</TD></TR><TR><TD>
+Transformations</TD><TD>Yes</TD><TD>No</TD><TD>Yes</TD><TD>No</TD><TD>No</TD><TD>Yes</TD></TR><TR><TD>
+Hierarchy</TD><TD>Yes</TD><TD>No</TD><TD>Yes</TD><TD>No</TD><TD>No</TD><TD>Yes</TD></TR><TR><TD>
+Instances</TD><TD>Yes</TD><TD>No</TD><TD>No</TD><TD>No</TD><TD>No</TD><TD>Yes</TD></TR><TR><TD>
+CSG</TD><TD>Yes</TD><TD>No</TD><TD>No</TD><TD>No</TD><TD>No</TD><TD>No
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">Ayam Features Supported by Various Export Formats</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>
+<BLOCKQUOTE>
+<SUP>a</SUP>&thinsp;: will be converted to NURBS<BR>
+<SUP>b</SUP>&thinsp;: will be converted to PolyMeshes<BR>
+<SUP>c</SUP>&thinsp;: 3D trim curves exported as PolyLines<BR>
+<SUP>d</SUP>&thinsp;: some quadrics are converted to NURBS (refer to plugin documentation)<BR>
+<SUP>e</SUP>&thinsp;: some parametrics are converted to NURBS (refer to plugin documentation)<BR>
+</BLOCKQUOTE>
+</P>
+<P>Note that a successful export of a 3D scene to a different application
+not only depends on Ayam but also on the importing
+application. For instance, many applications claim to read files in the
+Wavefront OBJ format but only import polygonal data or, even worse, only
+triangles from such files. By default, Ayam tries to preserve as much
+information&thinsp;/&thinsp;design intent as possible in the respective
+export format leading e.g.&nbsp;to the use of NURBS in Wavefront OBJ files.
+Consequently, to successfully transfer an Ayam scene to a different
+application, in some cases, manual conversion of the NURBS objects in
+the Ayam scene to polygonal geometry may be necessary.
+There is a script provided that helps in doing this (<CODE>"topoly.tcl"</CODE>,
+see also section
+<A HREF="ayam-6.html#topolytcl">Convert Everything to Polygons</A>).</P>
+<P>Ayam is not perfect either, as in most import options material and
+animation data is completely ignored.</P>
+<P>The following table gives an overview of the file format versions
+supported by the various import and export plugins. Import of files
+from a different version should be considered unsupported.</P>
+<P>
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+<B>Format</B></TD><TD><B>RIB</B></TD><TD><B>OBJ</B></TD><TD><B>3DMF(Apple)</B></TD><TD><B>DXF</B></TD><TD><B>3DM(Rhino)</B></TD><TD><B>X3D</B></TD></TR><TR><TD>
+Version</TD><TD>3.0</TD><TD>3.0</TD><TD>1.0</TD><TD>14</TD><TD>3.0</TD><TD>3.1
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">Supported File Format Versions Overview</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The next sections document the various import and export plugins
+in detail.</P>
+
+<H2><A NAME="imprib"></A> <A NAME="ss7.3">7.3</A> <A HREF="ayam.html#toc7.3">RenderMan Interface Bytestream (RIB) Import</A>
+</H2>
+
+<P>Using the <CODE>"rrib"</CODE> (for <B>R</B>ead <B>RIB</B>) plugin RenderMan
+Interface Bytestreams of version 3.0 can be imported into Ayam.
+This plugin is based on the Affine library by Thomas E. Burge.
+Start importing a RIB using the menu entry
+<CODE>"File/Import/RenderMan RIB"</CODE>
+(if this menu entry is not available, the
+rrib plugin must be loaded using the menu entry
+<CODE>"File/Load Plugin"</CODE> first).</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3>RIB Primitive Support</H3>
+
+<P>The RRIB plugin supports import of the following geometric
+primitives:
+<UL>
+<LI>Quadrics (Sphere, Disk, Cylinder, Cone, Paraboloid, Hyperboloid, Torus),</LI>
+<LI>bilinear and bicubic patches and patch meshes,</LI>
+<LI>NURBS patches (with trim curves),</LI>
+<LI>(general) polygons and (general) polygon meshes,</LI>
+<LI>subdivision meshes (with all tags).</LI>
+</UL>
+</P>
+<P>Furthermore, the plugin supports reading of CSG, object instances,
+archives, light sources (including area-lights), arbitrary linear
+transformations (except shear transformations), arbitrary
+RiOptions and RiAttributes, shaders (except transformation
+shaders and without array arguments), arbitrary primitive variables
+(e.g.&nbsp;varying or vertex)<SMALL TITLE="Since 1.7."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+, and procedural objects and delayed read
+archives<SMALL TITLE="Since 1.9."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>.<BR>
+Texture coordinates will import as TC tags
+(see also section 
+<A HREF="ayam-4.html#tctag">TC (Texture Coordinates) Tag</A>).
+The handedness of the scene (set via RiOrientation) is tracked and
+converted to the right-handed default of Ayam.<SMALL TITLE="Since 1.22."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>The RRIB plugin does not support reading of curves, implicit surfaces
+(blobby models) and calls to the RenderMan interface that are not
+so much useful for a RIB import like e.g.&nbsp;RiMakeTexture.<BR>
+Unsupported geometric primitives and other calls to the RenderMan interface
+are silently ignored.</P>
+<P>Also note that for NURBS patches and bicubic patch meshes, points of type
+"P" will be promoted to "Pw". Points of type "Pz" are not supported
+by the plugin. Trimming of NURBS patches by clamping their knot ranges
+is also not supported (however, UMM/VMM tags will be created, that contain
+the new knot minimum and maximum values).<SMALL TITLE="Since 1.9."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+See also section 
+<A HREF="ayam-4.html#ummtag">UMM/VMM (U/V Min Max) Tag</A>.</P>
+<P>Furthermore, objects of type (general) polygon and polygon mesh will
+always be promoted to general polygon meshes.</P>
+<P>Object instances are resolved to normal objects while importing.
+Instances may be easily created again using Automatic Instancing
+(see section 
+<A HREF="ayam-8.html#ai">Automatic Instancing</A>).
+If there are multiple objects in a RenderMan object instance, an
+enclosing Level object will be created.<SMALL TITLE="Since 1.22."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>Procedural objects will not be evaluated, instead, RiProc objects
+will be created, that carry all arguments and create the same
+sequence of RIB requests upon export as was read upon import.</P>
+<P>Note that in the case of serious syntactic errors of the RIB file
+more informative error messages are printed to the stderr channel
+of Ayam (which is not redirected to the Ayam console).</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="rribopt"></A> RIB Import Options</H3>
+
+<P>The RIB import may be controlled via different options:
+<UL>
+<LI><CODE>"ScaleFactor"</CODE>, determines a global scale factor to be applied
+to all imported objects.</LI>
+<LI><CODE>"ReadFrame"</CODE>, specifies the number of the frame in the RIB
+to read. A value of -1 means, all frames are to be read. If a frame
+number is specified and this frame does not show up in the RIB as
+<CODE>"FrameBegin &lt;yournumber&gt;"</CODE> nothing will be imported.</LI>
+<LI><CODE>"ReadCamera"</CODE>: if this is switched on, a Camera object will
+be created when the RIB plugin encounters a <CODE>"WorldBegin"</CODE>. You may drag
+this camera object onto a perspective View object in Ayam after import
+to see through the camera of the imported RIB.</LI>
+<LI><CODE>"ReadOptions"</CODE>, controls whether RiOptions are
+to be imported from the RIB to the scene. Note that those
+RiOptions will overwrite the current global settings in the Ayam scene.</LI>
+<LI><CODE>"ReadLights"</CODE>, if this is enabled the lights from the
+RIB will be imported.</LI>
+<LI><CODE>"ReadMaterial"</CODE>, controls whether material objects
+are to be created for the imported objects. All material objects
+are created in a special level named <CODE>"Materials"</CODE> in the top level
+of the scene. The plugin tries to keep the number of generated
+material objects as low as possible by comparing with already
+existing materials in this level. This also works with material
+objects that exist before the RRIB plugin is invoked (as long as
+they reside in this special level).</LI>
+<LI><CODE>"ReadPartial"</CODE>, this option is useful if you want to
+import partial RIBs (e.g.&nbsp;archives) that do not
+contain a <CODE>"WorldBegin"</CODE>.
+Be careful with this option (i.e.&nbsp;use it only if reading of a RIB fails),
+as it switches reading of all types of objects on, regardless of
+the RIB structure.</LI>
+<LI><CODE>"ReadSTrim"</CODE> if switched off, no simple trims (trims that only
+run along the border of a NURBS patch and actually do not trim the surface)
+will be imported if they are the only trim curves.</LI>
+<LI><CODE>"RescaleKnots"</CODE> allows to rescale the knot vectors of
+NURBS patches and trim curves so that the distances between different
+knots are not smaller than the given value. Using a value of 1.0e-04 leads
+to NURBS that may be safely drawn using GLU. The default value 0.0 means
+no scaling.</LI>
+<LI><CODE>"Progress"</CODE>: displays the progress of the import in terms of
+line numbers of the file to import (archives do not advance the
+progress).</LI>
+</UL>
+</P>
+
+<H2><A NAME="exprib"></A> <A NAME="ss7.4">7.4</A> <A HREF="ayam.html#toc7.4">RenderMan Interface Bytestream (RIB) Export</A>
+</H2>
+
+<P>RenderMan Interface Bytestream (RIB) export is the most important export
+module of Ayam and in fact justifies its existence. All features of the
+Ayam object and scene structure are supported (hierarchy, CSG, instances,
+materials, lights etc.).
+Furthermore, Ayam also supports direct rendering from view windows,
+rendering in multiple passes for shadow maps, and permanent previews
+(where a RenderMan renderer is directly coupled to an Ayam view window).</P>
+<P>The documentation on RIB export is spread over the Ayam documentation,
+this section gives some general information and otherwise just points
+to the real documentation sections.</P>
+<P>RIB export is always available, it does not need a plugin to be loaded.
+The corresponding main menu entry is <CODE>"File/Export/RenderMan RIB"</CODE>
+and the corresponding keyboard shortcut is <CODE>&lt;Ctrl+E&gt;</CODE>.
+To control the RIB export and rendering, many options exist that are
+documented in section 
+<A HREF="ayam-2.html#prefrib">RIB-Export preferences</A>.</P>
+<P>There are also some special ways to export RIBs available in the
+main menu: <CODE>"Special/RIB-Export"</CODE>; this is documented in
+section 
+<A HREF="ayam-2.html#mmspecial">Special Menu</A>.</P>
+<P>Ayam can not only export scenes as RIB but also call various
+RenderMan renderers to directly render the exported RIB files to
+the screen or to an image file.
+Documentation on how to export/render directly from a view window
+can be found in section 
+<A HREF="ayam-2.html#vmview">View Menu</A>.</P>
+<P>Invoking RIB export is also possible using the scripting interface,
+see the section 
+<A HREF="ayam-6.html#scwrib">RIB export</A> for more information.</P>
+<P>RIB export always honors <CODE>"NoExport"</CODE> tags and the <CODE>"HideChildren"</CODE>
+attribute.</P>
+
+<H2><A NAME="impmops"></A> <A NAME="ss7.5">7.5</A> <A HREF="ayam.html#toc7.5">Mops Import</A>
+</H2>
+
+<P>In older versions of Ayam, Mops scenes could be imported using the main
+menu entry: <CODE>"File/Import Mops"</CODE>. Since Ayam 1.13 Mops import is
+a plugin named <CODE>"mopsi"</CODE>. After loading the plugin, Mops scenes
+may be imported using the main menu entry <CODE>"File/Import/Mops"</CODE>.</P>
+<P>Ayam is able to import most elements of a Mops scene except for
+RiAttributes attached to arbitrary geometric objects,
+because attributes and shaders are managed by material objects in Ayam.
+However, if a Mops object has a surface or displacement shader,
+a material object with the shaders from the Mops object
+and its RiAttributes will be automatically created and linked with
+the geometric object while importing. Only Mops objects
+with surface or displacement shaders are considered because
+otherwise a material object would have to be created for every
+imported Mops object.
+The material objects are named <CODE>"mat0"</CODE>, <CODE>"mat1"</CODE> and so on.
+Make sure, that the current scene in Ayam does not contain material
+objects with those names, otherwise Mops import will not be able to
+create material objects for the scene to import.</P>
+<P>The import options <CODE>"ResetDM"</CODE> and <CODE>"ResetST"</CODE> control,
+whether GLU display mode and tolerance settings (see sections
+<A HREF="ayam-4.html#ncattr">NCurveAttr</A>,
+and 
+<A HREF="ayam-4.html#npattr">NPatchAttr</A>
+for more information about display mode and tolerance) of NURBS primitives
+should be reset to using global preference values (the default in Ayam)
+instead of using the values from the Mops scene file.</P>
+
+<H2><A NAME="impdxf"></A> <A NAME="ss7.6">7.6</A> <A HREF="ayam.html#toc7.6">AutoCAD DXF Import</A>
+</H2>
+
+<P>The <CODE>"dxfio"</CODE> plugin allows to import AutoCAD DXF (drawing interchange
+format) files into Ayam with the help of the Dime library (from Systems in
+Motion, Kongsberg SIM AS, Norway). This plugin only supports files
+up to version 14 of the file format.</P>
+<P>Start importing a DXF file using the main menu entry
+<CODE>"File/Import/AutoCAD DXF"</CODE>
+(if this menu entry is not available, the
+dxfio plugin must be loaded using the menu entry
+<CODE>"File/Load Plugin"</CODE> first).</P>
+<P>Note that the entire DXF file is read into memory before any geometry is
+created.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3>DXF Entity Support</H3>
+
+<P>The DXF import plugin supports reading of the following DXF entities:
+3DFACE, ARC, CIRCLE, ELLIPSE, LINE, SOLID, TRACE, BLOCK, INSERT,
+POLYLINE, LWPOLYLINE, and SPLINE. Entities not listed here will
+be silently ignored.</P>
+<P>3DFACE entities are imported as PolyMesh objects if either only the first
+three points are unique (the entity describes a triangle) or the face
+is planar else as BPatch objects.</P>
+<P>ARC, CIRCLE, and ELLIPSE entities will be read as NCircle objects with
+corresponding <CODE>"TMin"</CODE>, <CODE>"TMax"</CODE> parameters (for arcs and ellipses)
+and scale transformation values (for ellipses) set.</P>
+<P>POLYLINE entities are completely supported:
+<UL>
+<LI>Polylines will be imported as NCurve objects;</LI>
+<LI>PolyMeshes and PolyFaceMeshes will be imported as PolyMesh objects;</LI>
+<LI>B-Spline and Bezier surfaces will be imported as NPatch objects.</LI>
+</UL>
+</P>
+<P>LINE, LWPOLYLINE, and SPLINE entities will be imported as NCurve objects.</P>
+<P>SOLID and TRACE entities are imported as BPatch objects.</P>
+<P>BLOCK and INSERT entities will be converted to appropriate master (referenced)
+and instance objects (references).</P>
+<P>Bulges and extrusions are <EM>not</EM> supported.</P>
+<P>The following table comprehensively lists the supported DXF entities and
+their Ayam counterparts that will be created upon import.</P>
+<P>
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+<B>DXF Entity</B></TD><TD><B>Ayam Object</B></TD></TR><TR><TD>
+3DFACE</TD><TD>PolyMesh&thinsp;/&thinsp;BPatch</TD></TR><TR><TD>
+ARC</TD><TD>NCircle</TD></TR><TR><TD>
+CIRCLE</TD><TD>NCircle</TD></TR><TR><TD>
+ELLIPSE</TD><TD>NCircle</TD></TR><TR><TD>
+LINE</TD><TD>NCurve</TD></TR><TR><TD>
+SOLID</TD><TD>BPatch</TD></TR><TR><TD>
+TRACE</TD><TD>BPatch</TD></TR><TR><TD>
+POLYLINE</TD><TD>NCurve&thinsp;/&thinsp;PolyMesh&thinsp;/&thinsp;NPatch</TD></TR><TR><TD>
+LWPOLYLINE</TD><TD>NCurve</TD></TR><TR><TD>
+SPLINE</TD><TD>NCurve</TD></TR><TR><TD>
+INSERT</TD><TD>Instance
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">DXF Import Conversion Table</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="impdxfopt"></A> DXF Import Options</H3>
+
+<P>The DXF import may be controlled via different options:
+<UL>
+<LI><CODE>"FileName"</CODE>: is the path and name of the DXF file to import.</LI>
+<LI><CODE>"ReadCurves"</CODE>: if this is disabled, no freeform curves will
+be imported.</LI>
+<LI><CODE>"ScaleFactor"</CODE>: allows to apply a scaling factor to all
+imported objects.</LI>
+<LI><CODE>"ReadLayers"</CODE>: using this import option, a single layer or
+a range of layers may be selected for import.
+By default, all entities from all layers will be imported.</LI>
+<LI><CODE>"RescaleKnots"</CODE>: allows to rescale the knot vectors of imported
+NURBS curves so that the distances between different knots are not smaller
+than the given value. A <CODE>"RescaleKnots"</CODE> value of 1.0e-04 leads to NURBS
+that may be safely drawn using GLU. The default value 0.0 means no scaling.</LI>
+<LI><CODE>"Progress"</CODE>: displays the progress of the import;
+from 0 to 50 percent, Dime is reading the DXF file; from 50 to 100 percent,
+the dxfio plugin is converting the DXF entities to Ayam objects.</LI>
+</UL>
+</P>
+
+<H2><A NAME="expdxf"></A> <A NAME="ss7.7">7.7</A> <A HREF="ayam.html#toc7.7">AutoCAD DXF Export</A>
+</H2>
+
+<P>The <CODE>"dxfio"</CODE> plugin allows to export Ayam scenes to AutoCAD DXF
+(drawing interchange format) files with the help of the Dime library
+(from Systems in Motion, Kongsberg SIM AS, Norway).</P>
+<P>Start exporting to a DXF file using the main menu entry
+<CODE>"File/Export/AutoCAD DXF"</CODE>
+(if this menu entry is not available, the
+dxfio plugin must be loaded using the menu entry
+<CODE>"File/Load Plugin"</CODE> first).</P>
+<P>Note that the entire Ayam scene is converted to a corresponding
+DXF model in memory before it is written to the DXF file.</P>
+<P>Ayam only creates entities of type POLYLINE and SPLINE and misses very
+much information that could be saved to other formats (e.g.&nbsp;normals and
+texture coordinates). Therefore, the DXF export format should be avoided
+if possible.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3>Ayam Object and Properties Support</H3>
+
+<P>The export functionality of the dxfio plugin currently covers
+export of all boxes, quadrics, NURBS, PolyMeshes, instances, clones, script
+objects (of type <CODE>"Create"</CODE> or <CODE>"Modify"</CODE>), and objects that
+may be converted to NURBS curves or surfaces or to PolyMeshes.
+However, all boxes and quadrics will always be converted to NURBS surfaces
+and NURBS surfaces will be tesselated to PolyMeshes for export.</P>
+<P>The scene hierarchy and CSG operations are fully ignored, all objects will
+be written as if combined by the union operator.</P>
+<P>All transformations will be applied to the control points of the
+exported objects.</P>
+<P>PolyMesh objects will be exported to POLYLINE (subtype PolyFaceMesh) entities.
+If a PolyMesh object contains faces with holes or with more than four
+points, it will be tesselated for export. Eventually existing normals
+will not be exported.</P>
+<P>NURBS curves will be exported as SPLINE entities.</P>
+<P>Instance objects are resolved for export.</P>
+<P>Light sources, as well as Cameras, Views, and Materials are not exported.</P>
+<P>Clamping the knot ranges of NURBS curves or surfaces via UMM/VMM tags is
+not supported. Texture coordinates will not be exported.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="expdxfopt"></A> DXF Export Options</H3>
+
+<P>The DXF export may be controlled via different options:
+<UL>
+<LI><CODE>"FileName"</CODE>: is the path and name of the DXF file to export to.</LI>
+<LI><CODE>"ScaleFactor"</CODE>: allows to apply a scaling factor to all
+exported objects.</LI>
+<LI><CODE>"WriteSelected"</CODE>: exports only the selected objects.</LI>
+<LI><CODE>"ObeyNoExport"</CODE>: ignores all objects with <CODE>"NoExport"</CODE> tags.</LI>
+<LI><CODE>"IgnoreHidden"</CODE>: ignores all hidden objects.</LI>
+<LI><CODE>"WriteCurves"</CODE>: if this is disabled, no freeform curves will
+be exported.</LI>
+<LI><CODE>"TopLevelLayers"</CODE>: controls whether the top level Level
+objects in the Ayam scene to be exported should be interpreted as layers.
+If this option is enabled, all objects in these levels will be placed on
+the respective layer. Objects that are not in one of those levels
+will be written to the default layer. Furthermore, top level object names
+will become layer names.</LI>
+<LI><CODE>"Progress"</CODE>: displays the progress of the export;
+from 0 to 50 percent, the dxfio plugin is converting the Ayam objects
+to DXF entities; from 50 to 100 percent, Dime is writing the DXF file.</LI>
+</UL>
+</P>
+
+<H2><A NAME="impwav"></A> <A NAME="ss7.8">7.8</A> <A HREF="ayam.html#toc7.8">Wavefront OBJ Import</A>
+</H2>
+
+<P>Since Ayam 1.8.3 a Wavefront OBJ (version 3.0) import facility is available
+and since Ayam 1.13 it is a plugin (<CODE>"objio"</CODE>) that needs to be loaded
+before import.
+The corresponding main menu entry is <CODE>"File/Import/Wavefront OBJ"</CODE>
+(if this menu entry is not available, the objio plugin must be loaded
+using the menu entry <CODE>"File/Load Plugin"</CODE> first).</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3>Wavefront OBJ Statement Support</H3>
+
+<P>Wavefront OBJ import supports reading of polygonal lines and faces with vertex
+normals and texture coordinates (the latter are read as primitive variable
+tags); statements: <CODE>v, vt, vn, l, f</CODE>.</P>
+<P>Furthermore, freeform curves and surfaces (NURBS) with trim curves and with
+texture coordinates (again read as primitive variable tags) are supported;
+statements: <CODE>vp, cstype, deg, curv, curv2, surf, parm, trim, hole, end</CODE>.</P>
+<P>Freeform curves and surfaces of basis type bmatrix, cardinal and taylor
+are currently not supported. Also, import of special curves and
+points (e.g.&nbsp;curve on surface) is currently not supported. Furthermore,
+trimming of freeform curves and surfaces by clamping their knot ranges
+is not supported (however, proper UMM/VMM
+tags will be created, that contain the new knot minimum and maximum
+values).<SMALL TITLE="Since 1.9."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+See also section 
+<A HREF="ayam-4.html#ummtag">UMM/VMM (U/V Min Max) Tag</A>.
+No material and grouping information will be imported.
+Unsupported statements will be silently ignored.</P>
+<P>Wavefront OBJ import expects the file to be syntactically correct.
+The plugin is not very good in detecting and reporting errors. If the
+import fails, you might want to use a third party tool first to check
+whether the Wavefront OBJ file is valid at all.</P>
+<P>Furthermore, note that the objio plugin supports Wavefront version 3.0
+syntax only, files that use older syntax will not be imported correctly.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="impwavopt"></A> Wavefront OBJ Import Options</H3>
+
+<P>The following options control the Wavefront OBJ import process:
+<UL>
+<LI><CODE>"FileName"</CODE>: is the name of the Wavefront OBJ file (version 3.0)</LI>
+<LI><CODE>"MergeFaces"</CODE>: controls whether consecutive polygonal
+faces should be merged into a single PolyMesh object for import.
+Note that the merged PolyMesh objects probably needs to be optimized if there
+are vertices used by multiple faces
+(main menu <CODE>"Tools/PolyMesh/Optimize"</CODE>).</LI>
+<LI><CODE>"MergePVTags"</CODE>: controls whether the PV tags of PolyMesh
+objects should be merged as well if they are subject to automatic
+merging (see above).</LI>
+<LI><CODE>"ReadCurves"</CODE>: if this is disabled, no freeform curves will
+be imported. This option does <EM>not</EM> influence the import of trim
+curves.</LI>
+<LI><CODE>"ReadSTrim"</CODE>: if switched off, no simple trims (trims that only
+run along the border of a NURBS patch and actually do not trim the surface)
+will be imported if they are the only trim curves.</LI>
+<LI><CODE>"RescaleKnots"</CODE>: allows to rescale the knot vectors of
+NURBS curves, patches, and trim curves so that the distances between different
+knots are not smaller than the given value. A <CODE>"RescaleKnots"</CODE> value of
+1.0e-04 leads to NURBS that may be safely drawn using GLU.
+The default value 0.0 means no scaling.</LI>
+<LI><CODE>"ScaleFactor"</CODE>: allows to apply a scaling factor to all
+imported objects.</LI>
+<LI><CODE>"RationalStyle"</CODE>: determines how rational coordinates are
+stored in the file to be imported
+(see also section 
+<A HREF="ayam-1.html#rats">Rational Style</A>);</LI>
+<LI><CODE>"Progress"</CODE>: displays the progress of the import;
+from 0 to 100 percent, the objio plugin is reading lines from the
+Wavefront OBJ file and creating Ayam objects. The number may be a
+bit off occasionally, as the progress meter just counts lines and
+assumes a fixed medium line length of 28 characters.</LI>
+</UL>
+</P>
+
+<H2><A NAME="expwav"></A> <A NAME="ss7.9">7.9</A> <A HREF="ayam.html#toc7.9">Wavefront OBJ Export</A>
+</H2>
+
+<P>Since Ayam 1.7, it is possible to export scenes or objects to the Wavefront
+OBJ format (version 3.0). Since Ayam 1.13, Wavefront OBJ export is a plugin
+(<CODE>"objio"</CODE>) that needs to be loaded before export.
+The corresponding main menu entry is <CODE>"File/Export/Wavefront OBJ"</CODE>
+(if this menu entry is not available, the objio plugin must be loaded
+using the menu entry <CODE>"File/Load Plugin"</CODE> first).</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3>Ayam Object and Properties Support</H3>
+
+<P>The Wavefront export currently supports the following
+objects:
+<UL>
+<LI>NCurve and objects that may be converted to NCurve
+objects (e.g.&nbsp;ICurve, ConcatNC, ExtrNC),</LI>
+<LI>NPatch (with trim curves) and objects that may be converted
+to NPatch objects (e.g.&nbsp;BPatch, PatchMesh, Revolve, Sweep, Extrude, Skin,
+Cap, Gordon, Birail1, Birail2, Text),</LI>
+<LI>Quadrics will be automatically converted to NURBS
+surfaces,<SMALL TITLE="Since 1.8.3."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></LI>
+<LI>PolyMesh and objects that may be converted to PolyMesh objects
+(e.g.&nbsp;MetaObj), faces with holes are not supported by the Wavefront OBJ
+format and will be tesselated to triangles for export automatically,</LI>
+<LI>Box (as six polygonal faces),</LI>
+<LI>Instance, Clone, Mirror; those will be resolved to normal objects
+for export as Wavefront OBJ does not support referenced geometry.</LI>
+</UL>
+
+Since the Wavefront OBJ format does not support separate transformation
+attributes, all transformation attributes will be used to transform the
+coordinate values (the control points) of the exported objects.</P>
+<P>The hierarchy of the Ayam scene will be squashed to one level,
+transformations will be properly delegated to the child objects.</P>
+<P>CSG operations are fully ignored, all objects will be written
+as if combined by the union operator.</P>
+<P>The Wavefront OBJ export, currently, ignores all material information.
+Only geometry information is written to the OBJ file.
+However, texture coordinates from primitive variable
+tags will be exported.<SMALL TITLE="Since 1.8.3."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>UMM/VMM tags are used to trim the knot vectors of
+exported NURBS objects.<SMALL TITLE="Since 1.9."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+See also section 
+<A HREF="ayam-4.html#ummtag">UMM/VMM (U/V Min Max) Tag</A>.</P>
+<P>Light sources, as well as Cameras, and Views will not be exported.</P>
+<P>Object names will be exported as <CODE>o</CODE> statements.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="expwavopt"></A> Wavefront OBJ Export Options</H3>
+
+<P>The following parameters control the Wavefront OBJ export:
+<UL>
+<LI><CODE>"FileName"</CODE>: is the filename of the Wavefront OBJ file;</LI>
+<LI><CODE>"WriteSelected"</CODE>: exports only the currently selected object(s);</LI>
+<LI><CODE>"TessPoMesh"</CODE> automatically tesselates all PolyMesh objects
+to triangles for export;</LI>
+<LI><CODE>"WriteCurves"</CODE>: toggles writing of NURBS curves and NURBS
+curve providing objects to the exported Wavefront OBJ file (This option does
+<EM>not</EM> influence the export of trim curves.);</LI>
+<LI><CODE>"ScaleFactor"</CODE>: allows to apply a scaling factor to all
+exported objects;</LI>
+<LI><CODE>"RationalStyle"</CODE>: determines how to write rational coordinates
+(see also section 
+<A HREF="ayam-1.html#rats">Rational Style</A>);</LI>
+<LI><CODE>"Progress"</CODE>: displays the progress of the export;
+from 0 to 100 percent, the objio plugin is writing the Ayam objects
+to the Wavefront OBJ file.</LI>
+</UL>
+</P>
+
+<H2><A NAME="imp3dmf"></A> <A NAME="ss7.10">7.10</A> <A HREF="ayam.html#toc7.10">3DMF (Apple) Import</A>
+</H2>
+
+<P>Using the <CODE>"mfio"</CODE> plugin scenes may be imported from the 3DMF format
+(QuickDraw 3D Metafile)
+from Apple with the help of a free 3DMF parser created
+by Duet Development Corp. and distributed by Apple.
+Start importing a 3DMF file using the menu entry
+<CODE>"File/Import/Apple 3DMF"</CODE> (if this menu entry is not available,
+the mfio plugin must be loaded using the menu entry
+<CODE>"File/Load Plugin"</CODE> first).</P>
+<P>The mfio plugin only supports the 3DMF version 1.0!</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3>3DMF Primitive and Attribute Support</H3>
+
+<P>The mfio plugin supports import of the following geometric primitives:
+<UL>
+<LI>Polyline, Triangle, TriGrid, Polygon, general Polygon, Box,</LI>
+<LI>NURBS curve, NURBS surface (with trim curves),</LI>
+<LI>Ellipsoid, Cylinder, Cone, Disk, and Torus.</LI>
+</UL>
+</P>
+<P>The following table comprehensively lists the supported 3DMF primitives
+and their Ayam counterparts that will be created upon import.</P>
+<P>
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+<B>3DMF Primitive</B></TD><TD><B>Ayam Object</B></TD></TR><TR><TD>
+Polyline</TD><TD>NCurve</TD></TR><TR><TD>
+Triangle</TD><TD>PolyMesh</TD></TR><TR><TD>
+TriGrid</TD><TD>PolyMesh</TD></TR><TR><TD>
+Polygon</TD><TD>PolyMesh</TD></TR><TR><TD>
+Box</TD><TD>Box</TD></TR><TR><TD>
+Ellipsoid</TD><TD>Sphere</TD></TR><TR><TD>
+Cylinder</TD><TD>Cylinder</TD></TR><TR><TD>
+Cone</TD><TD>Cone</TD></TR><TR><TD>
+Disk</TD><TD>Disk</TD></TR><TR><TD>
+Torus</TD><TD>Torus</TD></TR><TR><TD>
+NURBCurve</TD><TD>NCurve</TD></TR><TR><TD>
+NURBCurve2D</TD><TD>NCurve</TD></TR><TR><TD>
+NURBPatch</TD><TD>NPatch</TD></TR><TR><TD>
+Container</TD><TD>Level
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">3DMF (Apple) Import Conversion Table</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The following transformations are supported in 3DMF import:
+<UL>
+<LI>Scale,</LI>
+<LI>Translate,</LI>
+<LI>Rotate, RotateQuaternion, RotateAxis (if axis is X, Y, or Z).</LI>
+</UL>
+</P>
+<P>Furthermore, the import plugin reads the structure of the scene from Container
+objects. Reference objects will be resolved to normal objects while importing.
+Instances may be easily created again using Automatic Instancing
+(see section 
+<A HREF="ayam-8.html#ai">Automatic Instancing</A>).</P>
+<P>Support for import of lights, camera attributes as well as
+material attributes other than material color and opacity is currently
+not available.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="imp3dmfopt"></A> 3DMF Import Options</H3>
+
+<P>The following parameters, additionally, control the 3DMF import:
+<UL>
+<LI><CODE>"FileName"</CODE>: is the filename of the 3DMF file to import;</LI>
+<LI><CODE>"ScaleFactor"</CODE>: The <CODE>"ScaleFactor"</CODE> option allows to apply a
+scaling factor to all imported objects.</LI>
+<LI><CODE>"ReadCurves"</CODE>:
+If the <CODE>"ReadCurves"</CODE>: import option is switched off, no curves will be
+imported. This option does <EM>not</EM> influence the import of trim curves.</LI>
+<LI><CODE>"ReadSTrim"</CODE> if switched off, no simple trims (trims that only
+run along the border of a NURBS patch and actually do not trim the surface)
+will be imported if they are the only trim curves.</LI>
+<LI><CODE>"RescaleKnots"</CODE>: allows to rescale the knot vectors of
+NURBS curves, patches, and trim curves so that the distances between different
+knots are not smaller than the given value. A <CODE>"RescaleKnots"</CODE> value of
+1.0e-04 leads to NURBS that may be safely drawn using GLU.
+The default value 0.0 means no scaling.</LI>
+</UL>
+</P>
+
+<H2><A NAME="exp3dmf"></A> <A NAME="ss7.11">7.11</A> <A HREF="ayam.html#toc7.11">3DMF (Apple) Export</A>
+</H2>
+
+<P>Using the <CODE>"mfio"</CODE> plugin scenes may be exported to the 3DMF format
+(QuickDraw 3D Metafile)
+from Apple with the help of a free 3DMF parser created by Duet
+Development Corp. and distributed by Apple. Start exporting to a
+3DMF file using the menu entry <CODE>"File/Export/Apple 3DMF"</CODE>
+(if this menu entry is not available, the mfio plugin must be loaded
+using the menu entry <CODE>"File/Load Plugin"</CODE> first).</P>
+<P>The mfio plugin only supports the 3DMF version 1.0!</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3>Ayam Object and Properties Support</H3>
+
+<P>The mfio export supports the following geometric objects:
+<UL>
+<LI>NURBS curve and NURBS surface (with trim curves) including all
+NURBS curve/surface providing objects, such as ICurve, Skin etc.,</LI>
+<LI>Sphere, Disk, Cone, Cylinder, Torus,</LI>
+<LI>Box, and PolyMesh.</LI>
+</UL>
+</P>
+<P>Objects of types not listed here will be converted to NURBS
+(if possible) or to PolyMesh objects automatically for export.</P>
+<P>All transformations are supported and will be written as
+Translate, Rotate, and Scale transformations, respectively.</P>
+<P>All Instance objects will be resolved for export.
+Level objects (regardless of type) will be written as Container objects.</P>
+<P>If an object has a material, the color and opacity of the material
+will be written as DiffuseColor and TransparencyColor, if the respective
+red color component has a value different from -1.</P>
+<P>Support for export of lights, camera attributes as well as
+material attributes other than material color and opacity is currently
+not available.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3>Trim Curves Support</H3>
+
+<P>The 3DMF file format specification for version 1.0 is unfortunately very
+terse, when it comes to trim curves. There is no clearly defined way of
+specifying them in conjunction with their respective NURBS surface.
+Furthermore, the method presented here is the
+only way that works with the free provided 3DMF parser.
+Trimmed NURBS patches will be written by Ayam like this:
+<BLOCKQUOTE><CODE>
+<PRE>
+Container (
+        NURBPatch ( ...
+        )
+        [transformations &amp; attributes of NURBS patch]
+        TrimCurves ( )
+        NURBCurve2D ( ...
+        )
+        Container (
+                NURBCurve2D ( ...
+                )
+                NURBCurve2D ( ...
+                )
+        )
+)
+</PRE>
+</CODE></BLOCKQUOTE>
+
+<OL>
+<LI>There will always be an enclosing <CODE>Container</CODE> for a NURBS patch.</LI>
+<LI>If the patch is trimmed, after the <CODE>NURBPatch</CODE> or potentially present
+transformations and attributes of the patch, a <CODE>TrimCurves</CODE> element
+will follow (which does <EM>not</EM> contain the trim curves but is empty).</LI>
+<LI>The trim curves follow now as 2D NURBS curves (<CODE>NURBCurve2D</CODE> objects
+for simple trims) or <CODE>Container</CODE> objects (for trim loops) with
+multiple 2D NURBS curves until the end of the enclosing container.</LI>
+<LI>The transformation attributes of the trim curves will be applied to
+the NURBS curve control points for export (there will be no transformations
+or attributes for the trim curve elements).</LI>
+</OL>
+</P>
+<P>The Ayam 3DMF import expects the trim curves to be delivered in this
+manner and can then indeed read them back accurately.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="exp3dmfopt"></A> 3DMF Export Options</H3>
+
+<P>The following parameters, additionally, control the 3DMF export:
+<UL>
+<LI><CODE>"FileName"</CODE>: is the filename of the 3DMF file to export;</LI>
+<LI><CODE>"WriteBinary"</CODE>: This option controls whether the text version
+or the binary version of the 3DMF file format should be used for export.</LI>
+<LI><CODE>"ScaleFactor"</CODE>:
+This option allows to apply a scaling factor to all
+exported objects.</LI>
+<LI><CODE>"WriteSelected"</CODE>: exports only the selected objects.</LI>
+<LI><CODE>"WriteCurves"</CODE>: If this option is disabled,
+no curves will be written to the exported 3DMF file. This option does
+<EM>not</EM> influence the export of trim curves.</LI>
+</UL>
+</P>
+
+<H2><A NAME="imprhino"></A> <A NAME="ss7.12">7.12</A> <A HREF="ayam.html#toc7.12">3DM (Rhino) Import</A>
+</H2>
+
+<P>Since version 1.8.2 Ayam contains a plugin named <CODE>"onio"</CODE> that may import
+scenes from the Rhino 3DM file format using the OpenNURBS toolkit
+(hence the name of the plugin onio &ndash; <B>O</B>pen<B>N</B>URBS <B>IO</B>)
+by Robert McNeel &amp; Associates.</P>
+<P>Start importing from a Rhino 3DM file using the menu entry
+<CODE>"File/Import/Rhino 3DM"</CODE>
+(if this menu entry is not available, the
+onio plugin must be loaded using the menu entry
+<CODE>"File/Load Plugin"</CODE> first).</P>
+<P>The onio plugin only supports import of 3DM files of version 3.0
+and earlier.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3>3DM Object Support</H3>
+
+<P>The import functionality of the onio plugin currently covers
+import of all NURBS and BRep objects and objects that may
+be converted to NURBS with routines from the OpenNURBS toolkit
+(those objects are: PolylineCurve, PolyCurve, LineCurve, ArcCurve,
+CurveOnSurface, RevSurface, SumSurface, and PlaneSurface).
+References will be resolved. Names will be imported, but
+converted to an ASCII representation. Since Ayam 1.8.3
+also Mesh objects will be imported to PolyMesh objects, texture
+coordinates will be read and appropriate PV tags will be
+created for them.</P>
+<P>The following table comprehensively lists the supported Rhino
+3DM primitives and their Ayam counterparts that will be created
+upon import.</P>
+<P>
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+<B>Rhino 3DM Primitive</B></TD><TD><B>Ayam Object</B></TD></TR><TR><TD>
+PolyLineCurve</TD><TD>NCurve</TD></TR><TR><TD>
+PolyCurve</TD><TD>NCurve</TD></TR><TR><TD>
+LineCurve</TD><TD>NCurve</TD></TR><TR><TD>
+ArcCurve</TD><TD>NCurve</TD></TR><TR><TD>
+CurveOnSurface</TD><TD>NCurve</TD></TR><TR><TD>
+Mesh</TD><TD>PolyMesh</TD></TR><TR><TD>
+NurbsCurve</TD><TD>NCurve</TD></TR><TR><TD>
+NurbsSurface</TD><TD>NPatch</TD></TR><TR><TD>
+RevSurface</TD><TD>NPatch</TD></TR><TR><TD>
+SumSurface</TD><TD>NPatch</TD></TR><TR><TD>
+PlaneSurface</TD><TD>NPatch
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">3DM (Rhino) Import Conversion Table</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="imp3dmopt"></A> 3DM Import Options</H3>
+
+<P>The 3DM import process is controlled by the following options:
+<UL>
+<LI><CODE>"ScaleFactor"</CODE>: This option allows to apply a
+scaling factor to all imported objects.</LI>
+<LI><CODE>"Accuracy"</CODE>: This option controls the
+tolerance of OpenNURBS internal operations, in this case the value is
+mostly used for conversion operations to the NURBS form.</LI>
+<LI><CODE>"ReadCurves"</CODE>: If this option is
+switched off, no curves will be imported. This option does <EM>not</EM>
+influence the import of trim curves.</LI>
+<LI><CODE>"ReadLayers"</CODE>: Using this import option, a single layer or a range
+of layers may be selected for import.
+By default, all objects from all layers will be imported.</LI>
+<LI><CODE>"ReadSTrim"</CODE>: This option helps to ignore single bounding
+trim loops of NURBS surfaces.
+Importing this single bounding trim loop would just make the Ayam scene
+more complex than needed in many cases.
+If <CODE>"ReadSTrim"</CODE> is switched off, no simple trims (trims that only
+run along the border of a NURBS patch and actually do not trim the surface)
+will be imported if they are the only trim curves.<BR>
+This option replaces the <CODE>"IgnoreFirstTrim"</CODE> import option
+available before Ayam 1.13 with slightly different semantics.</LI>
+<LI><CODE>"RescaleKnots"</CODE>: allows to rescale the knot vectors of
+NURBS curves, patches, and trim curves so that the distances between different
+knots are not smaller than the given value. A <CODE>"RescaleKnots"</CODE> value of
+1.0e-04 leads to NURBS that may be safely drawn using GLU.
+The default value 0.0 means no scaling. Since Ayam 1.13 also eventually
+present trim curves will be scaled properly to the new knot ranges of
+NURBS patches.</LI>
+<LI><CODE>"Progress"</CODE>: displays the progress of the import;
+from 0 to 50 percent, OpenNURBS is reading the 3DM file into memory;
+from 50 to 100 percent, the onio plugin is converting the 3DM objects
+to Ayam objects.</LI>
+</UL>
+</P>
+
+<H2><A NAME="exprhino"></A> <A NAME="ss7.13">7.13</A> <A HREF="ayam.html#toc7.13">3DM (Rhino) Export</A>
+</H2>
+
+<P>Since version 1.8.2 Ayam contains a plugin named <CODE>"onio"</CODE> that exports
+scenes to the Rhino 3DM file format using the OpenNURBS toolkit
+(hence the name of the plugin onio &ndash; <B>O</B>pen<B>N</B>URBS <B>IO</B>)
+by Robert McNeel &amp; Associates.</P>
+<P>Start exporting to a Rhino 3DM file using the menu entry
+<CODE>"File/Export/Rhino 3DM"</CODE>
+(if this menu entry is not available, the
+onio plugin must be loaded using the menu entry
+<CODE>"File/Load Plugin"</CODE> first).</P>
+<P>The onio plugin exports 3DM files of version 3.0.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3>Ayam Object and Properties Support</H3>
+
+<P>The export functionality of the onio plugin currently covers
+export of all boxes, quadrics, NURBS, polymeshes, instances, clones, script
+objects (of type <CODE>"Create"</CODE> or <CODE>"Modify"</CODE>) and objects that
+may be converted to NURBS curves or surfaces.</P>
+<P>Even though export of planar cap surfaces of various
+tool objects is fully supported, the export of general trimmed NURBS
+patches is not well supported. This is because of a missing feature
+(pushing up 2D trim curves to 3D curves for arbitrary NURBS
+surfaces) in the OpenNURBS toolkit. A coarse
+polygonal 3D representation of the 2D trim curves will be
+created automatically, so that general trimmed NURBS patches
+may be exported, albeit with lower quality and bigger file size
+as would be necessary.<SMALL TITLE="Since 1.9."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>UMM/VMM tags are used to trim the knot vectors of
+exported NURBS objects.<SMALL TITLE="Since 1.9."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+See also section 
+<A HREF="ayam-4.html#ummtag">UMM/VMM (U/V Min Max) Tag</A>.</P>
+<P>Since the Rhino 3DM file format does not support hierarchy and
+transformation attributes per object, the hierarchy of the Ayam scene
+will be squashed and all transformation attributes will be applied to
+the control points of the objects for export. CSG operations are fully
+ignored, all objects will be written as if combined by the union operator.
+Furthermore, all instance objects will be resolved to normal objects.</P>
+<P>All objects will be written to the first layer, the default layer (unless
+the <CODE>"TopLevelLayers"</CODE> option is used). Object names will be exported
+as well. Names of level objects will be prepended to the names of their
+child objects. The object hierarchy:
+<BLOCKQUOTE><CODE>
+<PRE>
++-Arm(Level)
+  |-MySphere(Sphere)
+  \-MyCylinder(Cylinder)
+</PRE>
+</CODE></BLOCKQUOTE>
+
+for instance, leads to two objects in the Rhino file
+named <CODE>"Arm/MySphere"</CODE> and <CODE>"Arm/MyCylinder"</CODE>.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="exp3dmopt"></A> 3DM Export Options</H3>
+
+<P>The 3DM export process is controlled by the following options:
+<UL>
+<LI><CODE>"ScaleFactor"</CODE>: The <CODE>"ScaleFactor"</CODE> option allows to apply a
+scaling factor to all exported objects.</LI>
+<LI><CODE>"Accuracy"</CODE>: The <CODE>"Accuracy"</CODE> option controls the tolerance
+of internal OpenNURBS operations (currently those are:
+pushing up 2D trim curves to 3D curves and
+checking NURBS surfaces for planarity).</LI>
+<LI><CODE>"WriteSelected"</CODE>: exports only the selected objects.</LI>
+<LI><CODE>"ObeyNoExport"</CODE>: ignores all objects with <CODE>"NoExport"</CODE> tags.</LI>
+<LI><CODE>"IgnoreHidden"</CODE>: ignores all hidden objects.</LI>
+<LI><CODE>"WriteCurves"</CODE>: If this option is disabled,
+no curves will be written to the exported Rhino 3DM file. This option does
+<EM>not</EM> influence the export of trim curves.</LI>
+<LI><CODE>"QuadAsBRep"</CODE>: If this option is enabled
+spheres, cylinders, cones, and torii will not be exported as collection
+of NURBS surfaces (as converted by Ayam) but as BRep objects (as converted
+by the OpenNURBS toolkit).
+However, not all features of the quadric objects will be translated in
+this case:
+<UL>
+<LI>The BRep sphere does not support ZMin, ZMax, and ThetaMax.</LI>
+<LI>The BRep cylinder does not support ThetaMax (base caps will
+be created if the cylinder is closed).</LI>
+<LI>The BRep cone does not support ThetaMax (a base cap will be
+created, if the cone is closed).</LI>
+<LI>The BRep torus does not support PhiMin, PhiMax, and ThetaMax.</LI>
+</UL>
+
+The <CODE>"QuadAsBRep"</CODE> option has no effect on the export of disks,
+hyperboloids, and paraboloids. Those will always be exported as NURBS
+surfaces.</LI>
+<LI><CODE>"TopLevelLayers"</CODE>: controls whether the top level Level
+objects in the Ayam scene to be exported should be interpreted as layers.
+If this option is enabled, all objects in these levels will be placed on
+the respective layer. Objects that are not in one of those levels
+will be written to the default layer. Furthermore, top level object names
+will become layer names.</LI>
+<LI><CODE>"Progress"</CODE>: displays the progress of the export;
+from 0 to 50 percent, the onio plugin is converting the Ayam objects
+to 3DM objects; from 50 to 100 percent OpenNURBS is writing the 3DM file.</LI>
+</UL>
+</P>
+
+<H2><A NAME="impx3d"></A> <A NAME="ss7.14">7.14</A> <A HREF="ayam.html#toc7.14">X3D (Web3D) Import</A>
+</H2>
+
+<P>Since version 1.13 Ayam provides a plugin named <CODE>"x3dio"</CODE> that may
+import scenes from the XML based X3D file format published by the Web3D
+Consortium. The XML parser used in this plugin is based on Expat and SCEW.</P>
+<P>Binary and compressed versions of X3D, as well as VRML files are <EM>not</EM>
+supported. Only pure XML files are read by the x3dio plugin.</P>
+<P>Start importing from a Web3D X3D file using the menu entry
+<CODE>"File/Import/Web3D X3D"</CODE>
+(if this menu entry is not available, the
+x3dio plugin must be loaded using the menu entry
+<CODE>"File/Load Plugin"</CODE> first).</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3>X3D Element Support</H3>
+
+<P>The import functionality of the x3dio plugin currently covers
+import of the following X3D elements (grouped by components):
+<UL>
+<LI><B>Geometry3D:</B>
+Box, Sphere, Cylinder, Cone, ElevationGrid, Extrusion,
+IndexedFaceSet, IndexedTriangleSet, IndexedTriangleStripSet,
+IndexedTriangleFanSet, TriangleSet, TriangleStripSet, TriangleFanSet,
+IndexedLineSet, and LineSet.
+
+<P>Cylinders with just one cap are imported as two objects (a Cylinder and
+a Disk). In all other cases and also for Cones, the <CODE>"Closed"</CODE>
+attribute of the Ayam object is set according to the cap information of
+the X3D element.</P>
+<P>ElevationGrids are imported as bilinear patch meshes.</P>
+
+</LI>
+<LI><B>Geometry2D:</B>
+Arc2D, ArcClosed2D, Circle2D, Disk2D, Polyline2D.
+
+<P>Arcs and Circles are imported as NCircle objects.
+Closed arcs and Polylines are imported as NURBS curves.
+Disks with an inner radius > 0.0 are imported as flat Hyperboloids
+(otherwise as Disks).</P>
+
+</LI>
+<LI><B>NURBS:</B>
+NurbsCurve, NurbsCurve2D, NurbsPatchsurface,
+NurbsTrimmedSurface, Contour2D, ContourPolyline2D,
+NurbsSweptSurface, NurbsSwungSurface, NurbsSet.
+
+<P>All NURBS elements are fully supported.</P>
+
+</LI>
+<LI><B>CAD:</B>
+QuadSet, IndexedQuadSet, CADLayer, CADAssembly, CADPart, CADFace.
+
+<P>CADLayer objects will be imported as top level Level objects.
+CADAssembly and CADPart objects will be imported as level objects.</P>
+
+</LI>
+<LI><B>Light sources:</B>
+DirectionalLight, PointLight, SpotLight.
+
+<P>The lights will be directly mapped to the standard RenderMan
+light sources distant, point, and spot, respectively.
+Therefore, the <CODE>"radius"</CODE> and the <CODE>"attenuation"</CODE> attributes
+of point and spotlights are not supported. However, point and spotlights
+still have a quadratic falloff with distance.</P>
+
+</LI>
+<LI><B>Navigation:</B>
+Viewpoint.
+
+<P>Viewpoint elements will be imported as view objects (with corresponding
+view window) or camera objects depending on the <CODE>"ReadViewpoints"</CODE>
+import option.</P>
+
+</LI>
+<LI><B>Non geometric&thinsp;/&thinsp;Scene structure:</B>
+Transformation, Shape, Group, StaticGroup, Inline.
+
+<P>Shear transformations are not supported.</P>
+<P>The semantics for inlining are currently not fully standards compliant.
+By default, DEFs in inlined files live in their own namespace.
+It is not possible to USE a DEF from an inlined file in the
+inlining file.
+However, if the <CODE>"MergeInlineDefs"</CODE> import option is switched on,
+<EM>all</EM> DEF namespaces (of inlining and inlined files) will be
+merged into one big namespace.
+Now it would be possible to USE a DEF from an inlined file in the
+inlining file. But beware, this only works correctly, if the DEF
+names in all the files are unique.
+It is not possible to transfer single definitions from an inlined file
+to the inlining file or from the inlining file to the inlined file.</P>
+<P>Also note: Inline URLs that do not point to the file system are not
+supported.</P>
+</LI>
+</UL>
+</P>
+<P>Unsupported X3D elements will be silently ignored. Prototyping and
+dynamic scenes as well as scripts are not supported.</P>
+<P>The following table comprehensively lists the supported Web3D
+X3D primitives and their Ayam counterparts that will be created
+upon import.</P>
+<P>
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+<B>X3D Primitive</B></TD><TD><B>Ayam Object</B></TD><TD><B>X3D Primitive</B></TD><TD><B>Ayam Object</B></TD></TR><TR><TD>
+<EM>Geometry3D:</EM></TD><TD>&ensp;</TD><TD><EM>CAD:</EM></TD><TD>&ensp;</TD></TR><TR><TD>
+Box</TD><TD>Box</TD><TD>QuadSet</TD><TD>PolyMesh</TD></TR><TR><TD>
+Sphere</TD><TD>Sphere</TD><TD>IndexedQuadSet</TD><TD>PolyMesh</TD></TR><TR><TD>
+Cylinder</TD><TD>Cylinder</TD><TD>CADLayer</TD><TD>Level</TD></TR><TR><TD>
+Cone</TD><TD>Cone</TD><TD>CADAssembly</TD><TD>Level</TD></TR><TR><TD>
+ElevationGrid</TD><TD>PaMesh</TD><TD>CADPart</TD><TD>Level</TD></TR><TR><TD>
+Extrusion</TD><TD>PolyMesh</TD><TD>CADFace</TD><TD>Level</TD></TR><TR><TD>
+IndexedFaceSet</TD><TD>PolyMesh</TD><TD><EM>Light:</EM></TD><TD>&ensp;</TD></TR><TR><TD>
+IndexedTriangleSet</TD><TD>PolyMesh</TD><TD>DirectionalLight</TD><TD>Light</TD></TR><TR><TD>
+IndexedTriangleStripSet</TD><TD>PolyMesh</TD><TD>SpotLight</TD><TD>Light</TD></TR><TR><TD>
+IndexedTriangleFanSet</TD><TD>PolyMesh</TD><TD>PointLight</TD><TD>Light</TD></TR><TR><TD>
+TriangleSet</TD><TD>PolyMesh</TD><TD>&ensp;</TD><TD>&ensp;</TD></TR><TR><TD>
+TriangleStripSet</TD><TD>PolyMesh</TD><TD>&ensp;</TD><TD>&ensp;</TD></TR><TR><TD>
+TriangleFanSet</TD><TD>PolyMesh</TD><TD>&ensp;</TD><TD>&ensp;</TD></TR><TR><TD>
+IndexedLineSet</TD><TD>NCurve</TD><TD>&ensp;</TD><TD>&ensp;</TD></TR><TR><TD>
+LineSet</TD><TD>NCurve</TD><TD>&ensp;</TD><TD>&ensp;</TD></TR><TR><TD>
+<EM>Geometry2D:</EM></TD><TD>&ensp;</TD><TD>&ensp;</TD><TD>&ensp;</TD></TR><TR><TD>
+Arc2D</TD><TD>NCircle</TD><TD>&ensp;</TD><TD>&ensp;</TD></TR><TR><TD>
+ArcClosed2D</TD><TD>NCurve</TD><TD>&ensp;</TD><TD>&ensp;</TD></TR><TR><TD>
+Circle2D</TD><TD>NCircle</TD><TD>&ensp;</TD><TD>&ensp;</TD></TR><TR><TD>
+Polyline2D</TD><TD>NCurve</TD><TD>&ensp;</TD><TD>&ensp;</TD></TR><TR><TD>
+Disk2D</TD><TD>Disk&thinsp;/&thinsp;Hyperboloid</TD><TD>&ensp;</TD><TD>&ensp;</TD></TR><TR><TD>
+<EM>NURBS:</EM></TD><TD>&ensp;</TD><TD>&ensp;</TD><TD>&ensp;</TD></TR><TR><TD>
+NurbsCurve</TD><TD>NCurve</TD><TD>&ensp;</TD><TD>&ensp;</TD></TR><TR><TD>
+NurbsCurve2D</TD><TD>NCurve</TD><TD>&ensp;</TD><TD>&ensp;</TD></TR><TR><TD>
+NurbsPatchSurface</TD><TD>NPatch</TD><TD>&ensp;</TD><TD>&ensp;</TD></TR><TR><TD>
+NurbsTrimmedSurface</TD><TD>NPatch</TD><TD>&ensp;</TD><TD>&ensp;</TD></TR><TR><TD>
+NurbsSweptSurface</TD><TD>Sweep</TD><TD>&ensp;</TD><TD>&ensp;</TD></TR><TR><TD>
+NurbsSwungSurface</TD><TD>Swing</TD><TD>&ensp;</TD><TD>&ensp;
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">X3D (Web3D) Import Conversion Table</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3>X3D Attribute Support</H3>
+
+<P>The <CODE>"solid"</CODE>, <CODE>"ccw"</CODE>, and <CODE>"convex"</CODE>
+attributes are always ignored.</P>
+<P>The <CODE>"DEF"</CODE> and <CODE>"USE"</CODE> attributes are supported for all
+elements, however, the corresponding master-instance relationships are
+completely resolved upon import.
+Instances of objects may be easily created again using Automatic Instancing
+(please refer to section 
+<A HREF="ayam-8.html#ai">Automatic Instancing</A>).</P>
+<P>Normals will currently not be generated automatically for any X3D element
+and thus the <CODE>"creaseAngle"</CODE> attribute will be fully ignored.
+Note however, that if normals are specified explicitly, e.g.&nbsp;for an
+<CODE>"IndexedFaceSet"</CODE> element, they will be imported correctly.</P>
+<P>Furthermore, if normals, colors, or texture coordinates
+are provided to an element that imports as a PolyMesh (IndexedFaceSet
+and the likes) proper PV (primitive variable) tags will be
+created.<SMALL TITLE="Since 1.17."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>Moreover, if there is an index provided to the normals, colors, or
+texture coordinates, the relevant affected data (e.g.&nbsp;the vertex
+coordinates) will be expanded properly (as RenderMan does not support
+multiple different indices on the vertex related data).
+Note that currently the mere presence of an index will lead to this expansion.
+The potential normal, color, or texture coordinate index is not checked for,
+whether it is identical to the vertex coordinate index (and thus no expansion
+would be necessary in the first place).</P>
+<P>The <CODE>"DEF"</CODE> attributes will be converted to object names
+in some cases.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="impx3dopt"></A> X3D Import Options</H3>
+
+<P>The following options further control the X3D import process:
+<UL>
+<LI><CODE>"FileName"</CODE>: is the name of the X3D file to be imported</LI>
+<LI><CODE>"ReadCurves"</CODE>: if this is disabled, no freeform curves will
+be imported. This option does <EM>not</EM> influence the import of trim
+curves.</LI>
+<LI><CODE>"ReadViewpoints"</CODE>: controls whether viewpoints should
+be read as view, camera, or not at all.</LI>
+<LI><CODE>"ReadSTrim"</CODE>: if switched off, no simple trims (trims that only
+run along the border of a NURBS patch and actually do not trim the surface)
+will be imported if they are the only trim curves.</LI>
+<LI><CODE>"RescaleKnots"</CODE>: allows to rescale the knot vectors of
+NURBS curves, patches, and trim curves so that the distances between different
+knots are not smaller than the given value. A <CODE>"RescaleKnots"</CODE> value of
+1.0e-04 leads to NURBS that may be safely drawn using GLU.
+The default value 0.0 means no scaling.</LI>
+<LI><CODE>"ScaleFactor"</CODE>: allows to apply a scaling factor to all
+imported objects.</LI>
+<LI><CODE>"RationalStyle"</CODE>: determines how rational coordinates are
+stored in the file to be imported
+(see also section 
+<A HREF="ayam-1.html#rats">Rational Style</A>);</LI>
+<LI><CODE>"Progress"</CODE>: displays the progress of the import;
+from 0 to 50 percent, the x3dio plugin is reading the XML file,
+from 50 to 100 percent the x3dio plugin is creating Ayam objects.</LI>
+</UL>
+</P>
+
+<H2><A NAME="expx3d"></A> <A NAME="ss7.15">7.15</A> <A HREF="ayam.html#toc7.15">X3D (Web3D) Export</A>
+</H2>
+
+<P>Since version 1.13 Ayam provides a plugin named <CODE>"x3dio"</CODE> that exports
+scenes to the XML based X3D file format published by the Web3D Consortium.
+The XML parser used in this plugin is based on Expat and SCEW.</P>
+<P>Start exporting to a X3D file using the menu entry
+<CODE>"File/Export/Web3D (X3D)"</CODE>
+(if this menu entry is not available, the
+x3dio plugin must be loaded using the menu entry
+<CODE>"File/Load Plugin"</CODE> first).</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3>Ayam Object and Properties Support</H3>
+
+<P>The export functionality of the x3dio plugin currently covers
+export of all boxes, quadrics, NURBS, PolyMeshes, instances, clones, script
+objects (of type <CODE>"Create"</CODE> or <CODE>"Modify"</CODE>) and objects that
+may be converted to NURBS curves or surfaces or to PolyMeshes
+(e.g.&nbsp;SDMesh objects).</P>
+<P>Some NURBS tool objects can be exported as parametric NURBS nodes,
+e.g.&nbsp;Sweep objects may be exported as NurbsSweptSurface nodes.</P>
+<P>The scene hierarchy (level objects) will be converted to a
+matching transform node hierarchy.</P>
+<P>CSG operations are fully ignored, all objects will be written as
+if combined by the union operator.</P>
+<P>Clamping the knot ranges of NURBS via UMM/VMM tags is not supported.</P>
+<P>NURBS surfaces support XML tags to set <CODE>"uTesselation"</CODE> and/or
+<CODE>"vTesselation"</CODE> attributes.</P>
+<P>PolyMesh objects will be exported to IndexedFaceSet nodes.
+PolyMesh faces with holes are automatically tesselated. PolyMesh faces
+with more than three points are tesselated if the export option
+<CODE>"TessPoMesh"</CODE> is used.
+All tesselated faces will be exported to a second IndexedFaceSet
+element.</P>
+<P>Light sources are exported if they are point, distant, or spot lights.</P>
+<P>Cameras and Views are exported as Viewpoint nodes. Note however, that
+X3D always assumes a perspective viewing transformation. This means,
+views of type <CODE>"Front"</CODE>, <CODE>"Side"</CODE>, or <CODE>"Top"</CODE> will not be
+exported properly.</P>
+<P>Material objects are supported in a very minimalist way,
+i.e.&nbsp;only the material color will be exported as <CODE>"diffuseColor"</CODE>
+attribute.
+However, XML tags can be used to add more attributes or even shaders to the
+exported materials, see also section 
+<A HREF="ayam-4.html#xmltag">XML tag</A>.</P>
+<P>Object names will be converted to DEF attributes.</P>
+<P>Instances can be resolved or exported as USE/DEF pairs.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3>Wire-frame Support</H3>
+
+<P>The X3D export allows to export wire-frames instead of surfaces for
+NPatch and PoMesh objects.</P>
+<P>To switch an object to wire-frame export, just add a tag <CODE>"AsWire"</CODE>
+to the object.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="expx3dopt"></A> X3D Export Options</H3>
+
+<P>The following parameters, additionally, control the X3D (Web3D) export:
+<UL>
+<LI><CODE>"FileName"</CODE>: is the filename of the X3D file;</LI>
+<LI><CODE>"ScaleFactor"</CODE>: allows to apply a scaling factor to all
+exported objects (this will be realized by an extra <CODE>Transform</CODE>-node
+in the scene hierarchy);</LI>
+<LI><CODE>"WriteSelected"</CODE>: if enabled, only the currently selected
+object(s) will be exported;</LI>
+<LI><CODE>"ObeyNoExport"</CODE>: toggles export of objects with <CODE>"NoExport"</CODE>
+tags;</LI>
+<LI><CODE>"IgnoreHidden"</CODE>: toggles export of hidden objects;</LI>
+<LI><CODE>"WriteCurves"</CODE>: toggles writing of NURBS curves and
+NURBS curve providing objects to the exported file (This option does
+<EM>not</EM> influence the export of trim curves.);</LI>
+<LI><CODE>"WriteViews"</CODE>: controls whether views should be exported as
+view points;</LI>
+<LI><CODE>"WriteParametrics"</CODE>: toggles writing of the following
+tool objects as plain NURBS surface or the following higher level
+primitives:
+<UL>
+<LI>Revolve as NurbsSwungSurface,</LI>
+<LI>Swing as NurbsSwungSurface,</LI>
+<LI>Sweep as NurbsSweptSurface,</LI>
+<LI>Extrude as NurbsSweptSurface;</LI>
+</UL>
+</LI>
+<LI><CODE>"WriteMaterials"</CODE>: controls whether appearance and
+material nodes should be exported for each shape;</LI>
+<LI><CODE>"ResolveInstances"</CODE>: controls whether instance objects should
+be resolved to normal objects or exported as DEF/USE pairs. Note, that no
+attempt is made to detect whether the master objects (the DEFs) will be
+exported for all exported instances (USE); this may happen especially in
+conjunction with the X3D export options <CODE>"WriteSelected"</CODE> or
+<CODE>"IgnoreHidden"</CODE>, incomplete/erroneous X3D files may
+result unless the
+<CODE>"ResolveInstances"</CODE> option is switched on;</LI>
+<LI><CODE>"TopLevelLayers"</CODE>: arranges for all top level
+objects in the Ayam scene to be exported as <CODE>CADLayer</CODE>-nodes,
+instead of <CODE>Transform</CODE>-nodes;</LI>
+<LI><CODE>"RationalStyle"</CODE>: determines how to write rational coordinates
+(see also section 
+<A HREF="ayam-1.html#rats">Rational Style</A>);</LI>
+<LI><CODE>"WriteX3dom"</CODE>: toggles X3DOM-export mode. If this option is
+enabled, the X3D export will
+<OL>
+<LI>first read a XHTML template file from the export target directory
+(named <CODE>"x3dom-template.xhtml"</CODE>),</LI>
+<LI>then inject the scene to be exported into the
+X3D <CODE>"&lt;Scene&gt;"</CODE>-tag of the template (already present child
+elements of this tag will be preserved),</LI>
+<LI>add width and height of the view window that was exported last
+as attributes to the <CODE>"&lt;X3D&gt;"</CODE>-tag,</LI>
+<LI>and finally write the XHTML document to the file
+specified via the <CODE>"FileName"</CODE> export option.</LI>
+</OL>
+</LI>
+<LI><CODE>"Progress"</CODE>: displays the progress of the export;
+from 0 to 50 percent, the x3dio plugin is creating a XML document
+in memory and from 50 to 100 percent this XML document will be written
+to the X3D file.</LI>
+</UL>
+</P>
+
+
+<HR>
+<A HREF="ayam-8.html">Next</A>
+<A HREF="ayam-6.html">Previous</A>
+<A HREF="ayam.html#toc7">Contents</A>
+</BODY>
+</HTML>
+
+

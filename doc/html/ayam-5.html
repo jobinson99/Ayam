@@ -1,0 +1,3365 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="LinuxDoc-Tools 0.9.66">
+ <TITLE>Ayam: NURBS Modelling Tools</TITLE>
+ <LINK HREF="ayam-6.html" REL=next>
+ <LINK HREF="ayam-4.html" REL=previous>
+ <LINK HREF="ayam.html#toc5" REL=contents>
+</HEAD>
+<BODY>
+<script type="text/javascript" src="ll.js"></script>
+<A HREF="ayam-6.html">Next</A>
+<A HREF="ayam-4.html">Previous</A>
+<A HREF="ayam.html#toc5">Contents</A>
+<HR>
+<H2><A NAME="nmtool"></A> <A NAME="s5">5.</A> <A HREF="ayam.html#toc5">NURBS Modelling Tools</A></H2>
+
+<P>This section describes NURBS curve and surface related modelling
+tools of Ayam.</P>
+
+<P>Note that pressing the <CODE>&lt;F1&gt;</CODE> key in tool dialog windows
+can be used to directly jump to the appropriate
+sub-section of this part of the documentation.</P>
+
+
+<H2><A NAME="ss5.1">5.1</A> <A HREF="ayam.html#toc5.1">General Remarks</A>
+</H2>
+
+<P>All NURBS modelling tools are accessible via the <CODE>"Tools"</CODE> menu of the
+main window or the toolbox. In addition, there are also corresponding
+scripting interface commands.
+See sections 
+<A HREF="ayam-6.html#scinurbs">Manipulating NURBS Curves</A>
+and 
+<A HREF="ayam-6.html#scinurbss">Manipulating NURBS Surfaces</A>.</P>
+<P>Many modifying tools work on multiple selected objects and execute
+the selected operation on all those selected objects in the order
+of their appearance in the current level.</P>
+<P>Tools that take only NURBS curves or only NURBS surfaces from the selection
+will warn if the selection contains objects of unsuitable type,
+but processing will continue regardless.<BR>
+In case of an error, however, the processing of multiple selected
+objects immediately stops, possibly leaving modified <EM>and</EM>
+unmodified objects behind.</P>
+<P>If an operation executed successfully on an object, the point selection
+may be removed from the object.</P>
+<P>The notification
+of the selected objects will be run immediately after the tool operation.
+The notification of the parent object(s), however,
+will be run after processing of all selected objects finished
+(for more information on notification, see also section
+<A HREF="ayam-8.html#toolobj">The Modelling Concept Tool-Objects</A>).</P>
+<P>Tools that create tool objects may use the clipboard to move the
+new children around, i.e.&nbsp;the clipboard contents may be lost afterwards.</P>
+<P>Most tools open a dialog window where additional operation parameters
+can be adjusted, see also the figure below.</P>
+<P>
+<CENTER>
+<IMG SRC="pics/tooldialog.gif" HEIGHT=136 WIDTH=309  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Tool Dialog Example</FONT></CENTER><P><CENTER>
+</CENTER>
+
+The <CODE>"Ok"</CODE>-button starts the tool and <CODE>"Cancel"</CODE> just closes
+the dialog.
+Furthermore, the currently set parameters can be tried using the
+<CODE>"Preview"</CODE> button.<SMALL TITLE="Since 1.30."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+A successful preview will be signaled by a green tick mark on the
+button, a failed preview (e.g.&nbsp;caused by unsuitable parameters)
+by a red exclamation mark. Note, that the
+meaning of the <CODE>"Ok"</CODE>- and <CODE>"Cancel"</CODE>-buttons change, when a
+preview was generated (green tick mark present). In this case,
+<CODE>"Ok"</CODE> simply closes the dialog and <CODE>"Cancel"</CODE> restores the
+selected objects to the state before the dialog opened.
+Also note, that repeated use of preview just starts the
+tool again on the selected objects in their original state.</P>
+
+
+
+<H2><A NAME="cctools"></A> <A NAME="ss5.2">5.2</A> <A HREF="ayam.html#toc5.2">Curve Creation Tools</A>
+</H2>
+
+<P>These tools create parametric curve objects.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="cbspt"></A> Circular B-Spline Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/cbsps.gif" HEIGHT=200 WIDTH=566  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">B-Spline Curves Created by the Circular B-Spline Tool</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>Radius, Arc, Sections, Order.</P>
+<DT><B>Operation</B><DD>
+<P>This tool creates a non-rational B-Spline curve with
+Sections+1+Order (Arc=360.0) or Sections+1+(Order/2) (other Arc values)
+control points in the XY-plane. The control points
+are arranged in a circle of the given radius, centered around the origin.
+This gives the curve a circular appearance (see image above) but it
+is <EM>not</EM> a true circle:
+If only few control points are used, the radius of the circular curve
+is clearly smaller than the specified radius value (see the left curve
+in the image above).
+Furthermore, shape, parameterisation, and curvature of the
+B-Spline curve are not exactly as one would expect from a circle.
+To create true circular curves, the NURBCircle tool (see below) should
+be used instead.</P>
+<DT><B>Notes</B><DD>
+<P>Sections must be at least 1.</P>
+<P>If Arc is 360.0, the first
+n control points of the new curve will be identical to the last n
+(where n is Order-1). Compare the left and middle curves in the image
+above which are of order 4 and 2 respectively, the first having
+3 and the latter just having 2-1=1 equal control points.
+If Arc is 360.0, the curve will also be marked periodic and the
+generation of multiple points will be enabled, so that point edit
+actions know that they may need to move two points
+(see also section 
+<A HREF="ayam-4.html#ncurvemp">Multiple Points</A>).</P>
+<P>If Arc is smaller than 360.0, the curve will be open, and, as is natural
+for a B-Spline curve, will not interpolate the first and last control
+points unless the order is 2 (see the right curve in the image above,
+which was created with an arc value of 180.0, 10 sections, and order 4).</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="ncirct"></A> NURBCircle Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/ncircle.gif" HEIGHT=200 WIDTH=200  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">A NURBS Circle</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>Radius, Arc.</P>
+<DT><B>Operation</B><DD>
+<P>The NURBCircle tool creates a circular NURBS curve
+of desired radius and arc in the XY-plane, centered around the origin
+(see also the image above).
+The order of the curve will be 3. The number of control points used
+differs according to the arc, e.g.&nbsp;9 points for full circles,
+5 for half circles,
+3 for a quarter circle.</P>
+<DT><B>Notes</B><DD>
+<P>The NURBS curve created by the NURBCircle tool is rational
+(uses weights). This means, editing the curve (e.g.&nbsp;moving control points)
+may lead to unpredicted results (the curve does not behave exactly
+as wished). If the curve is to be modified further, a closed B-Spline,
+created with the Circular B-Spline tool (see above), should be used instead.
+Additionally, the created curve will be marked as closed and the generation
+of multiple points will be enabled, so that point edit actions know that
+they may need to move two points.
+See also section 
+<A HREF="ayam-4.html#ncurvemp">Multiple Points</A>.</P>
+<P>A NURBS circle created by this tool can be used to easily create a
+NURBS torus by moving the circle along X a bit and then revolving it.
+The amount of movement determines the radius of the torus, whereas
+the radius of the circle determines the thickness.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="nrrt"></A> Rectangle Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/rect.gif" HEIGHT=215 WIDTH=215  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">A Rectangle</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>Width, Height</P>
+<DT><B>Operation</B><DD>
+<P>The rectangle tool creates a non-rational,
+piecewise linear, planar, centered NURBS curve of
+rectangular shape and twice the specified width and height
+in the XY-plane (see also the image above).</P>
+<DT><B>Notes</B><DD>
+<P>The created curve will be marked as closed and the generation
+of multiple points will be enabled, so that point edit actions know that
+they may need to move two points.
+See also section 
+<A HREF="ayam-4.html#ncurvemp">Multiple Points</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="trrt"></A> TrimRect Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/trect.gif" HEIGHT=162 WIDTH=161  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">A TrimRect</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The TrimRect tool takes the selected NPatch objects
+(or NPatch providing objects<SMALL TITLE="Since 1.22."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>) from the
+selection. If the current level
+is inside a NPatch object, the respective parent object is used.</P>
+<DT><B>Operation</B><DD>
+<P>For each selected patch, the TrimRect tool creates a
+non-rational, piecewise linear, planar NURBS curve of rectangular
+shape in the XY-plane, that fits in the (u, v) parameter space of this NURBS
+patch, for use as outer trim curve. See also the image above, depicting a
+rectangle for a NPatch defined on the knot intervals<BR>
+0.0, 0.0, 1.0, 1.0<BR>and<BR>
+0.0, 0.08<font style="text-decoration: overline;">3</font>, 0.1<font style="text-decoration: overline;">6</font>, 0.25, ... , 0.75, 0.8<font style="text-decoration: overline;">3</font>, 0.91<font style="text-decoration: overline;">6</font>, 1.0.</P>
+<P>The created curve will be marked as closed and the generation
+of multiple points will be enabled, so that point edit actions know that
+they may need to move two points.
+See also section 
+<A HREF="ayam-4.html#ncurvemp">Multiple Points</A>.</P>
+<P>If a NPatch object is selected, the new curve will be linked as child
+of this NPatch object. Otherwise it will be linked to the current level.</P>
+<P>The <CODE>"CreateAt"</CODE> and <CODE>"CreateIn"</CODE> options are ignored.</P>
+<P>See section 
+<A HREF="ayam-4.html#trim">Trim Curves</A> for a more detailed
+discussion of trim curves and how to use the rectangular curve created
+by the TrimRect tool.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="tweennct"></A> Tween Curve Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/tweenc.gif" HEIGHT=179 WIDTH=239  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Tweened Curve (white) from two Parameter Curves (blue)
+with <EM>r</EM>&thinsp;=&thinsp;0.5</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The tween curve tool takes two NURBS curves from
+the selection and requests a parameter <EM>r</EM>. In addition, an
+<EM>append</EM> option can be set.<SMALL TITLE="Since 1.29."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<DT><B>Operation</B><DD>
+<P>The selected NURBS curves will be interpolated (tweened)
+and a new curve incorporating features from both of the original curves
+will be created. See also the image above.
+The parameter <EM>r</EM> defines the ratio of influence of the first and
+the second curve (the latter is using a ratio of 1&thinsp;-&thinsp;<EM>r</EM>).
+<BLOCKQUOTE><CODE>
+<PRE>
+|-NCurve1             |-NCurve1
+|-NCurve2     ==>     |-Tweened_Curve(NCurve)
+                      |-NCurve2
+</PRE>
+</CODE></BLOCKQUOTE>
+
+If a third curve is selected, the parameter <EM>r</EM> is ignored and this
+third curve defines the ratio of influence with its y coordinates.
+Unless the <EM>append</EM> option is set, the new curve will be created after
+the first curve.</P>
+<DT><B>Notes</B><DD>
+<P>The two curves must be of the same length and order.
+They need not be defined on the same knot vector, however.</P>
+<P>The interpolation control curve does not need to be compatible with
+any of the original curves.</P>
+<P>If one of the curves knot vector types is <CODE>"Custom"</CODE> or the
+respective knot vector types are different, the resulting
+knot vector type will be <CODE>"Custom"</CODE> and the knot values will
+also be interpolated/tweened. Otherwise a matching knot vector will be
+generated according to the type.</P>
+<P>The original NURBS curves will not be deleted by this tool.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#sctweennc">tweenNC</A>
+and the related tool for
+surfaces 
+<A HREF="#tweennpt">Tween Surfaces Tool</A>.</P>
+<P>To tween NURBS curve providing objects or incompatible NURBS curve objects,
+a Script object must be used, as shown in the distributed example scene
+file <CODE>"tweenc.ay"</CODE> and script <CODE>"tweenc.tcl"</CODE>.</P>
+</DL>
+</P>
+
+
+
+<H2><A NAME="cmtools"></A> <A NAME="ss5.3">5.3</A> <A HREF="ayam.html#toc5.3">Curve Modification Tools</A>
+</H2>
+
+<P>These tools modify parametric curve objects.</P>
+<P>Unless noted otherwise, PV tags are <EM>not</EM> supported/modified
+by these tools.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="revertt"></A> Revert Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/revertnc.gif" HEIGHT=198 WIDTH=361  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Revert Tool (l: Original Curve, r: Reversed Curve)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The revert tool takes all NCurve,
+ICurve, ACurve, NCircle, and ConcatNC objects from the selection.
+In addition, plugin defined curve object types can support the
+revert operation.<SMALL TITLE="Since 1.26."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<DT><B>Operation</B><DD>
+<P>The direction of the selected curves will be
+reversed. This tool also reverts the relative knot distances
+of NURBS curves
+so that for example a NURBS curve defined on the (asymmetric) knot
+vector<BR>
+[&thinsp;0&thinsp;0&thinsp;0&ensp;0.75&ensp;1&thinsp;1&thinsp;1&thinsp;]<BR>
+will get the new knot vector<BR>
+[&thinsp;0&thinsp;0&thinsp;0&ensp;0.25&ensp;1&thinsp;1&thinsp;1&thinsp;]<BR>
+after reversal. This ensures that the shape of a NURBS curve does not
+change during reversal. Interpolating and approximating curves may
+change their shape as the underlying interpolation/approximation
+algorithms are not direction-invariant.<BR>
+For interpolating curves, the end derivatives are also reversed properly.</P>
+<DT><B>Notes</B><DD>
+<P>The revert tool can be conveniently invoked from view windows
+using the keyboard shortcut <CODE>&lt;!&gt;</CODE> (exclamation mark).</P>
+<P>Eventually selected points will still be selected after this
+operation.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#screvert">revertC</A>
+and the related tools for
+surfaces 
+<A HREF="#revertut">Revert U Surface Tool</A> and
+<A HREF="#revertvt">Revert V Surface Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="openct"></A> Open Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/openc.gif" HEIGHT=163 WIDTH=326  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Open Tool (l: Closed Curve, r: Opened Curve)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The open tool takes all NCurve,
+ICurve, ACurve, and ConcatNC objects from the selection.
+In addition, plugin defined curve object types can support the
+open operation.<SMALL TITLE="Since 1.26."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<DT><B>Operation</B><DD>
+<P>The curves will be opened.
+For closed NCurve objects, the last point will be moved away from
+the first (multiple end points will be managed correctly),
+see also the image above.</P>
+<P>For periodic NURBS curves, the last <EM>p</EM> points will be moved away
+from the first <EM>p</EM> (where <EM>p</EM> is the degree of the curve).</P>
+<P>For ACurve, ICurve, and ConcatNC objects the <CODE>"Closed"</CODE> attribute
+will be cleared and no control points will be modified.</P>
+<DT><B>Notes</B><DD>
+<P>The open tool can be conveniently invoked from view windows
+using the keyboard shortcut <CODE>&lt;(&gt;</CODE>.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#scopenc">openC</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="closect"></A> Close Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/closec.gif" HEIGHT=201 WIDTH=401  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Close Tool (l: Open Curve, r: Closed Curve)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The close tool takes all NCurve,
+ICurve, ACurve, and ConcatNC objects from the selection.
+In addition, plugin defined curve object types can support the
+close operation.<SMALL TITLE="Since 1.26."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<DT><B>Operation</B><DD>
+<P>The curves will be closed.
+For NCurve objects the last point will be made identical to
+the first, however, this does not guarantee a closed curve
+shape unless the knot vector is clamped,
+see also the image above.</P>
+<P>For ACurve, ICurve, and ConcatNC objects the <CODE>"Closed"</CODE> attribute
+will be set and no control points will be modified.</P>
+<DT><B>Notes</B><DD>
+<P>The close tool can be conveniently invoked from view windows
+using the keyboard shortcut <CODE>&lt;)&gt;</CODE>.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#scclosec">closeC</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="refit"></A> Refine Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/refinecv.gif" HEIGHT=228 WIDTH=520  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Successive Application of Refine Tool</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The refine tool takes all NCurve,
+ICurve, and ACurve objects from the selection.<SMALL TITLE="ICurve and ACurve since 1.21."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+In addition, plugin defined curve object types can support the
+refine operation.<SMALL TITLE="Since 1.26."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<DT><B>Operation</B><DD>
+<P>The selected curves will be refined by inserting
+a control point in the middle of each control point interval, changing
+the shape of the curve. The original control points will not be changed.
+For periodic NURBS curves, no control points will be inserted in the last
+<EM>p</EM> intervals (where <EM>p</EM> is the degree of the curve),
+this allows to maintain the periodicity, see also the
+image below where a periodic curve of length 9 (8 sections) has been
+refined, resulting in a periodic curve of length 15 (not 17).</P>
+<P>
+<CENTER>
+<IMG SRC="pics/refinepe.gif" HEIGHT=205 WIDTH=408  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Refining a Periodic NURBS Curve</FONT></CENTER><P><CENTER>
+</CENTER>
+
+If there are selected points, only the intervals between the first
+and the last selected point are refined, see also the image below.</P>
+<P>
+<CENTER>
+<IMG SRC="pics/refinesel.gif" HEIGHT=205 WIDTH=408  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Refining a Selected Region</FONT></CENTER><P><CENTER>
+</CENTER>
+
+The point selection will be adapted so that the refine tool can be
+applied multiple times.</P>
+<DT><B>Notes</B><DD>
+<P>The refine tool can be conveniently invoked from view windows
+using the keyboard shortcut <CODE>&lt;#&gt;</CODE>.<SMALL TITLE="Since 1.26."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#screfinec">refineC</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="refknit"></A> Refine Knots Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/refine.gif" HEIGHT=144 WIDTH=360  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Successive Application of Refine Knots Tool</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The refine knots tool takes a number of NURBS curves from
+the selection.</P>
+<DT><B>Operation</B><DD>
+<P>The knot vectors of the selected NURBS curves will be
+refined by inserting a knot in the middle of each inner knot interval
+without changing the shape of the curve. New control
+points will be added and the position of old control points may be
+changed in the progress. See also the  image above where a curve defined
+on the knot vector<BR>
+[&thinsp;0&thinsp;0&thinsp;0&thinsp;0&ensp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;]<BR>
+is successively refined to the knot vector<BR>
+[&thinsp;0&thinsp;0&thinsp;0&thinsp;0&ensp;0.5&ensp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;]<BR>
+and then<BR>
+[&thinsp;0&thinsp;0&thinsp;0&thinsp;0&ensp;0.25&ensp;0.5&ensp;0.75&ensp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;].</P>
+<DT><B>Notes</B><DD>
+<P>Because new knots are inserted into inner intervals only,
+the clamping state of the knot vectors does not change.
+Furthermore, knot vectors of type <CODE>"NURB"</CODE> will not change in type,
+other knot vectors will be changed to type <CODE>"Custom"</CODE>.</P>
+<P>The curve type of periodic curves will <EM>not</EM> be preserved.</P>
+<P>The point selection will be removed from the processed objects.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#screfineknnc">refineknNC</A>
+and the related tool for
+surfaces 
+<A HREF="#refinest">Refine Knots Surface Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="refknwit"></A> Refine Knots With Tool</H3>
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The refine knots with tool takes a number of NURBS curves
+from the selection and requests a vector of new knot values.</P>
+<DT><B>Operation</B><DD>
+<P>The knot vectors of the selected NURBS curves will be
+refined by inserting all knots from the specified vector at once.
+New control points will be added and the position of old control points
+may be changed in the progress.
+The resulting knot vector must be valid, otherwise an error will
+be reported and the respective curve is not changed.</P>
+<DT><B>Notes</B><DD>
+<P>Note that the shapes
+of the curves do not change, but the position of
+certain control points does.</P>
+<P>The point selection will be removed from the processed objects.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#screfineknnc">refineknNC</A>
+and the related tool for
+surfaces 
+<A HREF="#refinewst">Refine Knots With Surface Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="coart"></A> Coarsen Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/coarsen.gif" HEIGHT=178 WIDTH=398  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Successive Application of Coarsen Tool</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The coarsen tool takes all NCurve,
+ICurve, and ACurve objects from the selection.<SMALL TITLE="ICurve and ACurve since 1.26."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+In addition, plugin defined curve object types can support the
+coarsen operation.<SMALL TITLE="Since 1.26."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+
+<DT><B>Operation</B><DD>
+<P>Every second control point in the control vectors of
+the selected curves will be deleted. If the new length of the
+curve would be smaller than the current order, the coarsen tool
+will not change anything.</P>
+<DT><B>Notes</B><DD>
+<P>For periodic NURBS curves the coarsen tool will not remove
+control points from the first (last) <EM>p</EM> intervals (where <EM>p</EM>
+is the degree of the curve).</P>
+<P>For closed curves, the coarsen tool will not remove the last point.</P>
+<P>The coarsen tool will also remove knot values from NURBS curves with
+custom knot vectors.</P>
+<P>If there are selected points, only the intervals between the first
+and the last selected point are affected.</P>
+<P>The point selection will be modified so that the tool may be applied
+multiple times.<SMALL TITLE="Since 1.27."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>The coarsen tool can be conveniently invoked from view windows using the
+keyboard shortcut <CODE>&lt;Shift-#&gt;</CODE>.<SMALL TITLE="Since 1.26."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#sccoarsenc">coarsenC</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="elevt"></A> Elevate Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/elevate.gif" HEIGHT=128 WIDTH=332  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Successive Application of Elevate Tool (Order 3 (left), 4 (middle),
+5 (right))</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The elevate tool takes a number of NURBS curves from
+the selection and additionally requests an integer value.</P>
+<DT><B>Operation</B><DD>
+<P>The order of the selected NURBS curves will be raised
+by the specified integer value without changing the shape of the curve.
+See also the example image above.</P>
+<DT><B>Notes</B><DD>
+<P>If the knot vector of the curve is not clamped, it
+will be clamped automatically. The knot type of the curve will
+be changed to <CODE>"Custom"</CODE>. New control points will be added and the position
+of old control points may be changed in the progress.</P>
+<P>The point selection will be removed from the processed objects.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#scelevatenc">elevateNC</A>
+and the related tool for
+surfaces 
+<A HREF="#elevuvt">Elevate Surface Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="reduct"></A> Reduce Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/reduce.gif" HEIGHT=218 WIDTH=490  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Reduce Tool (Order 5 (left), 4 (right))</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The reduce tool takes a number of NURBS curves from
+the selection and additionally requests a tolerance value.</P>
+<DT><B>Operation</B><DD>
+<P>The order of the selected NURBS curves will be decreased
+by one if the shape of the reduced curves does not deviate from the original
+curves by the given tolerance in any point.</P>
+<P>See also the example image above where a curve of order five and
+length 11, defined on the knot vector<BR>
+[&thinsp;0&thinsp;0&thinsp;0&thinsp;0&thinsp;0&ensp;0.25&thinsp;0.25&ensp;0.5&thinsp;0.5&ensp;0.75&thinsp;0.75&ensp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;],<BR>
+has been reduced to order four and is now of length seven and
+defined on the knot vector<BR>
+[&thinsp;0&thinsp;0&thinsp;0&thinsp;0&ensp;0.25&ensp;0.5&ensp;0.75&ensp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;].</P>
+
+<DT><B>Notes</B><DD>
+<P>If the knot vector of the curve is not clamped, it
+will be clamped automatically. The knot type of the curve will
+be changed to <CODE>"Custom"</CODE>. Control points will be removed and the position
+of old control points may be changed in the progress.</P>
+<P>The point selection will be removed from the processed objects.</P>
+<P>The ability to reduce a certain curve can be improved by increasing
+the multiplicity of internal knots first. Furthermore, if the shape
+of the reduced curve has priority over the distribution of control points
+suitable for further editing, the curve approximation tool may be
+able to deliver a result even if curve reduction fails,
+see section 
+<A HREF="#approxnct">Approximate Tool</A>.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#screducenc">reduceNC</A>
+and the related tools for
+surfaces 
+<A HREF="#reduceuvt">Reduce Surface Tools</A>.</P>
+
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="extendt"></A> Extend Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/extendnc.gif" HEIGHT=322 WIDTH=562  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Extend Tool Example (Original Curve (upper), Original Curve and Extended Curve Superimposed (lower))</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The extend tool takes a number of NURBS curves from
+the selection and additionally requests a point in space.</P>
+<DT><B>Operation</B><DD>
+<P>The selected NURBS curves will be extended to the
+specified point in space without changing the already existing
+shape of the curves.</P>
+<P>The knot vector of the curves will be rescaled to the range [0,&thinsp;1].
+If the knot vector of a curve is not clamped at the end, it
+will be clamped automatically. The knot type of each curve will be
+changed to <CODE>"Custom"</CODE>. A new control point will be added and the position
+of old control points may be changed in the progress.</P>
+<DT><B>Notes</B><DD>
+<P>Due to the constraints that only one control point will be added
+to the curve and the current shape must be maintained, the new curve
+may form unusual/unwanted big arcs if the new point deviates too
+much from the tangent in the endpoint of the original curve.</P>
+<P>The point selection will be removed from the processed objects.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#scextendnc">extendNC</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="clat"></A> Clamp Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/clampnc.gif" HEIGHT=202 WIDTH=316  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Clamp Tool (left: original curve, right: clamped curve)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The clamp tool takes a number of NURBS curves from
+the selection.</P>
+<DT><B>Operation</B><DD>
+<P>The knot vectors of the selected NURBS curves will be
+changed using knot insertion so that the first and the last knot
+have a multiplicity equal to the order of the curve,
+without changing the shape of the curve. The curve will
+interpolate the first and the last control point afterwards (unless
+the weights of those points are not 1.0).</P>
+<P>See also the image above, where a curve of length seven and order four,
+originally defined on the knot vector:<BR>
+[&thinsp;0&ensp;0.1&ensp;0.2&ensp;0.3&ensp;0.4&ensp;0.5&ensp;0.6&ensp;0.7&ensp;0.8&ensp;0.9&ensp;1&thinsp;]<BR>
+has been clamped and is now defined on the knot vector:<BR>
+[&thinsp;0.3&thinsp;0.3&thinsp;0.3&thinsp;0.3&ensp;0.4&ensp;0.5&ensp;0.6&ensp;0.7&thinsp;0.7&thinsp;0.7&thinsp;0.7&thinsp;].</P>
+
+<DT><B>Notes</B><DD>
+<P>The knot type of the curves will be changed to <CODE>"Custom"</CODE>.</P>
+<P>In Ayam versions prior to 1.18 it was an error if the curve was already
+clamped at either side, this is no longer the case.
+Furthermore, curves with multiple knots in the end region(s) could not be
+clamped, this works ok now.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#scclampnc">clampNC</A>
+and the related tool for
+surfaces 
+<A HREF="#clanpt">Clamp Surface Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="unclat"></A> Unclamp Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/unclampnc.gif" HEIGHT=314 WIDTH=538  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Unclamp Tool (left: original curve, right: unclamped curve)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The unclamp tool takes a number of NURBS curves from
+the selection.</P>
+<DT><B>Operation</B><DD>
+<P>The knot vectors of the selected NURBS curves will be
+changed so that there are no multiple knots at the respective ends
+of the knot vectors. The shape of the curve will not change but the
+position of some control points will. The knot type of the curve can
+be changed to type <CODE>"Custom"</CODE>.</P>
+<P>See also the image above where a NURBS curve of length four and
+order three, defined on the knot vector<BR>
+[&thinsp;0&thinsp;0&thinsp;0&ensp;0.5&ensp;1&thinsp;1&thinsp;1&thinsp;],<BR>
+has been unclamped and is now using the new knot vector:<BR>
+[&thinsp;0&ensp;0.1333&ensp;0.3333&ensp;0.5&ensp;0.6667&ensp;0.8333&ensp;1&thinsp;].</P>
+<DT><B>Notes</B><DD>
+<P>Unclamping is <EM>not</EM> an exact reversal of clamping (and vice versa).</P>
+<P>Furthermore, as the unclamp operation only works on completely clamped curves,
+the unclamp tool may need to clamp the curve first.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#scunclampnc">unclampNC</A>
+and the related tool for
+surfaces 
+<A HREF="#unclanpt">Unclamp Surface Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="insknt"></A> Insert Knot Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/inskn.gif" HEIGHT=188 WIDTH=310  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Insert Knot Tool (left: original curve, right: a knot has been
+inserted one time at <EM>u</EM>&thinsp;=&thinsp;0.5)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The insert knot tool takes a number of NURBS curves from
+the selection and requests two additional values, a parametric value <I>u</I>
+and an integer value <I>i</I>.</P>
+<DT><B>Operation</B><DD>
+<P>A knot with the specified value <I>u</I> will be inserted <I>i</I>
+times into the knot vector of the selected curves, without changing the
+shape of the curves.</P>
+<P>See also the image above, where a knot has been inserted at
+<EM>u</EM>&thinsp;=&thinsp;0.5 one time into a curve of length four and
+order four that was originally defined on the knot vector:<BR>
+[&thinsp;0&thinsp;0&thinsp;0&thinsp;0&ensp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;].<BR>
+The processed curve of length five is defined on the knot vector:<BR>
+[&thinsp;0&thinsp;0&thinsp;0&thinsp;0&ensp;0.5&ensp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;].</P>
+<DT><B>Notes</B><DD>
+<P>The knot type of the curves will be changed to <CODE>"Custom"</CODE>.</P>
+<P>The point selection will be removed from the processed objects.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#scinsknnc">insknNC</A>
+and the related tool for
+surfaces 
+<A HREF="#insknnpt">Insert Knot Surface Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="remknt"></A> Remove Knot Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/remkn.gif" HEIGHT=165 WIDTH=381  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Remove Knot Tool (left: original curve, right: the knot
+at <EM>t</EM>&thinsp;=&thinsp;0.5 has been removed one time)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The remove knot tool takes a number of NURBS curves from
+the selection and requests three additional values, a parametric value <I>t</I>,
+an integer value <I>r</I>, and a tolerance value <I>tol</I>.</P>
+<DT><B>Operation</B><DD>
+<P>The knot at the specified parametric value <I>t</I> will
+be removed <I>r</I> times from the knot vector of the selected curves if
+the shape of the resulting curve does not deviate more than <I>tol</I>
+from the original curve in any point. Since Ayam 1.20 the knot to remove
+may also be specified using its (zero based)
+index in the knot vector; for instance by entering <CODE>"-i 3"</CODE> instead of
+<CODE>"0.5"</CODE> for the knot vector:<BR>
+[&thinsp;0&thinsp;0&thinsp;0&ensp;0.5&ensp;1&thinsp;1&thinsp;1&thinsp;].<BR>
+If the knot can not be removed <I>r</I> times due to the tolerance given, an
+error is reported and the original curve is left unchanged.<BR>
+This operation also fails, if the knot removal would lead to a curve
+of lower order.</P>
+<P>See also the image above, where the knot <EM>t</EM>&thinsp;=&thinsp;0.5
+has been removed one time from a curve of length five and
+order four that was originally defined on the knot vector:<BR>
+[&thinsp;0&thinsp;0&thinsp;0&thinsp;0&ensp;0.5&ensp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;].<BR>
+The processed curve of length four is defined on the knot vector:<BR>
+[&thinsp;0&thinsp;0&thinsp;0&thinsp;0&ensp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;].</P>
+
+<DT><B>Notes</B><DD>
+<P>If <I>tol</I> is <CODE>"0.0"</CODE> the remove knot tool tries to
+work without changing the shape of the curve, i.e.&nbsp;only superfluous
+knots will be removed.
+If <I>tol</I> is <CODE>"Inf"</CODE> (infinity) the specified knot will be removed
+regardless of potential curve changes.</P>
+<P>The point selection will be removed from the processed objects.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#scremknnc">remknNC</A>
+and the related tool for
+surfaces 
+<A HREF="#remknnpt">Remove Knot Surface Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="remsuknt"></A> Remove Superfluous Knots Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/remsuknnc.gif" HEIGHT=303 WIDTH=537  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Remove Superfluous Knots Tool (left: original curve, right: superfluous knots have been removed)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The remove superfluous knots tool takes a number of NURBS
+curves from the selection and requests a tolerance value <I>tol</I>.</P>
+<DT><B>Operation</B><DD>
+<P>All knots that do not contribute to the shape of the
+curve will be removed from the knot vector of the selected curves if
+the shape of the resulting curve does not deviate more than <I>tol</I>
+from the original curve in any point.</P>
+<P>It is no error if no knots can be removed.</P>
+<P>See also the example image above where a curve created by the concatenation
+algorithm with knot type <CODE>"Custom"</CODE> and therefore superfluous knots has
+been cleaned up by the remove superfluous knots tool.
+The original curve of order three with 28 control points is defined on the knot
+vector:<BR>
+[&thinsp;0&thinsp;0&thinsp;0&ensp;1&thinsp;1&thinsp;1&ensp;1.5&ensp;2&thinsp;2&thinsp;2&ensp;3&thinsp;3&thinsp;3&ensp;3.5&ensp;4&thinsp;4&thinsp;4&ensp;5&thinsp;5&thinsp;5&ensp;5.5&ensp;6&thinsp;6&thinsp;6&ensp;7&thinsp;7&thinsp;7&ensp;7.5&ensp;8&thinsp;8&thinsp;8&thinsp;].<BR>
+The processed curve has 21 control points and is defined on the knot
+vector:<BR>
+[&thinsp;0&thinsp;0&thinsp;0&ensp;1&thinsp;1&ensp;1.5&ensp;2&thinsp;2&ensp;3&thinsp;3&ensp;3.5&ensp;4&thinsp;4&ensp;5&thinsp;5&ensp;5.5&ensp;6&thinsp;6&ensp;7&thinsp;7&ensp;7.5&ensp;8&thinsp;8&thinsp;8&thinsp;].</P>
+
+<DT><B>Notes</B><DD>
+<P>The point selection will be removed from the processed objects.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#scremsuknnc">remsuknNC</A>
+and the related tools for
+surfaces 
+<A HREF="#remsuknuvt">Remove Superfluous Knots Surface Tools</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="fairt"></A> Fair Tool</H3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<P>
+<CENTER>
+<IMG SRC="pics/fairwing1.gif" HEIGHT=208 WIDTH=533  loading="lazy">
+&nbsp;a<BR><BR>
+<IMG SRC="pics/fairwing2.gif" HEIGHT=208 WIDTH=533  loading="lazy">
+&nbsp;b<BR><BR>
+<IMG SRC="pics/fairwing1cu.gif" HEIGHT=247 WIDTH=280  loading="lazy">
+&nbsp;c&emsp;
+<IMG SRC="pics/fairwing2cu.gif" HEIGHT=247 WIDTH=280  loading="lazy">
+&nbsp;d
+</CENTER><P><CENTER><FONT SIZE="-1">Fair Tool (a: Original, b: Processed, c: Curvature of a, d: Curvature of b)</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The fairing tool takes a number of NURBS
+curves from the selection and requests a tolerance value <I>tol</I>.</P>
+
+<DT><B>Operation</B><DD>
+<P>The control points of the curves will be modified
+so that the shape of the curve is somewhat smoother. The movement
+of a single control point is restricted by the specified tolerance
+value. This can also be used to apply the tool multiple times
+until the curve shape meets the requirements.<SMALL TITLE="Since 1.28."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>If the option <CODE>"Fair Worst"</CODE> is enabled, only the control point that
+would be moved the longest distance will be
+modified.<SMALL TITLE="Since 1.29."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>If there are selected points, only those will be modified.</P>
+<P>See also the example images above where a kink on the leading edge of
+a wing profile (a) has been removed by applying the fairing
+tool with a tolerance value of 0.1 two times, yielding the lower curve (b).
+Compare also the curvature plots of both curves (c and d).</P>
+
+<DT><B>Notes</B><DD>
+<P>The fairing algorithm uses the four direct and indirect neighboring
+control points of each point to process. This poses a problem for the
+end points of an open curve. Therefore, the control vector of open
+curves will be extended by a simple linear extrapolation algorithm,
+so that every point of the original curve
+has four neighbors. However, the fairing quality for the first, second,
+second to last, and last control point of an open curve will be somewhat
+lower.</P>
+<P>The original algorithm only delivers optimal results for cubic curves
+(of order four), using curves of other degrees will work too but yield
+worse results.</P>
+<P>Due to the fact that the algorithm uses already faired points as
+input points for other points to fair, it is <EM>not</EM> direction invariant
+if used on all or multiple neighboring points.
+Also, control points already placed on very good if not optimal positions
+may be moved away to less favorable positions. Further problems arise
+for multiple control points, used to model sharp corners, as the
+fairing algorithm does not differentiate between wanted and unwanted
+non-continuous curve features.
+If in doubt, just select a single control point to fair.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#scfairnc">fairNC</A>
+and the related tool for
+surfaces 
+<A HREF="#fairst">Fair Surface Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="conct"></A> Concat Tool</H3>
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The concat tool takes all NURBS curves and
+NURBS curve providing objects from the selection and requests
+parameters for closing, knot type, and fillet
+creation.<SMALL TITLE="Since 1.27."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+
+<DT><B>Operation</B><DD>
+<P>The selected curves will be concatenated
+and a new NURBS curve will be created.
+<BLOCKQUOTE><CODE>
+<PRE>
+|--NCurve             |--NCurve
+|--NCurve     ==>     |--NCurve
+                      |--NCurve
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+
+<DT><B>Notes</B><DD>
+<P>The order of the new curve is taken from the first curve.
+If one of the curves has weights, the resulting curve
+will have weights too.</P>
+<P>The original NURBS curves will not be deleted by this tool.</P>
+<P>See also section 
+<A HREF="ayam-4.html#concatncobj">ConcatNC Object</A> and
+the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#scconcatc">concatC</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="splitt"></A> Split Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/splitnc.gif" HEIGHT=188 WIDTH=310  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Split Tool (left: original curve, right: resulting split curves
+for <EM>u</EM>&thinsp;=&thinsp;0.5)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The split curves tool takes a number of NURBS curves from
+the selection and additionally requests a parametric value <I>u</I>.
+In addition, a <EM>relative</EM> and an <EM>append</EM> option can be set.</P>
+<DT><B>Operation</B><DD>
+<P>The selected NURBS curves will be split into two
+NURBS curves at the designated parametric value <I>u</I>. The splitting process
+involves application of knot insertion, so that all new curves will
+get a custom knot vector. The valid range of parametric values
+depends on the knot vector of the original curve unless the
+<EM>relative</EM> option is set, where it must be in the range (0.0, 1.0).</P>
+<P>The new curve(s) will be inserted
+into the level right after the respective curve(s) to split unless
+the <EM>append</EM> option is set.<SMALL TITLE="Since 1.24."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+<BLOCKQUOTE><CODE>
+<PRE>
+|--NCurve             |--NCurve
+|--Sphere     ==>     |--NCurve
+                      |--Sphere
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+<P>See also the image above, where a curve of length and order four,
+originally defined on the knot vector<BR>
+[&thinsp;0&thinsp;0&thinsp;0&thinsp;0&ensp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;],<BR>
+was split at parametric value 0.5 resulting in a new
+curve of length and order four that is defined on the knot vector<BR>
+[&thinsp;0.5&thinsp;0.5&thinsp;0.5&thinsp;0.5&ensp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;].<BR>
+The original curve will be defined on the knot vector<BR>
+[&thinsp;0&thinsp;0&thinsp;0&thinsp;0&ensp;0.5&thinsp;0.5&thinsp;0.5&thinsp;0.5&thinsp;]<BR>
+after this operation.</P>
+
+<DT><B>Notes</B><DD>
+<P>The original selected NURBS curve objects will be changed.</P>
+<P>The point selection will be removed from the original curves.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#scsplitnc">splitNC</A>
+and the related tool for
+surfaces 
+<A HREF="#splitnpt">Split Surface Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="ctrimt"></A> Curve Trim Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/trimnc.gif" HEIGHT=217 WIDTH=278  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Trim Tool (left: original curve, right: resulting trimmed curve for
+<EM>umin</EM>&thinsp;=&thinsp;0.1, <EM>umax</EM>&thinsp;=&thinsp;0.5)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The trim curves tool takes all selected NURBS curves from
+the selection and additionally requests two parametric values, <EM>umin</EM> and
+<EM>umax</EM>.</P>
+
+<DT><B>Operation</B><DD>
+<P>The selected NURBS curves will be trimmed to the
+designated parametric range (<EM>umin</EM>, <EM>umax</EM>).</P>
+<P>See also the image above, where a curve of length and order four,
+originally defined on the knot vector<BR>
+[&thinsp;0&thinsp;0&thinsp;0&thinsp;0&ensp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;],<BR>
+was trimmed at the parametric values 0.1 0.5 resulting in a new
+curve of length and order four that is defined on the knot vector<BR>
+[&thinsp;0.1&thinsp;0.1&thinsp;0.1&thinsp;0.1&ensp;0.5&thinsp;0.5&thinsp;0.5&thinsp;0.5&thinsp;].</P>
+
+<DT><B>Notes</B><DD>
+<P>The trimming process involves the application of knot insertion
+so that the curves will get a custom knot vector.</P>
+<P>The point selection will be removed from the original objects.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#sctrimnc">trimNC</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="reparamt"></A> Reparameterisation Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/reparamnc.gif" HEIGHT=290 WIDTH=454  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Reparameterisation Tool (ul: original curve, ur: reparameterised curve
+(white) over original (blue),
+ll: original curve used as clone trajectory,
+lr: reparameterised curve used as clone trajectory)</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The reparameterisation curves tool takes a number of
+NURBS curves from
+the selection and additionally requests a type <I>t</I>.</P>
+
+<DT><B>Operation</B><DD>
+<P>The selected NURBS curves will be approximately
+reparameterised to the given knot type <I>t</I>.</P>
+<P>See also the image above, where a curve of length six and order four,
+originally defined on the knot vector<BR>
+[&thinsp;0&thinsp;0&thinsp;0&thinsp;0&ensp;0.8&ensp;0.9&ensp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;],<BR>
+was reparameterised to type <CODE>"Centripetal"</CODE> resulting in a new
+curve of length six and order four that is defined on the knot vector<BR>
+[&thinsp;0&thinsp;0&thinsp;0&thinsp;0&ensp;0.323&ensp;0.5&ensp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;].<BR></P>
+
+<DT><B>Notes</B><DD>
+<P>The reparameterisation process
+involves a tesselation followed by an approximation, so that
+<UL>
+<LI>the shape of the new curve will slightly differ from the original curve,</LI>
+<LI>the new knot vector will be of type <CODE>"Custom"</CODE>,</LI>
+<LI>any weights will be removed&thinsp;/&thinsp;reset to 1.0,</LI>
+<LI>periodic curves will be converted to closed curves.</LI>
+</UL>
+</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#screparamnc">reparamNC</A></P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="plotcurt"></A> Plot Curvature Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/plotcur.gif" HEIGHT=298 WIDTH=372  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Curvature Plot (top) of simple NURBS curve (bottom)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The plot curvature tool takes a number of NURBS curves from
+the selection and requests three additional values: the number of data
+points, the width value and the height value.</P>
+<DT><B>Operation</B><DD>
+<P>A new NURBS curve, depicting the curvature of the selected
+NURBS curve, will be created for each of the selected
+NURBS curves. The curvature plots will have a length defined by the
+number of data points and will be scaled to the specified width
+and by the specified height value. See also the image above.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="interpnct"></A> Interpolate Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/interpnc.gif" HEIGHT=206 WIDTH=491  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Interpolate Curve Tool (left-white: original curve, left-blue and right: interpolating curve)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The interpolate tool takes a number of NURBS
+curves from the selection and requests five additional parameters.</P>
+<DT><B>Operation</B><DD>
+<P>The curves will be modified so that they interpolate
+all original control points with the desired interpolation order,
+parameterisation type and end derivatives.
+For a detailed description of the parameters see
+section 
+<A HREF="ayam-4.html#icp">ICurveAttr Property</A>.
+See also the image above.</P>
+<DT><B>Notes</B><DD>
+<P>Eventually present weight information of the original curves will be ignored.</P>
+<P>The point selection will be removed from the original objects.</P>
+<P>See also the documentation of the corresponding scripting interface command
+<A HREF="ayam-6.html#scinterpunp">interpNC</A> and the related tool for
+surfaces 
+<A HREF="#interpnpt">Interpolate Surface Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="approxnct"></A> Approximate Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/approxnc.gif" HEIGHT=198 WIDTH=659  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Approximate Curve Tool (left: original curve, middle and right: approximating curve)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The approximate tool takes a number of NURBS
+curves from the selection and requests additional parameters:
+new length, new order, whether to create a closed curve, and a tesselation
+parameter.</P>
+<DT><B>Operation</B><DD>
+<P>The curves will be modified so that they approximate
+their respective original curve shape(s) using a new non-rational NURBS curve
+with an adjustable number of new control points and order.
+The data points to approximate are created by tesselating the original
+curves.
+The tesselation parameter controls how fine this tesselation shall be,
+larger values lead to more data points and possibly higher approximation
+fidelity but also slower processing. A value of 0 disables the tesselation
+completely and the original control points will be used as
+approximation input.<SMALL TITLE="Since 1.29."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL><BR>
+See also the image above where a curve with seven original control points
+of order four has been approximated by a curve with just three control
+points and order three (middle) and by a curve with seven control points
+and order three (left).</P>
+<DT><B>Notes</B><DD>
+<P>The point selection will be removed from the original objects.</P>
+<P>Potentially present weights will be removed from the processed curves.</P>
+<P>See also the documentation of the corresponding scripting interface command
+<A HREF="ayam-6.html#scapproxnc">approxNC</A>,
+and the related tool for
+surfaces 
+<A HREF="#approxnpt">Approximate Surface Tools</A>.</P>
+<P>Approximation is also used by the 
+<A HREF="#reparamt">Reparameterisation Tool</A>.</P>
+
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="shiftclc"></A> Shift Closed Curve Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/shiftclsbsp.gif" HEIGHT=178 WIDTH=251  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Shift Closed Curve Tool (left: Closed B-Spline Curve, right: Shifted Curve)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The shift closed curve tool takes a number of
+closed curves (NCurve, ICurve, and ACurve objects are supported),
+from the selection and requests one additional integer parameter <I>i</I>.</P>
+<DT><B>Operation</B><DD>
+<P>The control points of the curve(s) will be shifted
+<I>i</I> times.<BR>
+The parameter <I>i</I> may be negative to revert the direction of the
+shifting.<BR>
+For a simple closed curve, shifting with <I>i</I>&thinsp;=&thinsp;1, the
+first control
+point will get the coordinates of the former last control point.
+This means, positive shifts occur in the direction of the curve.
+Note that for closed and periodic NURBS curves, the multiple points will
+be managed correctly.</P>
+<DT><B>Notes</B><DD>
+<P>Eventually selected points will still be selected after this
+operation. See also the image above.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#scshiftc">shiftC</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="toxyt"></A> To XY Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/toxy.gif" HEIGHT=222 WIDTH=384  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">To XY Tool (left: original curve, right: modified curve)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The To XY tool takes a number of
+NCurve, ACurve, or ICurve objects from the selection. The curves should be
+planar. Curves that form a single straight line are not supported.</P>
+<DT><B>Operation</B><DD>
+<P>The control points of the curves will be rotated,
+so that they are in the XY-plane of the respective object space defined by
+the curve objects. Additionally, the rotation attributes of
+the curve objects will be changed so that the curve does not
+change its orientation with regard to other objects or the world space.
+The scale attributes will be reset to 1.0.</P>
+<P>See also the image above, where the left curve, planar but not defined
+in the XY-plane will be changed, so that it is defined in the XY-plane
+(mind the two different object coordinate systems in conjunction with
+the world coordinate system in the middle).</P>
+<DT><B>Notes</B><DD>
+<P>A reverse operation, apart from undo, would be to apply the
+current transformation attributes to the control points of the curves.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#sctoxyc">toXYC</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="makecompt"></A> Make Compatible Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/makecomp.gif" HEIGHT=190 WIDTH=382  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Make Compatible Tool (left: Original Curves, right: Compatible Curves)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The make compatible tool takes a number of
+NURBS curves from the selection and requests a level.</P>
+<DT><B>Operation</B><DD>
+<P>The curves will be made compatible, so that, based on
+the level parameter given, they are of the same length, order and defined
+on the same knot vector.<BR>
+This eases the application of the build from curves tool
+(see section 
+<A HREF="#buildnpt">Build from Curves Tool</A>)
+or the application of skinning
+(see section 
+<A HREF="ayam-4.html#skinobj">Skin Object</A>).</P>
+
+<DT><B>Notes</B><DD>
+<P>This tool does not change the geometry of the curves.
+However, since clamping, degree elevation, and knot insertion may be
+used on the curves, their order, knot vectors, and control points
+may be changed.</P>
+
+<P>The orders of all curves will simply be raised to the maximum order of
+all curves; no attempt is made to check, whether lowering orders would
+lead to a simpler result.</P>
+<P>The point selection will be removed from the original objects.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#scmakecompnc">makeCompNC</A>
+and the related tool for
+surfaces 
+<A HREF="#makecompst">Make Surfaces Compatible Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="resckrt"></A> Rescale Knots to Range Tool</H3>
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The rescale knots to range tool takes a number of
+NURBS curves from the selection and requests a range (two float values).</P>
+<DT><B>Operation</B><DD>
+<P>The knot vectors of the curves will be scaled, so that
+their first and last values match the given range.</P>
+<DT><B>Notes</B><DD>
+<P>Since Ayam 1.20 the knot type of the curve does
+not have to be <CODE>"Custom"</CODE> anymore. Furthermore, rescaling the knots
+does not change the knot type.</P>
+<P>This tool does not change the geometry of the curves.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#screscaleknnc">rescaleknNC</A>
+and the related tool for
+surfaces 
+<A HREF="#resckrnpt">Rescale Knots to Range Surface Tool</A>.</P>
+</DL>
+</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="resckmt"></A> Rescale Knots to Mindist Tool</H3>
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The rescale knots to mindist tool takes a number of
+NURBS curves from the selection and request a minimum distance value.</P>
+<DT><B>Operation</B><DD>
+<P>The knot vectors of the curves will be scaled, so that
+no two knots have a distance smaller than the given minimum distance
+(except for multiple knots).</P>
+<DT><B>Notes</B><DD>
+<P>Since Ayam 1.20 the knot type of the curve does
+not have to be <CODE>"Custom"</CODE> anymore. Furthermore, rescaling the knots
+does not change the knot type.</P>
+<P>This tool does not change the geometry of the curves.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#screscaleknnc">rescaleknNC</A>
+and the related tool for
+surfaces 
+<A HREF="#resckmnpt">Rescale Knots to Mindist Surface Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="collt"></A> Collapse Points Tool</H3>
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The collapse tool expects a number of selected objects
+with selected (tagged) control points
+(see section 
+<A HREF="ayam-3.html#selac">Selecting Points</A> for information
+on how to select (tag) control points).</P>
+<DT><B>Operation</B><DD>
+<P>The selected control points will be made a
+single multiple point, all points will get the coordinate values
+of the respective center point.
+This means that the shape of the processed curve/surface can change.</P>
+<DT><B>Notes</B><DD>
+<P>This command used to only create multiple points for NURBS curve/surface
+objects and clear the point selection.</P>
+
+<P>In view windows this tool is bound to the <CODE>&lt;q&gt;</CODE> key.</P>
+</DL>
+</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="explt"></A> Explode Points Tool</H3>
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The explode tool expects some objects with
+a number of selected (tagged) multiple points
+(see section 
+<A HREF="ayam-3.html#selac">Selecting Points</A> for information
+on how to select (tag) control points).</P>
+<DT><B>Operation</B><DD>
+<P>The points forming the selected multiple points will
+be moved away from each other.
+The shapes of the processed objects will change.</P>
+<DT><B>Notes</B><DD>
+<P>This command used to only remove already existing multiple points
+of NURBS curves/surfaces that were created by the <CODE>"CreateMP"</CODE> option
+or the collapse tool above before.</P>
+
+<P>In view windows this tool is bound to the <CODE>&lt;Q&gt;</CODE> key.</P>
+</DL>
+</P>
+
+
+<H2><A NAME="sctools"></A> <A NAME="ss5.4">5.4</A> <A HREF="ayam.html#toc5.4">Surface Creation Tools</A>
+</H2>
+
+<P>These tools create parametric surface objects.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="nspt"></A> NURBSphere Tool</H3>
+
+
+
+
+
+
+
+
+
+
+
+<P>
+<CENTER>
+<IMG SRC="pics/nsphere-w.gif" HEIGHT=250 WIDTH=250  loading="lazy">
+&emsp;
+<IMG SRC="pics/nsphere-s.gif" HEIGHT=250 WIDTH=250  loading="lazy">
+
+</CENTER><P><CENTER><FONT SIZE="-1">NURB Sphere (l: Control Polygon, r: Shaded Surface)</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>Radius.</P>
+<DT><B>Operation</B><DD>
+<P>The NURBSphere tool creates a half circle NURBS curve
+of given radius and revolves it about the Y-axis thus forming a sphere.</P>
+<DT><B>Notes</B><DD>
+<P>Due to the construction method, the NURBS surface is
+degenerate at the poles which can lead to shading artefacts (compare
+the image above).</P>
+</DL>
+</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="nsp2t"></A> NURBSphere2 Tool</H3>
+
+
+
+
+
+
+
+
+
+
+
+<P>
+<CENTER>
+<IMG SRC="pics/nsphere2-w.gif" HEIGHT=250 WIDTH=250  loading="lazy">
+&emsp;
+<IMG SRC="pics/nsphere2-s.gif" HEIGHT=250 WIDTH=250  loading="lazy">
+
+</CENTER><P><CENTER><FONT SIZE="-1">Cobb NURB Sphere (l: Control Polygon, r: Shaded Surface)</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>None.</P>
+<DT><B>Operation</B><DD>
+<P>The NURBSphere2 tool creates a Cobb NURB sphere of radius 1.0,
+consisting of six NURBS patches arranged in a configuration resembling
+a box, see also the above image.</P>
+<DT><B>Notes</B><DD>
+<P>The NURBS patches are of comparatively high order (5).
+In contrast to the standard NURBS sphere, the Cobb sphere is not degenerate
+and no shading artefacts result.</P>
+</DL>
+</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="revt"></A> Revolve Tool</H3>
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The revolve tool takes all selected objects
+or their selected boundaries.</P>
+<DT><B>Operation</B><DD>
+<P>The tool creates a Revolve object, and moves
+the selected objects to it.
+<BLOCKQUOTE><CODE>
+<PRE>
+|-NCurve     ==>     +-Revolve
+                       \-NCurve
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+<P>For selected boundaries, properly parameterised ExtrNC objects
+will be created:
+<BLOCKQUOTE><CODE>
+<PRE>
+                     |-NPatch  &lt;------.
+|-NPatch     ==>     +-Revolve        |
+                       +-ExtrNC       |
+                         \-Instance --'
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+
+<DT><B>Notes</B><DD>
+<P>See section 
+<A HREF="ayam-4.html#revolveobj">Revolve Object</A>
+for more information regarding the revolve object.</P>
+<P>This tool uses the object clipboard to move the objects so that the
+original clipboard contents are lost when this tool finishes.</P>
+<P>Holding down the <CODE>&lt;Ctrl&gt;</CODE> key while clicking on the
+corresponding icon in the toolbox will keep the parameter curve
+selected and the current level will also be changed.</P>
+</DL>
+</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="swint"></A> Swing Tool</H3>
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The swing tool takes all selected objects
+or their selected boundaries.</P>
+<DT><B>Operation</B><DD>
+<P>The tool creates a Swing object, moves
+the selected objects to it, and rotates the first curve to
+the YZ-plane and the second curve to the XZ-plane.
+If the respective curve object is of type
+NCurve, ICurve, or ACurve, the control points will be modified
+and the rotation attributes will be reset, objects of other types will be
+rotated by their transformation attributes.<SMALL TITLE="Since 1.24."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+The rotation will be recorded in the undo buffer.
+<BLOCKQUOTE><CODE>
+<PRE>
+|-Cross_section(NCurve)         +-Swing
+|-Trajectory(NCurve)      ==>    |-Cross_section(NCurve)
+                                 \-Trajectory(NCurve)
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+<P>For selected boundaries, properly parameterised ExtrNC objects
+will be created:
+<BLOCKQUOTE><CODE>
+<PRE>
+                     |-NPatch  &lt;------.
+|-NPatch     ==>     +-Swing          |
+                       +-ExtrNC       |
+                         \-Instance --'
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+
+<DT><B>Notes</B><DD>
+<P>See section 
+<A HREF="ayam-4.html#swingobj">Swing Object</A>
+for more information regarding the Swing object.</P>
+<P>This tool uses the object clipboard to move the objects so that the
+original clipboard contents are lost when this tool finishes.</P>
+<P>Holding down the <CODE>&lt;Ctrl&gt;</CODE> key while clicking on the
+corresponding icon in the toolbox will keep the parameter curves
+selected and the current level will also be changed.</P>
+</DL>
+</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="extt"></A> Extrude Tool</H3>
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The extrude tool takes all selected objects
+or their selected boundaries.</P>
+<DT><B>Operation</B><DD>
+<P>The tool creates an Extrude object, and moves
+the selected objects to it.
+<BLOCKQUOTE><CODE>
+<PRE>
+|-Outline(NCurve)       +-Extrude
+|-Hole(NCurve)     ==>    |-Outline(NCurve)
+                          \-Hole(NCurve)
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+<P>For selected boundaries, properly parameterised ExtrNC objects
+will be created:
+<BLOCKQUOTE><CODE>
+<PRE>
+                     |-NPatch  &lt;------.
+|-NPatch     ==>     +-Extrude        |
+                       +-ExtrNC       |
+                         \-Instance --'
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+
+<DT><B>Notes</B><DD>
+<P>See section 
+<A HREF="ayam-4.html#extrudeobj">Extrude Object</A>
+for more information regarding the Extrude object.</P>
+<P>This tool uses the object clipboard to move the objects so that the
+original clipboard contents are lost when this tool finishes.</P>
+<P>Holding down the <CODE>&lt;Ctrl&gt;</CODE> key while clicking on the
+corresponding icon in the toolbox will keep the parameter curve
+selected and the current level will also be changed.</P>
+</DL>
+</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="sweept"></A> Sweep Tool</H3>
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The sweep tool takes all selected objects
+or their selected boundaries.</P>
+<DT><B>Operation</B><DD>
+<P>The tool creates a Sweep object, moves
+the selected objects to it, and offers to rotate the first curve object
+to the YZ-plane (if it is not already defined in this plane). If this
+curve object is of type NCurve, ICurve, or ACurve, the control points will
+be modified and the rotation attributes will be reset, objects of other
+types will be rotated by their transformation attributes.<SMALL TITLE="Since 1.24."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+The rotation will be recorded in the undo buffer.
+<BLOCKQUOTE><CODE>
+<PRE>
+|-Cross_section(NCurve)         +-Sweep
+|-Trajectory(NCurve)     ==>      |-Cross_section(NCurve)
+                                  \-Trajectory(NCurve)
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+<P>For selected boundaries, properly parameterised ExtrNC objects
+will be created:
+<BLOCKQUOTE><CODE>
+<PRE>
+                     |-NPatch  &lt;------.
+|-NPatch     ==>     +-Sweep          |
+                       +-ExtrNC       |
+                         \-Instance --'
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+
+<DT><B>Notes</B><DD>
+<P>See section 
+<A HREF="ayam-4.html#sweepobj">Sweep Object</A>
+for more information regarding the Sweep object.</P>
+<P>This tool uses the object clipboard to move the objects so that the
+original clipboard contents are lost when this tool finishes.</P>
+<P>Holding down the <CODE>&lt;Ctrl&gt;</CODE> key while clicking on the
+corresponding icon in the toolbox will keep the parameter curve
+selected and the current level will also be changed.</P>
+</DL>
+</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="bevt"></A> Bevel Tool</H3>
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The bevel tool takes all selected objects
+or their selected boundaries.</P>
+<DT><B>Operation</B><DD>
+<P>The tool creates a Bevel object, and moves
+the selected objects to it.
+<BLOCKQUOTE><CODE>
+<PRE>
+|-NCurve             +-Bevel
+             ==>       \-NCurve
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+<P>For selected boundaries, properly parameterised ExtrNC objects
+will be created:
+<BLOCKQUOTE><CODE>
+<PRE>
+                     |-NPatch  &lt;------.
+|-NPatch     ==>     +-Bevel          |
+                       +-ExtrNC       |
+                         \-Instance --'
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+
+<DT><B>Notes</B><DD>
+<P>See section 
+<A HREF="ayam-4.html#bevelobj">Bevel Object</A>
+for more information regarding the Bevel object.</P>
+<P>This tool uses the object clipboard to move the objects so that the
+original clipboard contents are lost when this tool finishes.</P>
+<P>Holding down the <CODE>&lt;Ctrl&gt;</CODE> key while clicking on the
+corresponding icon in the toolbox will keep the parameter curve
+selected and the current level will also be changed.</P>
+</DL>
+</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="capt"></A> Cap Tool</H3>
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The cap tool takes all selected objects
+or their selected boundaries.</P>
+<DT><B>Operation</B><DD>
+<P>The tool creates a Cap object, and moves
+the selected objects to it.
+<BLOCKQUOTE><CODE>
+<PRE>
+|-Outline(NCurve)         +-Cap
+|-Hole(NCurve)      ==>     |-Outline(NCurve)
+                            \-Hole(NCurve)
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+<P>For selected boundaries, properly parameterised ExtrNC objects
+will be created:
+<BLOCKQUOTE><CODE>
+<PRE>
+                     |-NPatch  &lt;------.
+|-NPatch     ==>     +-Cap            |
+                       +-ExtrNC       |
+                         \-Instance --'
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+
+<DT><B>Notes</B><DD>
+<P>See section 
+<A HREF="ayam-4.html#capobj">Cap Object</A>
+for more information regarding the Cap object.</P>
+<P>This tool uses the object clipboard to move the objects so that the
+original clipboard contents are lost when this tool finishes.</P>
+<P>Holding down the <CODE>&lt;Ctrl&gt;</CODE> key while clicking on the
+corresponding icon in the toolbox will keep the parameter curve
+selected and the current level will also be changed.</P>
+</DL>
+</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="bi1t"></A> Birail1 Tool</H3>
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The birail1 tool takes all selected objects
+or their selected boundaries.</P>
+<DT><B>Operation</B><DD>
+<P>The tool creates a Birail1 object, and moves
+the selected objects to it.
+<BLOCKQUOTE><CODE>
+<PRE>
+|-Cross_section(NCurve)      +-Birail1
+|-Rail1(NCurve)         ==>    |-Cross_section(NCurve)
+|-Rail2(NCurve)                |-Rail1(NCurve)
+                               \-Rail2(NCurve)
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+<P>For selected boundaries, properly parameterised ExtrNC objects
+will be created:
+<BLOCKQUOTE><CODE>
+<PRE>
+                     |-NPatch  &lt;------.
+|-NPatch     ==>     +-Birail1        |
+                       +-ExtrNC       |
+                         \-Instance --'
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+
+<DT><B>Notes</B><DD>
+<P>See section 
+<A HREF="ayam-4.html#birail1obj">Birail1 Object</A>
+for more information regarding the Birail1 object.</P>
+<P>This tool uses the object clipboard to move the objects so that the
+original clipboard contents are lost when this tool finishes.</P>
+<P>Holding down the <CODE>&lt;Ctrl&gt;</CODE> key while clicking on the
+corresponding icon in the toolbox will keep the parameter curve
+selected and the current level will also be changed.</P>
+</DL>
+</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="bi2t"></A> Birail2 Tool</H3>
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The birail2 tool takes all selected objects
+or their selected boundaries.</P>
+<DT><B>Operation</B><DD>
+<P>The tool creates a Birail2 object, and moves
+the selected objects to it.
+<BLOCKQUOTE><CODE>
+<PRE>
+|-Cross_section1(NCurve)       +-Birail2
+|-Rail1(NCurve)                  |-Cross_section1(NCurve)
+|-Rail2(NCurve)           ==>    |-Rail1(NCurve)
+|-Cross_section2(NCurve)         |-Rail2(NCurve)
+                                 \-Cross_section2(NCurve
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+<P>For selected boundaries, properly parameterised ExtrNC objects
+will be created:
+<BLOCKQUOTE><CODE>
+<PRE>
+                     |-NPatch  &lt;------.
+|-NPatch     ==>     +-Birail2        |
+                       +-ExtrNC       |
+                         \-Instance --'
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+
+<DT><B>Notes</B><DD>
+<P>See section 
+<A HREF="ayam-4.html#birail2obj">Birail2 Object</A>
+for more information regarding the Birail2 object.</P>
+<P>This tool uses the object clipboard to move the objects so that the
+original clipboard contents are lost when this tool finishes.</P>
+<P>Holding down the <CODE>&lt;Ctrl&gt;</CODE> key while clicking on the
+corresponding icon in the toolbox will keep the parameter curve
+selected and the current level will also be changed.</P>
+</DL>
+</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="gort"></A> Gordon Tool</H3>
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The gordon tool takes all selected objects
+or their selected boundaries.</P>
+<DT><B>Operation</B><DD>
+<P>The tool creates a Gordon object, and moves
+the selected objects to it.
+<BLOCKQUOTE><CODE>
+<PRE>
+|-NCurve             +-Gordon
+|-NCurve               |-NCurve
+|-Level                |-NCurve
+|-NCurve     ==>       |-Level
+|-NCurve               |-NCurve
+                       \-NCurve
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+<P>For selected boundaries, properly parameterised ExtrNC objects
+will be created:
+<BLOCKQUOTE><CODE>
+<PRE>
+                     |-NPatch  &lt;------.
+|-NPatch     ==>     +-Gordon         |
+                       +-ExtrNC       |
+                         \-Instance --'
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+
+<DT><B>Notes</B><DD>
+<P>See section 
+<A HREF="ayam-4.html#gordonobj">Gordon Object</A>
+for more information regarding the Gordon object.</P>
+<P>This tool uses the object clipboard to move the objects so that the
+original clipboard contents are lost when this tool finishes.</P>
+<P>Holding down the <CODE>&lt;Ctrl&gt;</CODE> key while clicking on the
+corresponding icon in the toolbox will keep the parameter curve
+selected and the current level will also be changed.</P>
+</DL>
+</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="skit"></A> Skin Tool</H3>
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The skin tool takes all selected objects
+or their selected boundaries.</P>
+<DT><B>Operation</B><DD>
+<P>The tool creates a Skin object, and moves
+the selected objects to it.
+<BLOCKQUOTE><CODE>
+<PRE>
+|-NCurve             +-Skin
+|-NCurve     ==>       |-NCurve
+|-NCurve               |-NCurve
+                       \-NCurve
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+<P>For selected boundaries, properly parameterised ExtrNC objects
+will be created:
+<BLOCKQUOTE><CODE>
+<PRE>
+                     |-NPatch  &lt;------.
+|-NPatch     ==>     +-Skin           |
+                       +-ExtrNC       |
+                         \-Instance --'
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+
+<DT><B>Notes</B><DD>
+<P>See section 
+<A HREF="ayam-4.html#skinobj">Skin Object</A>
+for more information regarding the Skin object.</P>
+<P>This tool uses the object clipboard to move the objects so that the
+original clipboard contents are lost when this tool finishes.</P>
+<P>Holding down the <CODE>&lt;Ctrl&gt;</CODE> key while clicking on the
+corresponding icon in the toolbox will keep the parameter curve
+selected and the current level will also be changed.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="trimt"></A> Trim Tool</H3>
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The trim tool takes the selected objects from
+the selection.</P>
+<DT><B>Operation</B><DD>
+<P>The tool creates a Trim object, and moves
+the selected objects to it.
+<BLOCKQUOTE><CODE>
+<PRE>
+|-NPatch             +-Trim
+|-NCurve     ==>       |-NPatch
+|-NCurve               |-NCurve
+                       \-NCurve
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+<DT><B>Notes</B><DD>
+<P>See section 
+<A HREF="ayam-4.html#trimobj">Trim Object</A>
+for more information regarding the Trim object.</P>
+<P>This tool uses the object clipboard to move the objects so that the
+original clipboard contents are lost when this tool finishes.</P>
+<P>Holding down the <CODE>&lt;Ctrl&gt;</CODE> key while clicking on the
+corresponding icon in the toolbox will keep the parameter curve
+selected and the current level will also be changed.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="tweennpt"></A> Tween Surfaces Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/tweenp.gif" HEIGHT=233 WIDTH=467  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Tweened Surface (white) from two Parameter Surfaces (blue)
+with <EM>r</EM>&thinsp;=&thinsp;0.5</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The tween tool takes two NURBS patches from
+the selection and requests a parameter <EM>r</EM>. In addition, an
+<EM>append</EM> option can be set.<SMALL TITLE="Since 1.29."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<DT><B>Operation</B><DD>
+<P>The selected NURBS patches will be interpolated (tweened)
+and a new patch incorporating features from both of the original patches
+will be created.
+The parameter <EM>r</EM> defines the ratio of influence of the first and
+the second patch (the latter is using a ratio of 1&thinsp;-&thinsp;<EM>r</EM>).
+<BLOCKQUOTE><CODE>
+<PRE>
+|-NPatch1            |-NPatch1
+|-NPatch2    ==>     |-Tweened_Surface(NPatch)
+                     |-NPatch2
+</PRE>
+</CODE></BLOCKQUOTE>
+
+If a third surface is selected, the parameter <EM>r</EM> is ignored and this
+third surface defines the ratio of influence with its y
+coordinates.<SMALL TITLE="Since 1.25."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+Unless the <EM>append</EM> option is set, the new surface will be created after
+the first surface.</P>
+<DT><B>Notes</B><DD>
+<P>The two patches must be of the same width, height,
+uorder, and vorder.
+They need not be defined on the same knot vectors, however.</P>
+<P>The interpolation control surface does not need to be compatible with
+any of the original patches.</P>
+<P>If one of the patches knot vector types is <CODE>"Custom"</CODE> or the
+respective knot vector types are different, the resulting
+knot vector type will be <CODE>"Custom"</CODE> and the knot values will
+also be interpolated/tweened. Otherwise a matching knot vector will be
+generated according to the type.</P>
+<P>The original NURBS patches will not be deleted by this tool.</P>
+<P>Trim curves are completely ignored by this tool.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#sctweennp">tweenNP</A>
+and the related tool for
+curves 
+<A HREF="#tweennct">Tween Curves Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<H2><A NAME="smtools"></A> <A NAME="ss5.5">5.5</A> <A HREF="ayam.html#toc5.5">Surface Modification Tools</A>
+</H2>
+
+<P>These tools modify parametric surface objects.</P>
+<P>Unless noted otherwise, PV tags are <EM>not</EM> supported/modified
+by these tools.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="revertut"></A> Revert U Tool</H3>
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The revert u tool takes a number of NURBS patches,
+IPatch, BPatch, or PatchMesh objects from the selection.</P>
+<DT><B>Operation</B><DD>
+<P>The control point arrays of the selected objects
+will be reversed in the U dimension (width).
+For NURBS patches this tool also reverts the relative knot distances
+of the corresponding knot vector so that the surface does not
+change in shape. However, trim curves will not be modified.<BR>
+For IPatch objects the respective derivatives are reverted.</P>
+<DT><B>Notes</B><DD>
+<P>PV tags will not be modified.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#screvertus">revertuS</A>
+and the related tool for
+curves 
+<A HREF="#revertt">Revert Tool</A>.</P>
+</DL>
+</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="revertvt"></A> Revert V Tool</H3>
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The revert v tool takes a number of NURBS patches
+IPatch, BPatch, or PatchMesh objects from the selection.</P>
+<DT><B>Operation</B><DD>
+<P>The control point arrays of the selected objects
+will be reversed in the V dimension (height).
+For NURBS patches this tool also reverts the relative knot distances
+of the corresponding knot vector so that the surface does not
+change in shape. However, trim curves will not be modified.<BR>
+For IPatch objects the respective derivatives are reverted.</P>
+<DT><B>Notes</B><DD>
+<P>PV tags will not be modified.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#screvertvs">revertvS</A>
+and the related tool for
+curves 
+<A HREF="#revertt">Revert Tool</A>.</P>
+</DL>
+</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="swapuvt"></A> Swap UV Tool</H3>
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The swap uv tool takes a number of NURBS patches,
+IPatch, BPatch, or PatchMesh objects from the selection.</P>
+<DT><B>Operation</B><DD>
+<P>The U and V dimension of the selected objects will
+be swapped (width, height, and all other dimension related parameters
+will be exchanged) without altering the shape of the patches.</P>
+<DT><B>Notes</B><DD>
+<P>The point selection will be removed from the original objects.</P>
+<P>PV tags will not be modified.</P>
+<P>Also trim curves will not be modified.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#scswapuvs">swapuvS</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="refinest"></A> Refine Knots Surface Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/refinenp.gif" HEIGHT=236 WIDTH=505  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Successive Application of Refine Knots Surface (U) Tool</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The refine knots surface tool takes a number of NURBS
+patches from the selection.</P>
+<DT><B>Operation</B><DD>
+<P>The respective knot vectors of the selected NURBS patches
+will be refined by inserting a knot in the middle of each inner knot interval
+without changing the shape of the patches. New control
+points will be added and the position of old control points may be
+changed in the progress. See also the image above where a surface defined
+on the knot vector<BR>
+[&thinsp;0&thinsp;0&thinsp;0&thinsp;0&ensp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;]<BR>
+is successively refined to the knot vector<BR>
+[&thinsp;0&thinsp;0&thinsp;0&thinsp;0&ensp;0.5&ensp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;]<BR>
+and then<BR>
+[&thinsp;0&thinsp;0&thinsp;0&thinsp;0&ensp;0.25&ensp;0.5&ensp;0.75&ensp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;].</P>
+
+<DT><B>Notes</B><DD>
+<P>Because new knots are inserted into inner intervals only,
+the clamping state of the knot vectors does not change.
+Furthermore, knot vectors of type <CODE>"NURB"</CODE> will not change in type,
+other knot vectors will be changed to type <CODE>"Custom"</CODE>.</P>
+<P>The point selection will be removed from the original objects.</P>
+<P>There are also tools available that refine only the U or
+V knots.</P>
+<P>See also the documentation of the corresponding scripting interface commands
+<A HREF="ayam-6.html#screfineunp">refineuNP</A> and
+<A HREF="ayam-6.html#screfinevnp">refinevNP</A>
+and the related tool for
+curves 
+<A HREF="#refknit">Refine Knots Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="refinewst"></A> Refine Knots With Surface Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/refknuwnp.gif" HEIGHT=255 WIDTH=436  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Refine Knots With Surface (U) Tool (left: original surface, right: refined surface)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The refine knots with surface tool takes a number of NURBS
+patches from the selection and requests a vector of new knot values.</P>
+<DT><B>Operation</B><DD>
+<P>The respective knot vectors of the selected NURBS patches
+will be refined by inserting all knots from the specified vector at once.
+The shape of the patch will not be changed.
+New control points will be added and the position of old control points
+may be changed in the progress.<BR>
+See also the example image above where a surface defined on the knot
+vector<BR>
+[&thinsp;0&thinsp;0&thinsp;0&thinsp;0&ensp;0.5&ensp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;]<BR>
+has been refined with the new knots 0.2 and 0.7 in U direction
+to the new knot vector:<BR>
+[&thinsp;0&thinsp;0&thinsp;0&thinsp;0&ensp;0.2&ensp;0.5&ensp;0.7&ensp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;].</P>
+<P>The resulting knot vector must be valid, otherwise an error will
+be reported and the respective patch is not changed.</P>
+<DT><B>Notes</B><DD>
+<P>The respective knot type of the patch may
+be changed to <CODE>"Custom"</CODE>.</P>
+<P>The point selection will be removed from the original objects.</P>
+<P>There are also tools available that refine only the U or
+V knots.</P>
+<P>See also the documentation of the corresponding scripting interface commands
+<A HREF="ayam-6.html#screfineunp">refineuNP</A> and
+<A HREF="ayam-6.html#screfinevnp">refinevNP</A>
+and the related tool for
+curves 
+<A HREF="#refknwit">Refine Knots With Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="elevuvt"></A> Elevate Surface Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/elevunp.gif" HEIGHT=255 WIDTH=436  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Elevate Surface Tool (left: original surface, right: elevated surface)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The elevate surface tool takes a number of NURBS patches
+from the selection and additionally requests two integer values.</P>
+<DT><B>Operation</B><DD>
+<P>The order of the selected NURBS patches will be raised
+by the specified integer values without changing the shape of the patches.
+New control points will be added and the position
+of old control points may be changed in the progress.</P>
+<P>See also the image above, where a surface of order four and width five,
+originally defined on the u knot vector:<BR>
+[&thinsp;0&thinsp;0&thinsp;0&thinsp;0&ensp;0.5&ensp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;]<BR>
+has been elevated to order five in u direction and is now of width seven
+and defined on the u knot vector:<BR>
+[&thinsp;0&thinsp;0&thinsp;0&thinsp;0&thinsp;0&ensp;0.5&ensp;0.5&ensp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;].</P>
+
+<DT><B>Notes</B><DD>
+<P>If the knot vector of the patch is not clamped, it
+will be clamped automatically.</P>
+<P>The knot type of the patch will be changed to <CODE>"Custom"</CODE>.</P>
+<P>The point selection will be removed from the original objects.</P>
+<P>There are also tools available that elevate a patch in U or
+V direction only.</P>
+<P>See also the documentation of the corresponding scripting interface commands
+<A HREF="ayam-6.html#scelevateunp">elevateuNP</A> and
+<A HREF="ayam-6.html#scelevatevnp">elevatevNP</A>
+as well as the related tool for
+curves 
+<A HREF="#elevt">Elevate Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="reduceuvt"></A> Reduce Surface Tools</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/reducenp.gif" HEIGHT=146 WIDTH=290  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Reduce Tool (Order 4 (left), 3 (right))</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The reduce surface tools take a number of NURBS surfaces from
+the selection and additionally request a tolerance value.</P>
+<DT><B>Operation</B><DD>
+<P>The order of the selected NURBS surfaces will be decreased
+by one if the shape of the reduced surfaces does not deviate from the original
+surfaces by the given tolerance in any point.</P>
+<P>See also the example image above where a surface of order four and
+height four, defined on the v knot vector<BR>
+[&thinsp;0&thinsp;0&thinsp;0&thinsp;0&ensp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;],<BR>
+has been reduced in v direction to order three and is now of height three and
+defined on the v knot vector<BR>
+[&thinsp;0&thinsp;0&thinsp;0&ensp;1&thinsp;1&thinsp;1&thinsp;].</P>
+
+
+<DT><B>Notes</B><DD>
+<P>If the respective knot vector of the surface is not clamped, it
+will be clamped automatically. The respective knot type of the surface will
+be changed to <CODE>"Custom"</CODE>. Control points will be removed and the position
+of old control points may be changed in the progress.</P>
+<P>The point selection will be removed from the processed objects.</P>
+<P>The ability to reduce a certain surface can be improved by increasing
+the multiplicity of internal knots first.</P>
+<P>See also the documentation of the corresponding
+scripting interface commands 
+<A HREF="ayam-6.html#screduceunp">reduceuNP</A> and
+<A HREF="ayam-6.html#screducevnp">reducevNP</A> as well as
+the related tool for curves 
+<A HREF="#reduct">Reduce Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="clanpt"></A> Clamp Surface Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/clampnp.gif" HEIGHT=260 WIDTH=366  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Clamp Surface Tool (left: Original Patch with B-Spline Knot Vectors, right: Clamped Patch)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The clamp surface tool takes a number of NURBS patches from
+the selection.</P>
+<DT><B>Operation</B><DD>
+<P>The knot vectors of the selected NURBS patches will be
+changed using knot insertion so that the first and the last knot
+(in each direction) have a multiplicity equal to the order of the patch
+(in the respective direction).</P>
+<P>See also the image above, where a surface of width/height four and both
+orders also four,
+originally defined on the B-Spline knot vectors:<BR>
+[&thinsp;0&ensp;0.1428&ensp;0.2857&ensp;0.4285&ensp;0.5714&ensp;0.7142&ensp;0.8571&ensp;1.0&thinsp;]<BR>
+has been clamped and is now defined on the knot vectors:<BR>
+[&thinsp;0.4285&thinsp;0.4285&thinsp;0.4285&thinsp;0.4285&ensp;0.5714&thinsp;0.5714&thinsp;0.5714&thinsp;0.5714&thinsp;].</P>
+
+<DT><B>Notes</B><DD>
+<P>The shape of the patches will not change but the position of some
+control points will. The patches interpolate the first and the last control
+points in the respective direction afterwards (unless the weights of those
+points are not 1.0).
+The knot types of the patches will be changed to type <CODE>"Custom"</CODE>.</P>
+<P>There are also tools available that clamp a patch in U or
+V direction only.</P>
+<P>See also the documentation of the corresponding scripting interface commands
+<A HREF="ayam-6.html#scclampunp">clampuNP</A> and
+<A HREF="ayam-6.html#scclampvnp">clampvNP</A>
+and the related tool for
+curves 
+<A HREF="#clat">Clamp Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="unclanpt"></A> Unclamp Surface Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/unclampnp.gif" HEIGHT=317 WIDTH=423  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Unclamp Surface Tool (left: Original Patch, right: Unclamped Patch)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The unclamp surface tool takes a number of NURBS patches from
+the selection.</P>
+<DT><B>Operation</B><DD>
+<P>The knot vectors of the selected NURBS patches will be
+changed so that there are no multiple knots at the respective ends
+of the knot vectors. The shape of the patches will not change but the
+position of some control points will. The knot types of the patches may
+be changed to type <CODE>"Custom"</CODE>.</P>
+<P>See also the image above, where a surface of width/height four and both
+orders three,
+originally defined on the knot vectors:<BR>
+[&thinsp;0&thinsp;0&thinsp;0&ensp;0.5&ensp;1&thinsp;1&thinsp;1&thinsp;]<BR>
+has been unclamped and is now defined on the knot vectors:<BR>
+[&thinsp;0&ensp;0.1666&ensp;0.3333&ensp;0.5&ensp;0.6666&ensp;0.8333&ensp;1&thinsp;].</P>
+
+<DT><B>Notes</B><DD>
+<P>Unclamping is <EM>not</EM> an exact reversal of clamping (and vice versa).</P>
+<P>Furthermore, as the unclamp operation only works on completely clamped surfaces,
+the unclamp tool may need to clamp the surface first.</P>
+<P>There are also tools available that unclamp a patch in U or
+V direction only.</P>
+<P>See also the documentation of the corresponding scripting interface commands
+<A HREF="ayam-6.html#scunclampunp">unclampuNP</A> and
+<A HREF="ayam-6.html#scunclampvnp">unclampvNP</A>
+and the related tool for
+curves 
+<A HREF="#unclat">Unclamp Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="insknnpt"></A> Insert Knot Surface Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/insknnp.gif" HEIGHT=254 WIDTH=363  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Insert Knot Surface Tool (left: original patch, right: a knot has been
+inserted one time at <EM>t</EM>&thinsp;=&thinsp;0.5)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The insert knot surface tool takes a number of NURBS
+patches from the selection and requests two additional values, a
+parametric value <EM>t</EM>
+and an integer value <EM>i</EM>.</P>
+<DT><B>Operation</B><DD>
+<P>A knot with the specified value <EM>t</EM> will be inserted <EM>i</EM>
+times into the knot vector of the selected patches, without changing their
+shape.</P>
+<P>See also the image above, where a knot has been inserted at
+<EM>u</EM>&thinsp;=&thinsp;0.5 one time into a surface of width four and
+order four that was originally defined on the u knot vector:<BR>
+[&thinsp;0&thinsp;0&thinsp;0&thinsp;0&ensp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;].<BR>
+The processed surface of width five is defined on the u knot vector:<BR>
+[&thinsp;0&thinsp;0&thinsp;0&thinsp;0&ensp;0.5&ensp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;].</P>
+
+<DT><B>Notes</B><DD>
+<P>The knot type of the patch will be changed to <CODE>"Custom"</CODE>.</P>
+<P>This tool does not change the geometry of the patches.</P>
+<P>The point selection will be removed from the original objects.</P>
+<P>See also the documentation of the corresponding scripting interface commands
+<A HREF="ayam-6.html#scinsknunp">insknuNP</A> and
+<A HREF="ayam-6.html#scinsknvnp">insknvNP</A>
+and the related tool for
+curves 
+<A HREF="#insknt">Insert Knot Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="remknnpt"></A> Remove Knot Surface Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/remknnp.gif" HEIGHT=246 WIDTH=490  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Remove Knot Surface Tool (left: original surface, right: the knot
+at <EM>t</EM>&thinsp;=&thinsp;0.5 has been removed one time)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The remove knot surface tool takes a number of NURBS
+surfaces from
+the selection and requests three additional values, a parametric value <EM>t</EM>,
+an integer value <EM>r</EM>, and a tolerance value <EM>tol</EM>.</P>
+<DT><B>Operation</B><DD>
+<P>The knot at the specified parametric value <EM>t</EM> will be
+removed <EM>r</EM> times from the knot vector of the selected surfaces if the
+shape of the resulting surfaces does not deviate more than <EM>tol</EM> from
+the original surfaces in any point. Since Ayam 1.20
+the knot to remove may also be specified using its (zero based)
+index in the knot vector; for instance by entering <CODE>"-i 3"</CODE> instead of
+<CODE>"0.5"</CODE> for the knot vector:<BR>
+[&thinsp;0&thinsp;0&thinsp;0&ensp;0.5&ensp;1&thinsp;1&thinsp;1&thinsp;].<BR>
+If the knot can not be removed <EM>r</EM> times due to the tolerance given, an
+error is reported and the original surface is left unchanged.<BR>
+This operation also fails, if the knot removal would lead to a surface
+of lower order.</P>
+<P>See also the image above, where the knot <EM>t</EM>&thinsp;=&thinsp;0.5
+has been removed one time from a surface of width five and
+order four that was originally defined on the u knot vector:<BR>
+[&thinsp;0&thinsp;0&thinsp;0&thinsp;0&ensp;0.5&ensp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;].<BR>
+The processed surface of width four is defined on the knot vector:<BR>
+[&thinsp;0&thinsp;0&thinsp;0&thinsp;0&ensp;1&thinsp;1&thinsp;1&thinsp;1&thinsp;].</P>
+
+<DT><B>Notes</B><DD>
+<P>If <EM>tol</EM> is <CODE>"0.0"</CODE> the remove knot tool tries to
+work without changing the shape of the surface, i.e.&nbsp;only superfluous
+knots will be removed.
+If <EM>tol</EM> is <CODE>"Inf"</CODE> (infinity) the specified knot will be removed
+regardless of potential surface changes.</P>
+<P>The point selection will be removed from the original objects.</P>
+<P>See also the documentation of the corresponding scripting interface commands
+<A HREF="ayam-6.html#scremknunp">remknuNP</A>, and
+<A HREF="ayam-6.html#scremknunp">remknvNP</A>
+and the related tool for
+curves 
+<A HREF="#remknt">Remove Knot Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="remsuknuvt"></A> Remove Superfluous Knots Surface Tools</H3>
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The remove superfluous knots tools take a number of NURBS
+surfaces from the selection and requests a tolerance value <I>tol</I>.</P>
+<DT><B>Operation</B><DD>
+<P>All knots that do not contribute to the shape of the
+surface will be removed from the knot vector of the selected surfaces if
+the shape of the resulting surface does not deviate more than <I>tol</I>
+from the original surface in any point.</P>
+<P>It is no error if no knots can be removed.</P>
+<DT><B>Notes</B><DD>
+<P>The point selection will be removed from the processed objects.</P>
+<P>See also the documentation of the corresponding
+scripting interface commands 
+<A HREF="ayam-6.html#scremsuknunp">remsuknuNP</A>
+and
+<A HREF="ayam-6.html#scremsuknvnp">remsuknvNP</A>.
+See also the related tool for
+curves 
+<A HREF="#remsuknt">Remove Superfluous Knots Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="splitnpt"></A> Split Surface Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/splitnp.gif" HEIGHT=227 WIDTH=453  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Split Surface Tool (left: original surface, right: the surface was
+split at <EM>t</EM>&thinsp;=&thinsp;0.5)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The split surface tool takes a number of NURBS patches from
+the selection and requests a parametric value <EM>t</EM> (in U or V parametric
+dimension, respectively).
+In addition, a <EM>relative</EM> and an <EM>append</EM> option can be set.</P>
+<DT><B>Operation</B><DD>
+<P>The patches will be split at the parametric value <EM>t</EM>
+into two patches (in U or V parametric dimension, respectively) using
+knot insertion. The valid range of parametric values
+depends on the knot vector of the original surface unless the
+<EM>relative</EM> option is set, where it must be in the range (0.0, 1.0).</P>
+<P>The new surface(s) will be inserted
+into the level right after the respective surface(s) to split unless
+the <EM>append</EM> option is set.<SMALL TITLE="Since 1.24."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+|-NPatch             |-NPatch
+|-Sphere     ==>     |-NPatch
+                     |-Sphere
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+<DT><B>Notes</B><DD>
+<P>The original NURBS patch object(s) will be modified.</P>
+<P>The point selection will be removed from the original objects.</P>
+<P>Eventually present trim curves will <EM>not</EM> be honored properly.</P>
+<P>See also the documentation of the corresponding scripting interface commands
+<A HREF="ayam-6.html#scsplitunp">splituNP</A>,
+<A HREF="ayam-6.html#scsplitvnp">splitvNP</A> and the related tool for
+curves 
+<A HREF="#splitt">Split Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="interpnpt"></A> Interpolate Surface Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/interpnp.gif" HEIGHT=316 WIDTH=490  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Interpolate Surface Tool (left-white: original surface, left-blue and right: interpolating surface)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The interpolate surface tool takes a number of NURBS
+patches from the selection and requests an additional parameter <EM>o</EM>.</P>
+<DT><B>Operation</B><DD>
+<P>The patches will be modified so that they interpolate
+all original control points with the desired interpolation order <EM>o</EM>.
+See also the image above.</P>
+<DT><B>Notes</B><DD>
+<P>Eventually present weight information of the original patches will be ignored.</P>
+<P>The point selection will be removed from the original objects.</P>
+<P>See also the documentation of the corresponding scripting interface commands
+<A HREF="ayam-6.html#scinterpunp">interpuNP</A> and
+<A HREF="ayam-6.html#scinterpvnp">interpvNP</A>,
+as well as the related tool for
+curves 
+<A HREF="#interpnct">Interpolate Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="approxnpt"></A> Approximate Surface Tools</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/approxnp.gif" HEIGHT=336 WIDTH=620  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Approximate Surface Tool (left: original surface, right: approximating (white) and original (blue) surface superimposed)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The approximate surface tools take a number of NURBS
+surfaces from the selection and request additional parameters. Depending
+on the approximation direction determined by the concrete tool selection,
+those are a subset or all of: width and height, orders, knot types,
+whether to create a closed surface, and tesselation parameters.</P>
+<DT><B>Operation</B><DD>
+<P>The surfaces will be modified so that they approximate
+their respective original surface shape(s) using a new non-rational NURBS
+surface with an adjustable number of new control points and
+order(s).<BR>
+The data points to approximate are created by tesselating the original
+surfaces.
+The tesselation parameters control how fine this tesselation shall be,
+larger values lead to more data points and possibly higher approximation
+fidelity but also slower processing. A tesselation parameter of 0 disables
+the tesselation completely and the original control points will be used as
+approximation input.</P>
+<P>See also the image above where a standard cone surface with nine rational
+control points in V direction of order three has been approximated by a
+periodic non rational surface with 11 control
+points and order three.</P>
+<DT><B>Notes</B><DD>
+<P>The point selection will be removed from the original objects.</P>
+<P>Potentially present weights will be removed from the processed surfaces.</P>
+<P>See also the documentation of the corresponding scripting interface command
+<A HREF="ayam-6.html#scapproxnp">approxNP</A>,
+and the related tool for
+curves 
+<A HREF="#approxnct">Approximate Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="fairst"></A> Fair Surface Tool</H3>
+
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The fair surface tool takes a number of NURBS
+surfaces from the selection and requests a mode and a tolerance
+value. In addition, a <CODE>"Fair Worst"</CODE> option can be set.</P>
+
+<DT><B>Operation</B><DD>
+<P>The control points of the surface will be modified
+so that the shape of the surface is somewhat smoother. The movement
+of a single control point is restricted by the specified tolerance
+value. This can also be used to apply the tool multiple times
+until the surface shape meets the requirements.</P>
+<P>As the surface fairing algorithm is derived from the curve fairing algorithm,
+the option <CODE>"Mode"</CODE> allows to select in which direction the
+algorithm shall be applied, or, for the modes <CODE>"UV"</CODE> and<CODE>"VU"</CODE>,
+in which order the dimensions shall be processed.</P>
+<P>If the option <CODE>"Fair Worst"</CODE> is enabled, only the control point that
+would be moved the longest distance in each control line in the
+currently processed direction will be modified.</P>
+<P>If there are selected points, only those will potentially be modified.</P>
+
+<DT><B>Notes</B><DD>
+<P>The fairing algorithm uses the four direct and indirect neighboring
+control points of each point to process. This poses a problem for the
+end points of an open surface. Therefore, the control vector of open
+surfaces will be extended by a simple linear extrapolation algorithm,
+so that every point of the original surface
+has four neighbors. However, the fairing quality for the first, second,
+second to last, and last control points of an open surface will be somewhat
+lower.</P>
+<P>The original algorithm only delivers optimal results for cubic surfaces
+(of order four), using surfaces of other degrees will work too but yield
+worse results.</P>
+<P>Due to the fact that the algorithm uses already faired points as
+input points for other points to fair, it is <EM>not</EM> direction invariant
+if used on all or multiple neighboring points.
+Also, control points already placed on very good if not optimal positions
+may be moved away to less favorable positions. Further problems arise
+for multiple control points, used to model sharp corners, as the
+fairing algorithm does not differentiate between wanted and unwanted
+non-continuous surface features.
+If in doubt, just select a single control point to fair.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#scfairnp">fairNP</A>
+and the related tool for
+curves 
+<A HREF="#fairt">Fair Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="makecompst"></A> Make Surfaces Compatible Tool</H3>
+
+
+<P>
+<CENTER>
+<IMG SRC="pics/makecomps.gif" HEIGHT=300 WIDTH=351  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Make Compatible Tool (u: Original, m: Compatible by Order, l: Fully Compatible Surfaces)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The make compatible tool takes a number of
+NURBS surfaces from the selection and requests a side and a level.</P>
+<DT><B>Operation</B><DD>
+<P>The surfaces will be made compatible, so that, based
+on the side and level parameters given, they are of the same orders,
+width/height, and defined on the same knot vector.</P>
+<DT><B>Notes</B><DD>
+<P>This tool does not change the geometry of the surfaces.
+However, since clamping, degree elevation, and knot insertion may be
+used on the surfaces, their order, knot vectors, and control points
+may be changed.</P>
+<P>The orders of all surfaces will simply be raised to the maximum order of
+all surfaces; no attempt is made to check, whether lowering orders would
+lead to a simpler result.</P>
+<P>The point selection will be removed from the original objects.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#scmakecompnp">makeCompNP</A>
+and the related tool for
+curves 
+<A HREF="#makecompt">Make Compatible Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="resckrnpt"></A> Rescale Knots to Range Surface Tool</H3>
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The rescale knots to range surface tool takes a number of
+NURBS patches from the selection and requests a range.</P>
+<DT><B>Operation</B><DD>
+<P>The knot vectors of the patches will be scaled, so that
+their first and last values match the given range. Trim curves, if
+present, will also be scaled to match the new range.</P>
+<DT><B>Notes</B><DD>
+<P>Since Ayam 1.20 the knot type of the surface does
+not have to be <CODE>"Custom"</CODE> anymore. Furthermore, rescaling the knots
+does not change the knot type.</P>
+<P>This tool does not change the geometry of the patches.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#screscaleknnp">rescaleknNP</A>
+and the related tool for
+curves 
+<A HREF="#resckrt">Rescale Knots to Range Tool</A>.</P>
+</DL>
+</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="resckmnpt"></A> Rescale Knots to Mindist Surface Tool</H3>
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The rescale knots to mindist surface tool takes a number of
+NURBS patches from the selection and request a minimum distance value.</P>
+<DT><B>Operation</B><DD>
+<P>The knot vectors of the patches will be scaled, so that
+no two knots have a distance smaller than the given minimum distance
+(except for multiple knots). Trim curves, if present, will also be scaled
+to match the new range.</P>
+<DT><B>Notes</B><DD>
+<P>Since Ayam 1.20 the knot type of the surface does
+not have to be <CODE>"Custom"</CODE> anymore. Furthermore, rescaling the knots
+does not change the knot type.</P>
+<P>This tool does not change the geometry of the patches.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#screscaleknnp">rescaleknNP</A>
+and the related tool for
+curves 
+<A HREF="#resckmt">Rescale Knots to Mindist Tool</A>.</P>
+</DL>
+</P>
+
+
+
+<H2><A NAME="ss5.6">5.6</A> <A HREF="ayam.html#toc5.6">Conversion Tools</A>
+</H2>
+
+<P>These tools convert between parametric objects.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="extnct"></A> Extract Curve Tool</H3>
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The extract curve tool takes the first of the selected
+objects from the selection.</P>
+<DT><B>Operation</B><DD>
+<P>The tool creates an instance from the first of the selected
+objects then creates an ExtrNC object and moves the instance to it.
+<BLOCKQUOTE><CODE>
+<PRE>
+|-NPatch             |-NPatch
+             ==>     +-ExtrNC
+                      \-Instance_of_NPatch(Instance)
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+<DT><B>Notes</B><DD>
+<P>This tool uses the object clipboard to move the objects
+around so that the original clipboard contents are lost when this tool
+finishes.</P>
+<P>See section 
+<A HREF="ayam-4.html#extrncobj">ExtrNC Object</A>
+for more information regarding the ExtrNC object.</P>
+</DL>
+</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="extrnpt"></A> Extract Patch Tool</H3>
+
+<P>
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The extract patch tool takes the first of the selected
+objects from the selection.</P>
+<DT><B>Operation</B><DD>
+<P>The tool creates an instance from the first of the
+selected objects then creates an ExtrNP object and moves the
+instance to it.
+<BLOCKQUOTE><CODE>
+<PRE>
+|-NPatch             |-NPatch
+             ==>     +-ExtrNP
+                      \-Instance_of_NPatch(Instance)
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+<DT><B>Notes</B><DD>
+<P>This tool uses the object clipboard to move the objects
+around so that the original clipboard contents are lost when this tool
+finishes.</P>
+<P>See section 
+<A HREF="ayam-4.html#extrnpobj">ExtrNP object</A>
+for more information regarding the ExtrNP object.</P>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#scextrnp">extrNP</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="breaknpt"></A> Break into Curves Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/breakcurv.gif" HEIGHT=170 WIDTH=308  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Break into Curves Example</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The break into curves tool takes all NURBS patches from
+the selection and requests some parameters.</P>
+<DT><B>Operation</B><DD>
+<P>The selected NURBS patches will be broken into NURBS curves,
+along the given direction (U or V).<BR>
+If the option <CODE>"ApplyTrafo"</CODE> is set,
+the transformations of the NPatch objects will be applied to the
+control points and the NCurve objects will be created with default
+transformation attributes, otherwise the NCurve objects will get the
+transformation attributes of the respective NPatch.
+See also the image above.<BR>
+If the option <CODE>"ReplaceOriginal"</CODE> is enabled, the curves will
+replace each original NPatch object, however, by default new curve
+objects will be appended to the current level:
+<BLOCKQUOTE><CODE>
+<PRE>
+|-NPatch             |-NPatch
+                     |-NCurve
+             ==>     |-NCurve
+                     |-NCurve
+                     |-NCurve
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+<DT><B>Notes</B><DD>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#scbreaknp">breakNP</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="buildnpt"></A> Build from Curves Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/buildsurf.gif" HEIGHT=172 WIDTH=342  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Build from Curves Example</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The build from curves tool takes a number of NURBS
+curves from the selection and requests some parameters.</P>
+<DT><B>Operation</B><DD>
+<P>The selected NURBS curves will be parsed, all curves
+that are of equal length or longer than the first selected curve
+will be used to form a new NURBS patch of the following
+dimensions:<BR>
+Width: number of used curves,
+Height: length of the first selected curve.
+If the supplied order is 0 (this is the default), the order of the
+new surface in U direction (Order_U) will be equal to the number of
+used curves for numbers of two to four and four for bigger numbers of
+used curves.<BR>
+The knot type in U direction (Knot-Type_U) will always be NURB.
+Other parameters (Order_V, Knot-Type_V, Knots_V) are taken from
+the first curve.<BR>
+See also the image above; note, that the extraneous control point
+of the upper curve and the knot vector of the curve below are ignored.
+To avoid this, the make compatible tool can be used first,
+see section  
+<A HREF="#makecompt">Make Compatible Tool</A>.</P>
+<P>If the <CODE>"ApplyTrafo"</CODE> option is enabled the transformation
+attributes of the individual curve objects will be applied to
+the control points, otherwise they will simply be ignored.</P>
+<P>If the <CODE>"ReplaceOriginal"</CODE> option is enabled, the new surface
+object will replace the first of the curves and the other curves
+will be removed. However, by default the new NPatch object will be
+appended to the current level:
+<BLOCKQUOTE><CODE>
+<PRE>
+|-NCurve               |-NCurve
+|-NCurve               |-NCurve
+|-NCurve     ==>       |-NCurve
+|-NCurve               |-NCurve
+                       |-NPatch
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+<DT><B>Notes</B><DD>
+<P>See also the documentation of the corresponding
+scripting interface command 
+<A HREF="ayam-6.html#scbuildnp">buildNP</A>.</P>
+</DL>
+</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="tesst"></A> Tesselation Tool</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/tgui.gif" HEIGHT=300 WIDTH=305  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">GUI of Tesselation Tool</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<DL>
+<DT><B>Arguments</B><DD>
+<P>The tesselation tool takes all NURBS patches and
+NURBS patch providing objects from the selection.</P>
+<DT><B>Operation</B><DD>
+<P>A modal dialog box (see image above) will pop up,
+that allows to select a tesselation method via a drop-down menu
+and to tune the corresponding tesselation parameter(s) using a slider and
+an entry widget. The initial method and parameter values will be derived
+from the <CODE>"TP"</CODE> tag of the first of the selected objects (if it has such
+a tag).</P>
+<P>The selected or provided NURBS patches will be tesselated with the
+chosen method and parameters.
+The PolyMesh objects created by the tesselation will immediately be
+displayed in all view windows instead of the original objects.
+Whenever tesselation method or parameters are changed, the tesselation
+will be recomputed and displayed, thus, allowing an immediate estimation
+of the tesselation quality and the number of created polygonal elements.</P>
+<P>If the option <CODE>"LazyUpdate"</CODE> is enabled,
+updates of the tesselation that normally occur while dragging the
+slider(s) will be deferred until the mouse button is released.
+The initial value of this option will be determined from the
+<CODE>"LazyNotify"</CODE> preference setting.</P>
+<P>The options <CODE>"UseTexCoords"</CODE> and <CODE>"UseVertColors"</CODE> control processing
+of texture coordinates and vertex colors stored as PV tags in the objects
+to be tesselated (see also section 
+<A HREF="ayam-4.html#pvtag">PV Tag</A>).
+When enabled, the resulting PolyMesh objects will
+also have PV tags of the respective type.<BR>
+Note that the PV tags must be named as defined by the hidden preference
+options <CODE>"PVTexCoordName"</CODE> and <CODE>"PVColorName"</CODE> respectively. By
+default those are set to <CODE>"st"</CODE> and <CODE>"Cs"</CODE>.<BR>
+If the <CODE>"UseTexCoords"</CODE> option is enabled, but no matching PV tag
+is present, texture coordinates will be generated from the data
+provided by a TC tag or (if no TC tag is present) from the knot
+values of the NURBS surfaces to be tesselated.<SMALL TITLE="Since 1.21."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+See also section 
+<A HREF="ayam-4.html#tctag">TC (Texture Coordinates) Tag</A>.</P>
+<P>The option <CODE>"UseVertNormals"</CODE> controls processing of
+vertex normals stored as PV tags in the objects to be
+tesselated (see also section 
+<A HREF="ayam-4.html#pvtag">PV Tag</A>).
+When enabled, the resulting PolyMesh objects will have normals derived
+from these tags instead of normals derived from the NURBS surface.<BR>
+Note that the PV tags must be named as defined by the hidden preference
+option <CODE>"PVNormalName"</CODE>. By default this is set to <CODE>"N"</CODE>, so that
+a correct example tag looks like this:
+<BLOCKQUOTE><CODE>
+<PRE>
+PV N,varying,n,4,0,0,1,0,0,1,1,1,0,0,0,1
+</PRE>
+</CODE></BLOCKQUOTE>
+</P>
+<P>The option <CODE>"RefineTrims"</CODE> controls how many times the trim
+curves are to be refined before tesselation for improved tesselation
+fidelity along trim edges.<SMALL TITLE="Since 1.21."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+See also the images below.</P>
+
+
+
+
+
+
+
+
+
+<P>
+<CENTER>
+<IMG SRC="pics/reftrims0.gif" HEIGHT=262 WIDTH=261  loading="lazy">
+&emsp;
+<IMG SRC="pics/reftrims2.gif" HEIGHT=262 WIDTH=261  loading="lazy">
+
+</CENTER><P><CENTER><FONT SIZE="-1">RefineTrims Example (left: 0, right: 2)</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+
+<P>The option <CODE>"Primitives"</CODE> allows to select a primitive
+creation method. These methods are explained in greater detail
+in section 
+<A HREF="#prims">Primitive Creation Methods</A>.</P>
+<P>If the <CODE>"Ok"</CODE> button is pressed, the tesselation tool will be
+closed and all selected objects will be replaced by their tesselated
+counterparts. The original objects will be deleted.<BR>
+If referenced/master objects are among the selected objects or their
+children, and if any of their references are not selected or a child
+of the selected objects (i.e.&nbsp;would not be deleted also), then those
+master objects will not be deleted but moved to the clipboard instead.</P>
+<P>If the <CODE>"Save"</CODE> button is used, the tesselation dialog will be
+closed and <CODE>"TP"</CODE> tags containing
+the currently selected method and parameter value will be added
+to all selected objects.
+These tags can be evaluated later, when the respective
+objects are converted to PolyMesh objects (e.g.&nbsp;upon export).
+Since Ayam 1.11 the conversion mechanism of objects keeps the
+<CODE>"TP"</CODE> tags intact, so that e.g.&nbsp;tesselation parameters saved
+to a Sphere or a Revolve object will also be preserved, and can
+also be used later when the object will eventually be converted to
+a PolyMesh (via a NURBS patch).</P>
+<P>If <CODE>"Cancel"</CODE> is used, the dialog will be closed
+and all selected objects remain unchanged.</P>
+<DT><B>Notes</B><DD>
+<P>The tesselation tool will block most other parts of Ayam
+while it is running, i.e.&nbsp;it is not possible to change the selection
+or run other tools. It is, however, allowed to adjust view parameters
+while the tesselation tool is open, to examine the tesselation result
+more closely or from different viewing angles.</P>
+<P>The values of the parameter slider bounds may be changed by simply entering
+values that are out of the current bounds into the respective entry widget,
+then pressing the <CODE>&lt;Tab&gt;</CODE> key. Range and resolution of the slider
+will be recalculated automatically from the value in the entry widget.</P>
+<P>PV tags that do not provide enough data for the surface to be tesselated
+will be silently ignored.</P>
+<P>The PolyMesh objects created by this tool will <EM>not</EM> be optimized.</P>
+<P>The tesselation facility is based on the GLU (V1.3+) NURBS tesselator.</P>
+</DL>
+</P>
+
+<H4><A NAME="s3"></A> Sampling Methods and Parameters</H4>
+
+<P>Six sampling methods are available:
+<OL>
+<LI><CODE>"ParametricError"</CODE>
+ensures that the distance between the tesselated surface and the original
+surface is no point bigger than the value specified by <CODE>"SParamU"</CODE>.
+</LI>
+<LI>The sampling method <CODE>"PathLength"</CODE> ensures that no edge of a
+polygon generated by the tesselation is longer than the value specified
+by <CODE>"SParamU"</CODE> and the tesselation method
+</LI>
+<LI><CODE>"DomainDistance"</CODE> (the default up to 1.22) simply tesselates
+the NURBS surface into equally sized pieces with regard to parametric
+space; <CODE>"SParamU"</CODE> and <CODE>"SParamV"</CODE> control the number of sampling
+points in U and V direction respectively per unit length.
+This leads to different numbers of samples for knot vectors
+of different total length in parameter space.
+</LI>
+<LI><CODE>"NormalizedDomainDistance"</CODE>
+ensures that the tesselation creates the same number of sample
+points (as given via <CODE>"SParamU"</CODE> and <CODE>"SParamV"</CODE>) for
+knot vectors of any total length in parameter
+space<SMALL TITLE="Since 1.9."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+and
+</LI>
+<LI><CODE>"AdaptiveDomainDistance"</CODE> additionally adds
+sample points depending on the number of control points (width or
+height of the patch) to provide a better adaptation to complex
+patches.<SMALL TITLE="Since 1.9."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+</LI>
+<LI><CODE>"AdaptiveKnotDistance"</CODE> normalizes the number of sample
+points to the number of knot intervals and the total length of
+the knot vector.<SMALL TITLE="Since 1.23."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></LI>
+</OL>
+</P>
+<P><CODE>"SParamU"</CODE> is a parameter for the sampling method above.<BR>
+The default value for the sampling method <CODE>"AdaptiveKnotDistance"</CODE> is 3.
+Higher values lead to better quality and more tesselated polygons.<BR>
+The default value for the sampling method <CODE>"DomainDistance"</CODE> is 8. Higher
+values lead to better quality and more tesselated polygons.<BR>
+The default value for the sampling method <CODE>"PathLength"</CODE> is 1.5.
+Smaller values lead to better quality and more tesselated polygons.<BR>
+The default value for the sampling method <CODE>"ParametricError"</CODE> is 0.25.
+Smaller values lead to better quality and more tesselated polygons.</P>
+
+<P>Note that <CODE>"SParamU"</CODE> is expressed in object space units for the
+<CODE>"PathLength"</CODE> and <CODE>"ParametricError"</CODE> sampling methods.</P>
+<P><CODE>"SParamV"</CODE> is just available for the sampling methods
+<CODE>"DomainDistance"</CODE>, <CODE>"NormalizedDomainDistance"</CODE>,
+<CODE>"AdaptiveDomainDistance"</CODE>, and<BR>
+<CODE>"AdaptiveKnotDistance"</CODE>.<BR>
+The default value is equal to the respective value of the <CODE>"SParamU"</CODE>
+parameter above.</P>
+<P>See also the next two images and corresponding tables that allow to
+compare the results of four main sampling methods with different parameters.</P>
+
+<P>
+<CENTER>
+<IMG SRC="pics/smethods-def.gif" HEIGHT=600 WIDTH=800  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Sampling Method Comparison, Defaults
+(l: ParametricError, ml: PathLength, mr: DomainDistance, r: AdaptiveKnotDistance)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+Method</TD><TD><B>ParametricError</B></TD><TD><B>PathLength</B></TD><TD><B>DomainDistance</B></TD><TD><B>AdaptiveKnotDistance</B></TD></TR><TR><TD>
+Parameter</TD><TD>0.25</TD><TD>1.5</TD><TD>8&thinsp;/&thinsp;8</TD><TD>3&thinsp;/&thinsp;3</TD></TR><TR><TD>
+Cylinder</TD><TD>88</TD><TD>104</TD><TD>368</TD><TD>192</TD></TR><TR><TD>
+Sphere</TD><TD>96</TD><TD>80</TD><TD>112</TD><TD>120</TD></TR><TR><TD>
+Box</TD><TD>36</TD><TD>60</TD><TD>384</TD><TD>108</TD></TR><TR><TD>
+Total</TD><TD>220</TD><TD>244</TD><TD>864</TD><TD>420
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">Sampling Methods Parameters and Results (1/2)</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>&nbsp;</P>
+
+<P>
+<CENTER>
+<IMG SRC="pics/smethods-hi.gif" HEIGHT=600 WIDTH=800  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Sampling Method Comparison, Higher Quality
+(l: ParametricError, ml: PathLength, mr: DomainDistance, r: AdaptiveKnotDistance)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+Method</TD><TD><B>ParametricError</B></TD><TD><B>PathLength</B></TD><TD><B>DomainDistance</B></TD><TD><B>AdaptiveKnotDistance</B></TD></TR><TR><TD>
+Parameter</TD><TD>0.125</TD><TD>0.9</TD><TD>12&thinsp;/&thinsp;12</TD><TD>4&thinsp;/&thinsp;4</TD></TR><TR><TD>
+Cylinder</TD><TD>152</TD><TD>168</TD><TD>840</TD><TD>352</TD></TR><TR><TD>
+Sphere</TD><TD>216</TD><TD>160</TD><TD>264</TD><TD>224</TD></TR><TR><TD>
+Box</TD><TD>36</TD><TD>108</TD><TD>864</TD><TD>192</TD></TR><TR><TD>
+Total</TD><TD>404</TD><TD>436</TD><TD>1968</TD><TD>768
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">Sampling Methods Parameters and Results (2/2)</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+
+
+
+<H4><A NAME="s3"></A> <A NAME="prims"></A> Primitive Creation Methods</H4>
+
+<P>The primitive creation methods determine, how the OpenGL primitives
+sent from the GLU NURBS tesselator (<CODE>GL_TRIANGLES</CODE>, <CODE>GL_TRIANGLE_FAN</CODE>,
+<CODE>GL_TRIANGLE_STRIP</CODE>, and <CODE>GL_QUAD_STRIP</CODE>) are turned into polygon faces.
+Four primitive creation methods are available:
+<OL>
+<LI><CODE>"Triangles"</CODE>: the output contains only triangles. Even
+if quads are originally emitted from the tesselator, those will be
+torn down to triangles.
+</LI>
+<LI><CODE>"TrianglesAndQuads"</CODE>: the output contains triangles and
+possibly quads (as originally emitted from the
+tesselator).<SMALL TITLE="Since 1.23."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+Note that quads will be emitted from the tesselator with higher probability
+in the <EM>DomainDistance</EM> and <EM>KnotDistance</EM> sampling methods.
+</LI>
+<LI><CODE>"Quads"</CODE>: the output only contains quads that will be
+synthesized from neighboring triangles if they form a planar quad.
+The pairing algorithm is not very sophisticated, only one solution
+will be tried. Furthermore, triangles without suitable neighbor will
+be used to form degenerate quads.<SMALL TITLE="Since 1.23."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+</LI>
+<LI><CODE>"QuadrangulatedTriangles"</CODE>: the output contains only quads
+that stem from refined/quadrangulated triangles.<SMALL TITLE="Since 1.30."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+The input of the quadrangulation are the triangles as created by
+the <CODE>"Triangles"</CODE> method. Each triangle will be refined/replaced by three
+quads. Four new points will be introduced for that. These new points
+will be placed directly on the (still) underlying NURBS surface.
+The quads are guaranteed not to be degenerate (contrary to those created by
+the <CODE>"Quads"</CODE> method) but they may be non-planar
+if the tesselated surface is highly curved and the initial sampling
+is sufficiently coarse.<BR>
+Degeneracies will be detected and proper actions with regard to normal
+interpolation will be taken.<BR>
+Vertex colors supplied via PV tags are currently not supported by this method.</LI>
+</OL>
+</P>
+<P>See also the following images and tables for a comparison of the
+primitive creation method results.</P>
+
+
+<P>
+<CENTER>
+<IMG SRC="pics/sprims-pe.gif" HEIGHT=600 WIDTH=800  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Primitive Creation Method Comparison, Sampling Method: Parametric
+Error (0.65) (l: Triangles, ml: TrianglesAndQuads, mr: Quads,
+r: QuadrangulatedTriangles)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+Method</TD><TD><B>Triangles</B></TD><TD><B>TrianglesAndQuads</B></TD><TD><B>Quads</B></TD><TD><B>QuadrangulatedTriangles</B></TD></TR><TR><TD>
+Cylinder</TD><TD>56t</TD><TD>56t</TD><TD>32q</TD><TD>168q</TD></TR><TR><TD>
+Sphere</TD><TD>32t</TD><TD>32t</TD><TD>32q</TD><TD>96q</TD></TR><TR><TD>
+Box</TD><TD>36t</TD><TD>36t</TD><TD>24q</TD><TD>108q</TD></TR><TR><TD>
+Total</TD><TD>124t</TD><TD>124t</TD><TD>88q</TD><TD>372q
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">Primitive Creation Method Comparison (1/2)</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+
+
+<P>
+<CENTER>
+<IMG SRC="pics/sprims-ak.gif" HEIGHT=600 WIDTH=800  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Primitive Creation Method Comparison, Sampling Method: AdaptiveKnotsDistance (3.0/3.0)
+(l: Triangles, ml: TrianglesAndQuads, mr: Quads, r: QuadrangulatedTriangles)</FONT></CENTER><P><CENTER>
+</CENTER>
+
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+Method</TD><TD><B>Triangles</B></TD><TD><B>TrianglesAndQuads</B></TD><TD><B>Quads</B></TD><TD><B>QuadrangulatedTriangles</B></TD></TR><TR><TD>
+Cylinder</TD><TD>56t</TD><TD>24t&thinsp;/&thinsp;84q</TD><TD>100q</TD><TD>576q</TD></TR><TR><TD>
+Sphere</TD><TD>120t</TD><TD>24t&thinsp;/&thinsp;48q</TD><TD>72q</TD><TD>360q</TD></TR><TR><TD>
+Box</TD><TD>108t</TD><TD>54q</TD><TD>54q</TD><TD>324q</TD></TR><TR><TD>
+Total</TD><TD>284t</TD><TD>48t&thinsp;/&thinsp;186q</TD><TD>226q</TD><TD>1260q
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">Primitive Creation Method Comparison (2/2)</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+
+
+
+<HR>
+<A HREF="ayam-6.html">Next</A>
+<A HREF="ayam-4.html">Previous</A>
+<A HREF="ayam.html#toc5">Contents</A>
+</BODY>
+</HTML>
+
+

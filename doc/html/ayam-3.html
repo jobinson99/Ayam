@@ -1,0 +1,1462 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="LinuxDoc-Tools 0.9.66">
+ <TITLE>Ayam: Modelling Actions</TITLE>
+ <LINK HREF="ayam-4.html" REL=next>
+ <LINK HREF="ayam-2.html" REL=previous>
+ <LINK HREF="ayam.html#toc3" REL=contents>
+</HEAD>
+<BODY>
+<script type="text/javascript" src="ll.js"></script>
+<A HREF="ayam-4.html">Next</A>
+<A HREF="ayam-2.html">Previous</A>
+<A HREF="ayam.html#toc3">Contents</A>
+<HR>
+<H2><A NAME="iac"></A> <A NAME="s3">3.</A> <A HREF="ayam.html#toc3">Modelling Actions</A></H2>
+
+<P>This section contains the documentation of the interactive modelling
+actions available in Ayam.</P>
+<P>Before invoking any modelling action one or more objects should be
+selected using the object hierarchy in the main window, the pick action,
+or selection manipulating keyboard shortcuts.</P>
+<P>Every action can be started with a key press (a shortcut) when
+the keyboard focus is in a view window or by clicking on the associated
+button in the toolbox window.
+Using a keyboard shortcut starts that action in the current view only,
+the other views are not affected. In multi window GUI mode, starting an
+action from the toolbox window will cause the action to be started in all
+view windows that are currently open simultaneously. In single window GUI
+mode, the action will be started in the current internal view only
+(unless <CODE>"AutoFocus"</CODE> is enabled).</P>
+<P>It is perfectly ok to start and work with many different actions at
+the same time in different views: one can have e.g.&nbsp;a view, where objects
+are moved, a second where objects are rotated and a third, where objects
+are picked. The layout, drawing style, and grids may also differ between
+the different views. Together with the feature, that the selection may be
+changed while actions are active and even panning and zooming of views
+is possible (using the rightmost and middle mouse buttons respectively) while
+actions are active and without breaking them, this is the key to
+unsurpassed flexibility in modelling using Ayam.</P>
+<P>To break an action, the <CODE>&lt;Esc&gt;</CODE> key may be used.</P>
+<P>The default action for all views, which is also in effect after
+use of the <CODE>&lt;Esc&gt;</CODE> key, is <CODE>"None"</CODE>, <CODE>"Pick"</CODE>, or
+<CODE>"Edit"</CODE> (depending on the preference
+setting <CODE>"Modelling/DefaultAction"</CODE>).
+See section
+<A HREF="#objsel">Selecting Objects by Picking</A>
+for more information about picking objects.</P>
+<P>Note that modelling actions that are directly modifying transformations
+or points are not available in perspective views, but selection actions
+and also the numeric point editing action do work fine.</P>
+<P>If an action is in effect for a view, the views title will be changed
+appropriately.</P>
+<P>A modelling action is performed by clicking into the view with the
+leftmost mouse button to mark a point in space or to pick a vertex
+and then by dragging the mouse.</P>
+<P>You may undo/redo the effects of a modelling action using <CODE>&lt;Ctrl+z&gt;</CODE>
+and <CODE>&lt;Ctrl+y&gt;</CODE> (see section
+<A HREF="ayam-8.html#undos">The Undo System</A> for more information).</P>
+<P>Grids are available to restrict the modelling actions to certain
+points and help in exact modelling.</P>
+<P>Also note that the middle and rightmost mouse buttons may be used
+to zoom and move the view while modelling actions are active.</P>
+<P>For actions that modify the camera of a view please see section
+<A HREF="ayam-2.html#vwsc">View Window Shortcuts and Actions</A>.</P>
+
+
+
+<H2><A NAME="ss3.1">3.1</A> <A HREF="ayam.html#toc3.1">Modelling Actions Overview</A>
+</H2>
+
+<P>This section gives an overview over the various modelling actions.
+Note that a more complete collection of shortcuts is available as separate
+reference card document in the Ayam distribution.</P>
+<P>
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+<B>Name</B></TD><TD><B>Shortcut</B></TD><TD><B>Icon</B></TD><TD><B>Name</B></TD><TD><B>Shortcut</B></TD><TD><B>Icon</B></TD></TR><TR><TD>
+<EM>Transform:</EM></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR><TR><TD>
+Move</TD><TD><CODE>&lt;m&gt;</CODE></TD><TD>
+<IMG SRC="pics/moveac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD><TD>Rotate</TD><TD><CODE>&lt;r&gt;</CODE></TD><TD>
+<IMG SRC="pics/rotateac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Move X</TD><TD><CODE>&lt;mx&gt;</CODE></TD><TD>
+<IMG SRC="pics/movexac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD><TD>Rotate About</TD><TD><CODE>&lt;ra&gt;</CODE></TD><TD>
+<IMG SRC="pics/rotateaac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Move Y</TD><TD><CODE>&lt;my&gt;</CODE></TD><TD>
+<IMG SRC="pics/moveyac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD><TD>Set Mark</TD><TD><CODE>&lt;a&gt;</CODE></TD><TD>
+<IMG SRC="pics/markac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Move Z</TD><TD><CODE>&lt;mz&gt;</CODE></TD><TD>
+<IMG SRC="pics/movezac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD><TD></TD><TD></TD><TD></TD></TR><TR><TD>
+Scale 3D</TD><TD><CODE>&lt;S&gt;</CODE></TD><TD>
+<IMG SRC="pics/scale3dac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD><TD>Scale 3D About</TD><TD><CODE>&lt;Sa&gt;</CODE></TD><TD>
+<IMG SRC="pics/scale3daac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Scale 2D</TD><TD><CODE>&lt;s&gt;</CODE></TD><TD>
+<IMG SRC="pics/scale2dac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD><TD>Scale 2D About</TD><TD><CODE>&lt;sa&gt;</CODE></TD><TD>
+<IMG SRC="pics/scale2daac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Scale 1D X</TD><TD><CODE>&lt;sx&gt;</CODE></TD><TD>
+<IMG SRC="pics/scale1dxac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD><TD>Scale 1D X About</TD><TD><CODE>&lt;sxa&gt;</CODE></TD><TD>
+<IMG SRC="pics/scale1dxaac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Scale 1D Y</TD><TD><CODE>&lt;sy&gt;</CODE></TD><TD>
+<IMG SRC="pics/scale1dyac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD><TD>Scale 1D Y About</TD><TD><CODE>&lt;sya&gt;</CODE></TD><TD>
+<IMG SRC="pics/scale1dyaac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Scale 1D Z</TD><TD><CODE>&lt;sz&gt;</CODE></TD><TD>
+<IMG SRC="pics/scale1dzac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD><TD>Scale 1D Z About</TD><TD><CODE>&lt;sza&gt;</CODE></TD><TD>
+<IMG SRC="pics/scale1dzaac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Stretch 2D</TD><TD><CODE>&lt;T&gt;</CODE></TD><TD>
+<IMG SRC="pics/stretchac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD><TD>Stretch 2D About</TD><TD><CODE>&lt;Ta&gt;</CODE></TD><TD>
+<IMG SRC="pics/stretchaac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+<EM>Edit:</EM></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR><TR><TD>
+Edit</TD><TD><CODE>&lt;e&gt;</CODE></TD><TD>
+<IMG SRC="pics/editac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD><TD>Tag Points</TD><TD><CODE>&lt;t&gt;</CODE></TD><TD>
+<IMG SRC="pics/tagac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Edit Weights</TD><TD><CODE>&lt;w&gt;</CODE></TD><TD>
+<IMG SRC="pics/editwac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD><TD>Insert Points</TD><TD><CODE>&lt;i&gt;</CODE></TD><TD>
+<IMG SRC="pics/insertac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Edit Numeric</TD><TD><CODE>&lt;E&gt;</CODE></TD><TD>
+<IMG SRC="pics/editdac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD><TD>Delete Points</TD><TD><CODE>&lt;d&gt;</CODE></TD><TD>
+<IMG SRC="pics/deleteac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">Modelling Actions Overview</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+
+
+
+<H2><A NAME="objorpnt"></A> <A NAME="ss3.2">3.2</A> <A HREF="ayam.html#toc3.2">Transforming Objects or Selected Points</A>
+</H2>
+
+<P>Many modelling actions either work on objects transformation attributes
+or coordinates of selected points. Since Ayam 1.30 this is
+controlled implicitly by the point selection: if editable points are selected,
+they will be transformed instead of the object.
+If there are objects with <EM>and</EM> without selected editable points in the
+selection, the latter will not be transformed at all.</P>
+<P>Using the preference setting <CODE>"ScopeManagement"</CODE>  (see section
+<A HREF="ayam-2.html#prefmodel">Modelling Preferences</A>) a
+explicit scope management mode can be enabled.
+For this mode there are two keyboard
+shortcuts: <CODE>&lt;o&gt;</CODE> and <CODE>&lt;p&gt;</CODE>.
+<CODE>&lt;o&gt;</CODE> switches to object transformations and <CODE>&lt;p&gt;</CODE> to
+point transformations.
+These shortcuts can be used anytime, even in the middle of any other
+actions. If points are to be modified, a little red point will appear
+in the modelling mode icon in the view menu as shown in the image
+below:</P>
+<P>
+<CENTER>
+<IMG SRC="pics/trpnt.gif" HEIGHT=140 WIDTH=400  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">View Transforming Objects (left) and Points (right)</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>Note that those shortcuts just switch the current view, to modify all
+open views, just press <CODE>o</CODE> or <CODE>p</CODE> twice:
+<CODE>&lt;oo&gt;</CODE> and <CODE>&lt;pp&gt;</CODE>.<SMALL TITLE="Since 1.21."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>Also note that the modelling scope may also be toggled by clicking
+on the modelling mode icon with the rightmost mouse
+button or by starting the action using this mouse
+button.<SMALL TITLE="Since 1.26."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+
+
+<H2><A NAME="objsel"></A> <A NAME="ss3.3">3.3</A> <A HREF="ayam.html#toc3.3">Selecting Objects by Picking</A>
+</H2>
+
+<P>This section describes techniques that can used for selecting
+one or more objects within a view window with the mouse.</P>
+<P>When the view windows action is <CODE>"Pick"</CODE>, objects
+that appear within this view can be selected with the mouse.
+This action may be invoked by pressing <CODE>&lt;P&gt;</CODE>
+or by making this action the default action using the preference
+setting <CODE>"Modelling/DefaultAction"</CODE>. If picking is the
+default action, it will be automatically enabled when any other
+action is broken using <CODE>&lt;Esc&gt;</CODE>.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="oneobjsel"></A> Selecting Individual Objects</H3>
+
+<P>Selecting objects within a view is a straightforward operation that uses
+standard methods. You will use the following two selection operations most
+frequently:</P>
+<P>
+<UL>
+<LI>To select a single object within a view, move the cursor to the object
+and click mouse button 1 (the leftmost one).
+Once you select an object, any objects previously
+selected are unselected automatically.
+</LI>
+<LI>To select an additional object, move the cursor to the object and
+<CODE>&lt;Control&gt;</CODE>+Click (again with the leftmost mouse button).
+Previously selected objects remain selected, and
+the newly picked object is added to the selection. Notice that the picked item
+must belong to the same level as the previously selected objects. An
+alternative method for selecting multiple objects is to drag a rectangle
+around them. For more information see
+<A HREF="#mulobjsel">Drag-selecting Multiple Objects</A></LI>
+</UL>
+</P>
+<P>Note that the Root object and View objects can not be pick-selected at all.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="mulobjsel"></A> Drag-selecting Multiple Objects</H3>
+
+<P>You can select multiple objects using the <CODE>&lt;Control&gt;</CODE>+Click method
+described in section 
+<A HREF="#oneobjsel">Selecting Individual Objects</A>.
+An additional method for selecting multiple objects is to drag a rectangle
+around those objects. However only objects that belong to the current level
+can be picked within a drag-selection. If you want to select multiple objects
+that belong to another level you must change the current level by either
+selecting it in the tree/listbox or by picking one object from that level
+on a view.</P>
+<P>The procedure for drag-selecting multiple objects also uses a standard method:</P>
+<P>
+<OL>
+<LI>Imagine a rectangle that encloses only the objects you want to select.
+</LI>
+<LI>Click at one corner of the rectangle and, while continuing to press the
+mouse button, drag until you have enclosed all the objects.
+</LI>
+<LI>Release the mouse button. All the valid objects inside or crossing the
+rectangle are selected and any objects previously selected are unselected
+automatically.</LI>
+</OL>
+</P>
+
+<P>Note that if you press <CODE>&lt;Control&gt;</CODE> during the drag-selection, objects
+that are enclosed by the rectangle will be added to the current selection
+instead of replacing it.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="ambobjsel"></A> Ambiguous Picking</H3>
+
+<P>In some cases Ayam is unable to differentiate between the objects you have
+selected and other nearby or related objects. This ambiguity can arise as
+follows:</P>
+<P>
+<UL>
+<LI>Imagine a small square surrounding the cursor. When you click an object,
+any other valid objects that fall inside this square are also considered to
+be possible selections. For example, if you select an item that is positioned
+very close to another one, Ayam may consider both items to be possible
+selections.
+</LI>
+<LI>If your model is three-dimensional (which is likely to happen),
+imagine a line that is perpendicular to the screen and that passes through
+the cursor and into the model. When you pick an object, any objects that
+intersect this line are considered to be possible candidates for selection.</LI>
+</UL>
+</P>
+<P>If the selection is ambiguous Ayam displays a window that contains a list of
+the possible candidates for selection (see image below), or, if the
+<CODE>"PickCycle"</CODE> option is activated, Ayam just cycles through the
+candidate objects by further clicks on the same
+position.<SMALL TITLE="Since 1.23."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>When a name in the candidate list is selected,
+the corresponding object is highlighted. Click <CODE>"Ok"</CODE> when you have
+determined which object to select or <CODE>"Cancel"</CODE> to close the list and keep
+the previous selection unchanged.</P>
+<P>
+<CENTER>
+<IMG SRC="pics/ampick.gif" HEIGHT=166 WIDTH=353  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">List of Picking Candidates</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>It is also possible to use a double click in the list of selection
+candidates to select an object and immediately close the dialog
+window. Moreover, as the list of candidates immediately gets the
+keyboard focus, the cursor keys and <CODE>&lt;Enter&gt;</CODE> can also be
+used to select the object.<SMALL TITLE="Since 1.11."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>Notes:
+<UL>
+<LI>While the list of ambiguous candidates is opened no other
+objects can be picked within the views.
+</LI>
+<LI>It is possible to use the <CODE>"Zoom to Object"</CODE> action (shortcut
+<CODE>&lt;BackSpace&gt;</CODE>) while the ambiguous select listbox is open to get
+a better view of the temporarily selected object.
+</LI>
+<LI>The tolerance used to determine whether an object should be picked
+or not can be adjusted (see <CODE>"PickTolerance"</CODE> in
+<A HREF="ayam-8.html#hidprefsp">Hidden Preference Settings</A>).</LI>
+</UL>
+</P>
+
+<H2><A NAME="selac"></A> <A NAME="ss3.4">3.4</A> <A HREF="ayam.html#toc3.4">Selecting/Tagging Points</A>
+</H2>
+
+<P>The modelling action <CODE>"Select Points"</CODE> (shortcut: <CODE>&lt;t&gt;</CODE>;
+for <B>t</B>&thinsp;ag points) may be applied to objects that support
+single point editing or read only points.</P>
+<P>To select or de-select a point it can directly be clicked upon
+or a rectangular region can be dragged with the mouse around the
+points in question.</P>
+<P>Only points within a certain distance from the mouse pointer
+click position will be considered picked (see preference option
+<CODE>"Modelling/PickEpsilon"</CODE>).
+Points that would be picked will flash in a different color when
+the mouse pointer moves over them (this is also controlled by the
+preference option <CODE>"Modelling/FlashPoints"</CODE>).</P>
+<P>Selected points will be drawn in dark red when the select points
+modelling action or a modelling action that would modify the selected
+points is active (see the following image).</P>
+<P>
+<CENTER>
+<IMG SRC="pics/selpnts.gif" HEIGHT=162 WIDTH=281  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Object With Selected Points (red)</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The selected editable points may be modified subsequently using the
+modelling actions Move, Rotate, and Scale; refer also to the discussion in
+section 
+<A HREF="#objorpnt">Transforming Objects or Selected Points</A>.
+See also the table below.</P>
+<P>
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+<B>Name</B></TD><TD><B>Shortcut</B></TD><TD><B>Icon</B></TD></TR><TR><TD>
+Tag Points</TD><TD><CODE>&lt;t&gt;</CODE></TD><TD>
+<IMG SRC="pics/tagac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">Tag Action</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>After the pick (the selection of a point), the picked point
+will be added to the list of selected points for the selected object.
+If the selected point is already in that list it will be removed from
+the list instead, the picked point will be deselected.</P>
+<P>All points can be selected easily using the keyboard shortcut <CODE>&lt;A&gt;</CODE>.</P>
+<P>The list of selected points will not be deleted from the object until
+an explicit deselection is performed using the keyboard shortcut
+<CODE>&lt;N&gt;</CODE> or if certain modelling tools are used.</P>
+<P>The point selection can also be inverted using the keyboard shortcut
+<CODE>&lt;I&gt;</CODE>.</P>
+<P>All three shortcuts above can be used anytime without interfering
+with any other active modelling actions.</P>
+<P>Note that the list of selected points is not copied, if the object
+is copied using the clipboard. The selection is also not saved to
+Ayam scene files. But selected points survive
+undo/redo.<SMALL TITLE="Since 1.16."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>Furthermore, the selection action itself is not an operation
+recorded in the undo buffer, thus cannot directly be undone.</P>
+<P>The point selection also does not interfere with single point modelling
+actions:
+It is perfectly legal to select some points, move them using
+the move action, then switch to single point editing, edit
+some other or even one of the selected points, switch back
+to the selection action, add other points to the selection or delete
+some points from the selection, switch to rotate, rotate the selected
+points and so on.</P>
+<P>A bigger number of points may be added to the selection using a
+click and drag operation. All points that are inside the rectangular
+region defined by the click and drag will be added to the selection.
+In fact, this approach is the only way to safely add points to the
+selection that occlude each other. Clicking always only adds/removes
+single points.</P>
+<P>Holding down the <CODE>&lt;Ctrl&gt;</CODE>-key while
+dragging the mouse removes all selected points within the rectangular
+region defined by the drag from the
+selection.<SMALL TITLE="Since 1.16.1."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>The exact behaviour of picking multiple points of a NURBS curve or surface
+depends on the attribute <CODE>"CreateMP"</CODE>:<BR>
+If <CODE>"CreateMP"</CODE> is enabled, picking a multiple point will always
+select all points that make up the multiple point.<BR>
+If <CODE>"CreateMP"</CODE> is disabled, picking a multiple point will only
+select the first of the points that make up the multiple point
+(but drag selection can be used to select all points nevertheless).</P>
+
+
+
+<H2><A NAME="markac"></A> <A NAME="ss3.5">3.5</A> <A HREF="ayam.html#toc3.5">Setting the Mark</A>
+</H2>
+
+<P>
+<CENTER>
+<IMG SRC="pics/mark.gif" HEIGHT=330 WIDTH=400  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Front View With Mark Set At 1,-1,0</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>This action may be invoked to mark a point in space for perusal
+of other modelling actions that e.g.&nbsp;rotate or scale about a point.
+The marked point will be shown as a little red cross in the view window
+(see also the image above).</P>
+<P>The keyboard shortcut to invoke the set mark action is <CODE>&lt;a&gt;</CODE>.
+This action is also active as intermediate action for e.g.&nbsp;rotate
+about, where the keyboard shortcuts <CODE>&lt;r&gt;</CODE>
+and then <CODE>&lt;a&gt;</CODE> would be used in a sequence and after
+setting the mark, the rotate about action would take over again.</P>
+<P>See also the table below.
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+<B>Name</B></TD><TD><B>Shortcut</B></TD><TD><B>Icon</B></TD></TR><TR><TD>
+Set Mark</TD><TD><CODE>&lt;a&gt;</CODE></TD><TD>
+<IMG SRC="pics/markac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">Set Mark Action</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>A single click with the left mouse button sets the mark. If grids are
+active in the view, the mark will be snapped to the nearest grid coordinates.</P>
+<P>Note, that, using a single mouse click, only two dimensional mark
+coordinates can be specified. Therefore, in versions prior to 1.21, the
+third coordinate was always set to zero upon a click. This is no longer
+the case. If the preference option <CODE>"Modelling/GlobalMark"</CODE> is
+enabled, the third coordinate is <EM>not</EM> reset anymore. This way all
+three coordinates of the mark can be defined by clicking two times in
+appropriate views, e.g.&nbsp;first in a
+front view for the x and y coordinates and then in a side view for the
+missing z coordinate.</P>
+<P>The mark can also be set to a point of one of the selected objects by
+clicking on it. In this case, the mark coordinates are always immediately
+three dimensional.<SMALL TITLE="Since 1.21."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>If the mouse is dragged instead of clicked, the mark is set to the
+bounding box center of all points in the drag
+rectangle.<SMALL TITLE="Since 1.25."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+
+
+<P>Additionally, when the set mark action is active, the following keyboard
+shortcuts are available:
+<UL style="list-style: none; ">
+<LI><CODE>&lt;Return&gt;</CODE> accept the current mark (useful, if one
+first rotates about a point then decides to also scale about
+the same point: <CODE>&lt;ra&gt;</CODE>, drag mouse, <CODE>&lt;sa&gt;</CODE>,
+<CODE>&lt;Return&gt;</CODE>, drag mouse ...),</LI>
+<LI><CODE>&lt;c&gt;</CODE> set the mark to the center of gravity of all
+currently selected objects coordinate systems,</LI>
+<LI><CODE>&lt;C&gt;</CODE> set the mark to the center of gravity of all
+currently selected points.</LI>
+<LI><CODE>&lt;b&gt;</CODE> set the mark to the center of the bounding
+box of all currently selected points.</LI>
+<LI><CODE>&lt;0&gt;</CODE>&thinsp;&ndash;&thinsp;<CODE>&lt;9&gt;</CODE> open a intermediate
+parameter GUI where the three mark coordinate values (separated by spaces) may
+be entered.<SMALL TITLE="Since 1.30."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></LI>
+</UL>
+
+The image below demonstrates the difference between the
+center of the bounding box and the center of gravity.</P>
+<P>
+<CENTER>
+<IMG SRC="pics/bbxvscog.gif" HEIGHT=183 WIDTH=583  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Bounding Box Center Mark (left) and Center of Gravity Mark (right)</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The mark may also directly be manipulated using the corresponding view object
+property (see also section 
+<A HREF="ayam-4.html#vat">ViewAttrib Property</A>).</P>
+<P>Since Ayam 1.21, the mark may also be set without activating the
+set mark action and without interfering with other modelling actions
+by double clicking with the rightmost mouse button.</P>
+<P>Another way of setting the mark is via the <CODE>"FindU"</CODE> special action
+for curves
+(see also section 
+<A HREF="#finduac">Finding Points on Curves</A>)
+or the <CODE>"FindUV"</CODE> special action for surfaces
+(see also section 
+<A HREF="#finduvac">Finding Points on Surfaces</A>)
+.</P>
+<P>The mark can also be used to remember an important point in space
+and get back to it later using the pan to mark action
+(keyboard shortcut <CODE>&lt;.&gt;</CODE>).</P>
+<P>The current mark can be cleared by pressing <CODE>&lt;D&gt;</CODE> anytime.</P>
+<P>Finally, remember that certain operations like e.g.&nbsp;changing the view
+type will also clear the mark.</P>
+
+
+
+<H2><A NAME="ipgui"></A> <A NAME="ss3.6">3.6</A> <A HREF="ayam.html#toc3.6">Intermediate Parameter GUIs</A>
+</H2>
+
+<P>
+<CENTER>
+<IMG SRC="pics/ipgui.gif" HEIGHT=366 WIDTH=527  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Intermediate Parameter GUI Example</FONT></CENTER><P><CENTER>
+</CENTER>
+
+Several interactive modelling actions support intermediate parameter
+GUIs.<SMALL TITLE="Since 1.27."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+Those are simple entry fields that appear in the lower right corner of the
+view window when e.g.&nbsp;a
+number key is pressed while the action is active and allow to parameterise
+the action in quick and exact fashion. See also the image above, where
+the intermediate parameter GUI for the Rotate action is shown.</P>
+<P>The parameter value can be committed using the <CODE>&lt;Enter&gt;</CODE> or
+<CODE>&lt;Return&gt;</CODE> key.</P>
+<P>The parameter GUI can also be used multiple times&thinsp;/&thinsp;kept open
+when the <CODE>&lt;Shift&gt;</CODE> key is held down while committing the
+parameter value.</P>
+<P>Currently only actions that require one parameter are supported.</P>
+
+
+
+<H2><A NAME="moveac"></A> <A NAME="ss3.7">3.7</A> <A HREF="ayam.html#toc3.7">Moving Objects or Selected Points</A>
+</H2>
+
+<P>Using the modelling action <CODE>"Move"</CODE> (shortcut: <CODE>&lt;m&gt;</CODE>)
+selected objects or selected (tagged) points can be moved.</P>
+<P>Note that the objects/points will be moved in the XY-plane for
+Front-views, the ZY-plane for Side-views, and the XZ-plane
+for Top-views only, no matter how the view is rotated.</P>
+<P>The move action may be restricted to a certain
+axis, by pressing <CODE>&lt;x&gt;</CODE>, <CODE>&lt;y&gt;</CODE>, or <CODE>&lt;z&gt;</CODE>
+right after the <CODE>&lt;m&gt;</CODE>.<SMALL TITLE="Since 1.17."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>For an overview of the move actions see also the table below.</P>
+<P>
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+<B>Name</B></TD><TD><B>Shortcut</B></TD><TD><B>Icon</B></TD></TR><TR><TD>
+Move</TD><TD><CODE>&lt;m&gt;</CODE></TD><TD>
+<IMG SRC="pics/moveac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Move X</TD><TD><CODE>&lt;mx&gt;</CODE></TD><TD>
+<IMG SRC="pics/movexac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Move Y</TD><TD><CODE>&lt;my&gt;</CODE></TD><TD>
+<IMG SRC="pics/moveyac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Move Z</TD><TD><CODE>&lt;mz&gt;</CODE></TD><TD>
+<IMG SRC="pics/movezac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">Move Actions Overview</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>See also the documentation of the corresponding
+scripting interface commands 
+<A HREF="ayam-6.html#scmovob">movOb</A> and
+<A HREF="ayam-6.html#scmovpnts">movPnts</A>.</P>
+
+
+
+<H2><A NAME="rotac"></A> <A NAME="ss3.8">3.8</A> <A HREF="ayam.html#toc3.8">Rotating Objects or Selected Points</A>
+</H2>
+
+<P>Using the modelling action <CODE>"Rotate"</CODE> (shortcut: <CODE>&lt;r&gt;</CODE>)
+objects or selected (tagged) points can be rotated.</P>
+<P>The axis of rotation is always parallel to the Z-axis in Front-views, the
+Y-axis in Top-views, and the X-axis in Side-views of the local
+object coordinate system. The orientation of the object coordinate system
+may change in respect to the world coordinate system if a sequence of
+rotate modelling actions is applied.</P>
+<P>Note that if multiple objects are selected, each object is rotated
+around the center of its own local coordinate system.
+Only the Rotate_X, Rotate_Y, or Rotate_Z property of the selected
+objects will be changed by this action.</P>
+<P>
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+<B>Name</B></TD><TD><B>Shortcut</B></TD><TD><B>Icon</B></TD></TR><TR><TD>
+Rotate</TD><TD><CODE>&lt;r&gt;</CODE></TD><TD>
+<IMG SRC="pics/rotateac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">Rotate Action</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>See also the documentation of the corresponding
+scripting interface commands 
+<A HREF="ayam-6.html#scrotob">rotOb</A> and
+<A HREF="ayam-6.html#scrotpnts">rotPnts</A>.</P>
+
+<H2><A NAME="rotaac"></A> <A NAME="ss3.9">3.9</A> <A HREF="ayam.html#toc3.9">Rotating Objects or Selected Points about a Point</A>
+</H2>
+
+<P>Using the rotate about modelling action
+objects or the selected (tagged) points of the selected objects
+can be interactively rotated about a specific point in space.</P>
+<P>To start the rotate about action, invoke the normal rotate action,
+then press <CODE>&lt;a&gt;</CODE>.
+See also the table below.</P>
+<P>
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+<B>Name</B></TD><TD><B>Shortcut</B></TD><TD><B>Icon</B></TD></TR><TR><TD>
+Rotate About</TD><TD><CODE>&lt;ra&gt;</CODE></TD><TD>
+<IMG SRC="pics/rotateaac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">Rotate About Action</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>To rotate about a different point, the intermediate set mark action must
+be restarted (simply press <CODE>&lt;a&gt;</CODE> again).</P>
+<P>After setting the mark, the action works the same way as
+the Rotate action, except that it rotates the selected object(s)
+or points about the mark.
+This, consequently, also works with multiple selected objects.
+Note that this action does not only change the Rotate_X,
+Rotate_Y, or Rotate_Z
+properties of the selected objects, but also the Translate_X,
+Translate_Y, or Translate_Z properties.</P>
+<P>To avoid degenerated coordinates due to roundoff errors it is highly
+suggested to use a grid or the intermediate parameter GUI
+with this action.</P>
+<P>See also the section
+<A HREF="ayam-6.html#aactcl">Automatic About Center Actions</A>
+for a script, that modifies the rotate action to rotate
+about the current selections center automatically.</P>
+
+
+
+<H2><A NAME="scalac"></A> <A NAME="ss3.10">3.10</A> <A HREF="ayam.html#toc3.10">Scaling Objects or Selected Points</A>
+</H2>
+
+<P>There are several different actions available to interactively scale
+objects or the selected (tagged) points of the selected objects:</P>
+<P>The modelling action <CODE>"Scale 3D"</CODE> (shortcut: <CODE>&lt;S&gt;</CODE>, note the
+big S!) scales all three axes of the selected objects or
+the selected (tagged) points of the selected objects
+by the same factor.</P>
+<P>The modelling action <CODE>"Scale 2D"</CODE> (shortcut: <CODE>&lt;s&gt;</CODE>)
+scales just two axes of the selected objects or
+the selected (tagged) points of the selected objects. Those axes are
+XY in a Front-view, ZY in a Side-view, and XZ in a Top-view.</P>
+<P>It is also possible to restrict the scaling of objects or selected
+points to just one axis.
+For that <CODE>&lt;x&gt;</CODE>, <CODE>&lt;y&gt;</CODE>, or <CODE>&lt;z&gt;</CODE> must
+be pressed right after <CODE>&lt;s&gt;</CODE> (e.g.&nbsp;<CODE>&lt;sx&gt;</CODE> for
+scale 1D about x).</P>
+<P>Since Ayam 1.17, direct access to the 1D scale modelling actions
+<CODE>"Scale X"</CODE> (old shortcut: <CODE>&lt;x&gt;</CODE>),
+<CODE>"Scale Y"</CODE> (old shortcut: <CODE>&lt;y&gt;</CODE>), and
+<CODE>"Scale Z"</CODE> (old shortcut: <CODE>&lt;z&gt;</CODE>) is no longer available.</P>
+<P>The modelling action <CODE>"Stretch 2D"</CODE> (shortcut: <CODE>&lt;T&gt;</CODE>)
+works much like <CODE>"Scale 2D"</CODE> but the scale factor for each
+axis may be different. Never start this action by a click
+near one of the axes to be changed, as this will cause
+very big scale factors for the other axis. Try it first with
+a centered box by starting from one of the box corners,
+then try it once starting on the X-axis.</P>
+<P>For an overview of the scale actions see also the table below.</P>
+<P>
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+<B>Name</B></TD><TD><B>Shortcut</B></TD><TD><B>Icon</B></TD></TR><TR><TD>
+Scale 3D</TD><TD><CODE>&lt;S&gt;</CODE></TD><TD>
+<IMG SRC="pics/scale3dac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Scale 2D</TD><TD><CODE>&lt;s&gt;</CODE></TD><TD>
+<IMG SRC="pics/scale2dac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Scale 1D X</TD><TD><CODE>&lt;sx&gt;</CODE></TD><TD>
+<IMG SRC="pics/scale1dxac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Scale 1D Y</TD><TD><CODE>&lt;sy&gt;</CODE></TD><TD>
+<IMG SRC="pics/scale1dyac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Scale 1D Z</TD><TD><CODE>&lt;sz&gt;</CODE></TD><TD>
+<IMG SRC="pics/scale1dzac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Stretch 2D</TD><TD><CODE>&lt;T&gt;</CODE></TD><TD>
+<IMG SRC="pics/stretchac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">Scaling Actions Overview</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>See also the documentation of the corresponding
+scripting interface commands 
+<A HREF="ayam-6.html#scscalob">scalOb</A> and
+<A HREF="ayam-6.html#scscalpnts">scalPnts</A>.</P>
+
+
+
+<H2><A NAME="scalaac"></A> <A NAME="ss3.11">3.11</A> <A HREF="ayam.html#toc3.11">Scaling Objects or Selected Points about a Point</A>
+</H2>
+
+<P>Using the scale about modelling actions objects or the selected
+(tagged) points of the selected objects can be interactively scaled
+about a specific point in space.</P>
+<P>To start a scale about action, invoke the normal scale action,
+then press <CODE>&lt;a&gt;</CODE> (e.g.&nbsp;<CODE>&lt;sa&gt;</CODE> for scale 2D about,
+<CODE>&lt;sya&gt;</CODE> for scale 1D Y about).
+For an overview of the scale about actions see also the table below.</P>
+<P>
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+<B>Name</B></TD><TD><B>Shortcut</B></TD><TD><B>Icon</B></TD></TR><TR><TD>
+Scale 3D About</TD><TD><CODE>&lt;Sa&gt;</CODE></TD><TD>
+<IMG SRC="pics/scale3daac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Scale 2D About</TD><TD><CODE>&lt;sa&gt;</CODE></TD><TD>
+<IMG SRC="pics/scale2daac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Scale 1D X About</TD><TD><CODE>&lt;sxa&gt;</CODE></TD><TD>
+<IMG SRC="pics/scale1dxaac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Scale 1D Y About</TD><TD><CODE>&lt;sya&gt;</CODE></TD><TD>
+<IMG SRC="pics/scale1dyaac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Scale 1D Z About</TD><TD><CODE>&lt;sza&gt;</CODE></TD><TD>
+<IMG SRC="pics/scale1dzaac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Stretch 2D About</TD><TD><CODE>&lt;Ta&gt;</CODE></TD><TD>
+<IMG SRC="pics/stretchaac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">Scaling About Actions Overview</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>To scale about a different point, the intermediate set mark action
+must be restarted (simply press <CODE>&lt;a&gt;</CODE> again).</P>
+<P>After setting the mark, the action works the same way as
+the scale action, except that it scales the selected object(s)
+or points about the mark.
+This, consequently, also works with multiple selected objects.
+Note that this action does not only change the Scale_X, Scale_Y,
+or Scale_Z
+properties of the selected objects, but also the Translate_X,
+Translate_Y, or Translate_Z
+properties.</P>
+<P>Also note, that the three dimensional scaling about the mark
+occurs in all three dimensions, however, in the intermediate interactive
+set mark action only two dimensional coordinates can be specified
+using a single mouse click. To specify a true three dimensional mark
+the corresponding view object attributes can be used or
+a point can be selected and the mark set to it (shortcut <CODE>&lt;C&gt;</CODE>).
+See section 
+<A HREF="#markac">Setting the Mark</A> for other means
+of setting a three dimensional mark.</P>
+<P>To avoid degenerated coordinates due to roundoff errors it is highly
+suggested to use a grid or the intermediate parameter GUI
+with this action.</P>
+<P>See also the section
+<A HREF="ayam-6.html#aactcl">Automatic About Center Actions</A>
+for a script, that modifies the scale actions to scale
+about the current selections center automatically.</P>
+
+
+
+<H2><A NAME="editac"></A> <A NAME="ss3.12">3.12</A> <A HREF="ayam.html#toc3.12">Editing Points</A>
+</H2>
+
+<P>To edit the points of an object two actions (<CODE>"Edit"</CODE> and
+<CODE>"Numeric Point Edit"</CODE>) are available.
+Those actions may be applied to objects that support single point
+editing only.
+Such objects usually draw their selectable points using small white
+rectangular handles when a modelling action is active (see also the
+image below).</P>
+<P>
+<CENTER>
+<IMG SRC="pics/handles.gif" HEIGHT=203 WIDTH=408  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Objects With Editable (left) and With Read-only Points (right)</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>In contrast to e.g.&nbsp;the move action, all point edit actions require the
+handle of the point to be picked directly.
+Only points within a certain distance from the mouse pointer click
+position will be considered picked (see preference option
+<CODE>"Modelling/PickEpsilon"</CODE>).
+Points that would be picked will flash in a different color when
+the mouse pointer moves over them (this is also controlled by the
+preference option <CODE>"Modelling/FlashPoints"</CODE>).</P>
+<P>For an overview of the point edit actions see also the table below.</P>
+<P>
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+<B>Name</B></TD><TD><B>Shortcut</B></TD><TD><B>Icon</B></TD></TR><TR><TD>
+Edit</TD><TD><CODE>&lt;e&gt;</CODE></TD><TD>
+<IMG SRC="pics/editac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Numeric Edit</TD><TD><CODE>&lt;E&gt;</CODE></TD><TD>
+<IMG SRC="pics/editdac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">Edit Points Overview</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The modelling action <CODE>"Edit"</CODE> (shortcut: <CODE>&lt;e&gt;</CODE>)
+works much like the move action, but it moves single points instead of
+objects. Since Ayam 1.18 it is possible
+to edit points of multiple selected objects (in former versions
+only points from the first selected object were considered).</P>
+<P>If a multiple point is edited, this action modifies all single
+points that make up the multiple point, i.e.&nbsp;it is not possible to
+move single points apart from a multiple point using this action.
+Temporarily disable the <CODE>"CreateMP"</CODE> property or
+explode the multiple point to do that.</P>
+<P>If the preference option <CODE>"Modelling/EditSnaps"</CODE> is enabled,
+the picked point will be moved to the nearest grid coordinates first,
+otherwise the grid just controls the displacement for the edit
+action. The snapping can occur in 2D or 3D, depending on the preference
+option <CODE>"Modelling/Snap3D"</CODE>.
+Moreover, while snapping a point, the mouse pointer will warp to
+the new position of the point (so that the user does not lose
+track of it). Warping the mouse pointer currently does not work on
+Mac OS X Aqua.</P>
+
+<P>
+<A NAME="numeditac"></A> </P>
+<P>The modelling action <CODE>"Numeric Point Edit"</CODE> (shortcut:
+<CODE>&lt;E&gt;</CODE>)
+starts an intermediate point selection action and upon a click
+with the mouse opens a small window where the coordinates of the
+selected editable point(s) may be changed directly by entering
+new coordinate values on the keyboard (see image below).
+If there are already selected points, the dialog window will
+be opened immediately.<SMALL TITLE="Since 1.26."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>
+<CENTER>
+<IMG SRC="pics/numpnted.gif" HEIGHT=152 WIDTH=134  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Numeric Point Edit Dialog</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>Nothing will be changed unless the <CODE>"Return"</CODE> key is pressed
+in a coordinate entry field or the <CODE>"Apply"</CODE> button is used.</P>
+<P>In contrast to the normal point selection action, where further
+clicks add points to the selection, clicking on new points, while
+the edit point dialog is open, deselects the old point(s),
+selects the new point and loads its coordinate values into the
+entry fields. In case of multiple selected objects, the deselection
+is only performed on the object with a new selection.</P>
+<P>Note that the w coordinate setting will be ignored for selected points
+that do not have weight information (are not rational).</P>
+<P>Using the small menu on top of the coordinate window one can
+determine whether editing takes place in local/object space or
+global/world space.</P>
+<P>This modelling action may affect multiple points of multiple selected
+objects.<SMALL TITLE="Since 1.18."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>Snapping points of different objects together is now possible too:
+Just select two objects, start numeric point editing (press <CODE>&lt;E&gt;</CODE>),
+pick a point on the first object (where a point of the second object
+should be snapped to), the point edit window opens, now drag select
+the point of the second object (do <EM>not</EM> use a single click for
+selection as this would also load new coordinates) and press apply.</P>
+<P>The numeric point editing action also supports read only
+points, their coordinates may be retrieved, but applying any values
+will have no effect.<SMALL TITLE="Since 1.18."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>When applying changes, single coordinate entry fields may be empty to
+prevent a change of the corresponding coordinate
+value.<SMALL TITLE="Since 1.20."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>If a multiple point is edited, this action modifies all single
+points that make up the multiple point, i.e.&nbsp;single points can not
+be moved apart from a multiple point using the numeric point
+edit action. Temporarily disable the <CODE>"CreateMP"</CODE> property or
+explode the multiple point to do that.</P>
+<P>Notice that the numeric point editing dialog may stay
+open all the time.<SMALL TITLE="Since 1.4."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>Furthermore, it is not necessary that the original
+object stays selected while working with the numeric point edit dialog,
+other objects may be selected to e.g.&nbsp;infer new point coordinates from
+their properties and apply them to the original object.
+Furthermore notice that the coordinate values displayed in the numeric
+point editing window will not update when the point is modified by
+another modelling action (e.g.&nbsp;in another view). Simply click on the point
+again in a view where the numeric point editing action is active, to
+update the coordinate values in the numeric point editing dialog.</P>
+<P>The numeric point edit value fields support Tcl expressions.
+This allows e.g.&nbsp;to set a point to
+exactly<SMALL TITLE="in the limits imposed by the
+floating point data type double"><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL> 1/3 by entering:
+<BLOCKQUOTE><CODE>
+<CODE>[expr 1.0/3.0]</CODE>
+</CODE></BLOCKQUOTE>
+</P>
+<P>Even though the dialog may display point coordinates in degraded
+accuracy (due to floating point to string conversion)
+the original point data is unchanged and its accuracy is not affected
+as long as the new data is not applied.
+See also the discussion of the <CODE>"TclPrecision"</CODE> preference option in
+section 
+<A HREF="ayam-2.html#prefmisc">Miscellaneous Preferences</A>).</P>
+
+<P>
+<A NAME="nmpmenu"></A> 
+The numeric point edit dialog also has a context menu.<SMALL TITLE="Since 1.21."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+The entries in this menu allow to:
+<UL>
+<LI> <CODE>"Clear"</CODE> all entries,</LI>
+<LI> <CODE>"Reset"</CODE> all entries to the last fetched values (undo edits),</LI>
+<LI> <CODE>"Fetch Mark"</CODE>, set all entries to the mark coordinates of the
+current view (W is cleared),</LI>
+<LI> <CODE>"Fetch First"</CODE>, set all entries to the first of the currently
+selected points, or</LI>
+<LI> <CODE>"Fetch Last"</CODE>, set all entries to the last of the currently
+selected points.</LI>
+</UL>
+</P>
+<P>The following keyboard shortcuts are in effect for the
+numeric edit dialog:
+<UL>
+<LI> <CODE>&lt;x&gt;</CODE>, <CODE>&lt;y&gt;</CODE>, <CODE>&lt;z&gt;</CODE>, <CODE>&lt;w&gt;</CODE>, move
+the focus to the respective entry.</LI>
+<LI> <CODE>&lt;Return&gt;</CODE>&thinsp;/&thinsp;<CODE>&lt;Enter&gt;</CODE>, apply
+all changes.</LI>
+<LI> <CODE>&lt;Shift-Return&gt;</CODE>&thinsp;/&thinsp;<CODE>&lt;Shift-Enter&gt;</CODE>,
+apply all changes and close the dialog.</LI>
+<LI> <CODE>&lt;Shift-Delete&gt;</CODE>, clear all entries.</LI>
+<LI> <CODE>&lt;Esc&gt;</CODE> close the dialog.</LI>
+</UL>
+</P>
+
+<H2><A NAME="editwac"></A> <A NAME="ss3.13">3.13</A> <A HREF="ayam.html#toc3.13">Editing Weights</A>
+</H2>
+
+<P>In the NURBS context, weights are mainly used to construct perfect
+circles, circular arcs, and spheres. However, they also present
+another way of influencing the curves or surfaces shape in relation
+to the control point with the weight: Weights smaller than 1.0 repel
+the curve or surface from the control point, whereas weights larger
+than 1.0 attract the curve or surface to the control point. See
+also the following image:</P>
+<P>
+<CENTER>
+<IMG SRC="pics/weights.gif" HEIGHT=269 WIDTH=358  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Weights Example (Blue: w&thinsp;=&thinsp;0.5, Red: w&thinsp;=&thinsp;2.0)</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>To edit the weights of an object two actions (<CODE>"Edit Weights"</CODE> and
+<CODE>"Reset Weights"</CODE>) are available.
+Those actions may be applied to objects that support single point
+editing and support rational coordinates only. Those are
+objects of type NCurve, NPatch, and PatchMesh.</P>
+<P>The modelling action <CODE>"Edit Weights"</CODE> (shortcut: <CODE>&lt;w&gt;</CODE>)
+allows to change the w coordinate of a single point by dragging the
+mouse left or right. The initial click always resets the weight to 1.0.
+For every 10 pixels the mouse is dragged, a value of 0.1 will be
+added to or removed from the weight respectively.
+If a grid is active, the 0.1 will be multiplied by the grid value
+so that a grid of 0.5 will add/remove weight in terms of 0.05
+increments/decrements.<BR>
+When the <CODE>&lt;Control&gt;</CODE> key is held down while picking the
+control point to edit, the weight will not be
+reset.<SMALL TITLE="Since 1.25."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>The modelling action <CODE>"Reset Weights"</CODE> (shortcut: <CODE>&lt;W&gt;</CODE>)
+resets the w coordinate of the picked point to 1.0. Drag
+selection of points to reset is also
+possible.<SMALL TITLE="Since 1.25."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>In both actions the current weight of a control point is visualized
+by color: repelling weights (w&thinsp;&lt;&thinsp;1.0) are drawn in
+tones of blue that
+get darker as the weight approaches 0.0 and attracting weights
+(w&thinsp;>&thinsp;1.0) are
+drawn in tones of red that get darker as the weight approaches 3.0.
+Control points with zero or invalid weights are drawn in black.
+Control points with negative weights are drawn in green.
+Control points with no weight (w&thinsp;=&thinsp;1.0) stay white,
+see also the figure below.
+<CENTER>
+<IMG SRC="pics/weightscale.gif" HEIGHT=105 WIDTH=569  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Weight Scale</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The weights may also be reset for all points using the
+keyboard shortcut: <CODE>&lt;Ctrl-W&gt;</CODE>.</P>
+<P>Also note that, if the preference option <CODE>"RationalPoints"</CODE>
+is set to <EM>homogeneous</EM>, changing the weight of a control point
+also changes its (displayed) position.
+See also section 
+<A HREF="ayam-2.html#prefmodel">Modelling Preferences</A>.</P>
+<P>For an overview of the weight edit actions see also the table below.</P>
+<P>
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+<B>Name</B></TD><TD><B>Shortcut</B></TD><TD><B>Icon</B></TD></TR><TR><TD>
+Edit Weights</TD><TD><CODE>&lt;w&gt;</CODE></TD><TD>
+<IMG SRC="pics/editwac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Reset Weights</TD><TD><CODE>&lt;W&gt;</CODE></TD><TD>
+<IMG SRC="pics/resetwac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">Edit Weights Overview</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+
+
+
+<H2><A NAME="snapac"></A> <A NAME="ss3.14">3.14</A> <A HREF="ayam.html#toc3.14">Snapping Points to the Grid</A>
+</H2>
+
+<P>
+<CENTER>
+<IMG SRC="pics/snapgrpnt.gif" HEIGHT=242 WIDTH=634  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Snapping Points to the Grid</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>There are two actions available for snapping points to the current
+grid of a view.<SMALL TITLE="Since 1.11."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>The actions are initiated using the shortcuts <CODE>&lt;g&gt;</CODE>
+and <CODE>&lt;G&gt;</CODE>. If an object has selected (tagged)
+editable points, only those points will be snapped to the grid,
+otherwise all editable points of the object will be snapped to the grid
+(see also the image above).
+If <CODE>&lt;g&gt;</CODE> is used, the snapping only occurs in
+the modelling plane associated with the view (i.e.&nbsp;in 2D).
+To snap all three coordinate values to the grid use <CODE>&lt;G&gt;</CODE>.
+Note that the snapping also occurs, if the view has the preference
+option <CODE>"Use Grid"</CODE> turned off.
+This action can be used without affecting other active actions.</P>
+
+<H2><A NAME="snapoac"></A> <A NAME="ss3.15">3.15</A> <A HREF="ayam.html#toc3.15">Snapping Objects to the Grid</A>
+</H2>
+
+<P>
+<CENTER>
+<IMG SRC="pics/snapgrobj.gif" HEIGHT=183 WIDTH=516  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Snapping Objects to the Grid</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>There are two actions available for snapping objects to the current
+grid of a view.<SMALL TITLE="Since 1.26."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>The actions are initiated using the shortcuts <CODE>&lt;f&gt;</CODE>
+and <CODE>&lt;F&gt;</CODE>.<BR>
+If <CODE>&lt;f&gt;</CODE> is used, the snapping only occurs in
+the modelling plane associated with the view (i.e.&nbsp;in 2D).
+To snap all three coordinate values to the grid use <CODE>&lt;F&gt;</CODE>.
+Note that the snapping also occurs, if the view has the preference
+option <CODE>"Use Grid"</CODE> turned off.
+This action can be used without affecting other active actions.</P>
+
+
+
+<H2><A NAME="snapmac"></A> <A NAME="ss3.16">3.16</A> <A HREF="ayam.html#toc3.16">Snapping Points to the Mark</A>
+</H2>
+
+<P>
+<CENTER>
+<IMG SRC="pics/snapmrkpnt.gif" HEIGHT=204 WIDTH=574  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Snapping Points to the Mark</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The snap points to mark action moves all selected points to
+the current mark.<SMALL TITLE="Since 1.18."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+See also the image above.</P>
+<P>This action is initiated using the shortcut <CODE>&lt;M&gt;</CODE>.
+All selected editable points of the selected objects are snapped to
+the current mark coordinates (see section
+<A HREF="#markac">Setting the Mark</A>
+for more information about the mark) immediately.
+This action can be used without affecting other active actions.</P>
+
+<H2><A NAME="snapomac"></A> <A NAME="ss3.17">3.17</A> <A HREF="ayam.html#toc3.17">Snapping Objects to the Mark</A>
+</H2>
+
+<P>
+<CENTER>
+<IMG SRC="pics/snapmrkobj.gif" HEIGHT=242 WIDTH=620  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Snapping Objects to the Mark</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The snap objects to mark action moves all selected objects to
+the current mark.<SMALL TITLE="Since 1.18."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+See also the image above.</P>
+<P>This action is initiated using the shortcut <CODE>&lt;K&gt;</CODE>.
+All selected objects are snapped to the current
+mark coordinates (see section
+<A HREF="#markac">Setting the Mark</A>
+for more information about the mark) immediately, providing
+an easy way to move objects over long distances or to just put
+an object "here".
+This action can be used without affecting other active actions.</P>
+
+
+
+<H2><A NAME="insdelac"></A> <A NAME="ss3.18">3.18</A> <A HREF="ayam.html#toc3.18">Inserting or Deleting Points</A>
+</H2>
+
+<P>
+<CENTER>
+<IMG SRC="pics/inspnt.gif" HEIGHT=246 WIDTH=491  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Inserting Points</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The modelling action <CODE>"Insert Point"</CODE> (shortcut: <CODE>&lt;i&gt;</CODE>)
+may be applied to NURBS, interpolating, and approximating curves
+(objects of type NCurve, ICurve, and ACurve) only.
+A new control point will be inserted in the curve right
+after the picked point. The new point will be inserted in the
+middle between the selected point and the next point, changing
+the shape of the curve. See also the image above.<BR>
+It is also possible to insert control
+points into certain types of NURBS curves without changing
+their shape using knot insertion; see also the insert knot tool section
+<A HREF="ayam-5.html#insknt">Insert Knot Tool</A>.</P>
+<P>If the <CODE>&lt;Ctrl&gt;</CODE>-key is held down while clicking on a point,
+the new point can interactively be placed on a freely chosen
+position.<SMALL TITLE="Since 1.25."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+This is done by initially giving the new point the coordinates of the
+clicked point, from there, the new point can be dragged to the
+final position.</P>
+<P>The modelling action <CODE>"Delete Point"</CODE> (shortcut: <CODE>&lt;d&gt;</CODE>)
+may be applied to NURBS, interpolating, and approximating curves
+(objects of type NCurve, ICurve, and ACurve) only.
+The selected control point will be deleted from the curve.
+Deleting points from a curve with knot type <CODE>"Custom"</CODE>
+may currently lead to an incorrect knot sequence, please
+check and correct the new sequence manually.
+See also the table below.
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+<B>Name</B></TD><TD><B>Shortcut</B></TD><TD><B>Icon</B></TD></TR><TR><TD>
+Insert Points</TD><TD><CODE>&lt;i&gt;</CODE></TD><TD>
+<IMG SRC="pics/insertac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Delete Points</TD><TD><CODE>&lt;d&gt;</CODE></TD><TD>
+<IMG SRC="pics/deleteac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">Insert/Delete Points Actions</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+
+
+
+<H2><A NAME="multac"></A> <A NAME="ss3.19">3.19</A> <A HREF="ayam.html#toc3.19">Manipulating the Multiplicity of Points</A>
+</H2>
+
+<P>
+<CENTER>
+<IMG SRC="pics/incmult.gif" HEIGHT=257 WIDTH=554  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Successively Increasing the Multiplicity of Selected Points</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>To manipulate the multiplicity of selected NURBS curve control
+points there are two modelling actions
+available.<SMALL TITLE="Since 1.20."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>The actions are initiated using the shortcuts <CODE>&lt;*&gt;</CODE>
+(to increase the multiplicity) and <CODE>&lt;/&gt;</CODE>
+(to decrease the multiplicity).</P>
+<P>Increasing the multiplicity of a control point can be used to
+easily construct sharp corners and linear curve segments
+(see also the image above).</P>
+<P>The multiplicity of the selected control points will only be
+raised to the order of the curve and, conversely, never be
+decreased below 1. Trying to increase/decrease beyond those
+limits will not result in any error.</P>
+<P>The selected points stay selected, so that the actions can be
+applied multiple times.</P>
+<P>Both actions can be invoked anytime without breaking other
+actions.</P>
+
+
+
+<H2><A NAME="finduac"></A> <A NAME="ss3.20">3.20</A> <A HREF="ayam.html#toc3.20">Finding Points on Curves</A>
+</H2>
+
+<P>
+<CENTER>
+<IMG SRC="pics/breakp.gif" HEIGHT=229 WIDTH=279  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Breakpoint Display in Find Point on Curve Action</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The modelling action <CODE>"FindU"</CODE> (shortcut: <CODE>&lt;u&gt;</CODE>)
+may be applied to NURBS curves (objects of type NCurve or
+objects that provide NCurve objects) only.
+This action may be used to get the corresponding parametric
+value <EM>u</EM> from an arbitrary point on a curve. For every picked point
+the appropriate value for <EM>u</EM> is calculated, stored
+in the global variable <CODE>"u"</CODE>, and additionally written to the console.
+The mark is set to the coordinates of the point on the curve that
+results from evaluating the curve at the parametric value <EM>u</EM>.
+See also section 
+<A HREF="#markac">Setting the Mark</A>
+for more information about the mark.
+Remember to exactly pick a point on the curve or nearby, otherwise
+the calculation may fail.</P>
+<P>This action can also be used to get the curve coordinates
+from a distinct value (breakpoint) from the knot
+vector.<SMALL TITLE="Since 1.25."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+Those points are displayed as rhombuses and can simply be picked, see also
+the image above. If a breakpoint is picked, its parametric
+value is put into the global variable <CODE>u</CODE> and the mark is set to
+the corresponding, three dimensional, point on the curve. Drag
+selection of breakpoints is also possible. A drag selection
+of multiple breakpoints, either with one drag or a second drag with the
+<CODE>&lt;Ctrl&gt;</CODE> key held down, leads to a knot range selection which will
+be stored in a <CODE>"UMM"</CODE> tag.<SMALL TITLE="Since 1.29."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+The selected range will be displayed
+as a pair of bracket symbols (<CODE>"["</CODE> and <CODE>"]"</CODE>) on the curve when the
+<CODE>"FindU"</CODE> action is active.
+A selected knot range can then e.g.&nbsp;be perused by the knot refine tool.
+An empty drag selection will remove the current knot range selection by
+removing the <CODE>"UMM"</CODE> tag.</P>
+<P>See also the table below.</P>
+<P>
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+<B>Name</B></TD><TD><B>Shortcut</B></TD><TD><B>Icon</B></TD></TR><TR><TD>
+Find U</TD><TD><CODE>&lt;u&gt;</CODE></TD><TD>
+<IMG SRC="pics/finduac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">Find Point on Curve Action</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+
+
+
+<H2><A NAME="finduvac"></A> <A NAME="ss3.21">3.21</A> <A HREF="ayam.html#toc3.21">Finding Points on Surfaces</A>
+</H2>
+
+<P>The modelling action <CODE>"FindUV"</CODE> (shortcut: <CODE>&lt;U&gt;</CODE>)
+may be applied to NURBS surfaces (objects of type NPatch or
+objects that provide NPatch objects) only.
+This action may be used to get the corresponding parametric
+values <EM>u</EM> and <EM>v</EM> from a point on a surface. For every picked
+point the appropriate values for <EM>u</EM> and <EM>v</EM> are calculated,
+stored in the global variables <CODE>"u"</CODE> and <CODE>"v"</CODE>, and additionally
+written to the console.
+The mark is set to the coordinates of the point on the surface that
+results from evaluating the surface at the parametric values <EM>u</EM> and <EM>v</EM>.
+See section 
+<A HREF="#markac">Setting the Mark</A>
+for more information about the mark.
+Remember to exactly pick a point on the surface or nearby, otherwise
+the calculation may fail. As the icon suggests, this action works best
+in the shaded drawing mode.</P>
+<P>This action can also be used to get the surface coordinates
+from a pair of distinct values (breakpoints) from the knot
+vectors.<SMALL TITLE="Since 1.29."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+Those points are displayed as rhombuses and can simply be picked.
+If a breakpoint is picked, its parametric
+values are put into the global variables <CODE>u</CODE> and <CODE>v</CODE> and
+the mark is set to
+the corresponding, three dimensional, point on the surface. Drag
+selection of breakpoints is also possible.</P>
+<P>See also the table below.</P>
+<P>
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+<B>Name</B></TD><TD><B>Shortcut</B></TD><TD><B>Icon</B></TD></TR><TR><TD>
+Find UV</TD><TD><CODE>&lt;U&gt;</CODE></TD><TD>
+<IMG SRC="pics/finduvac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">Find Point on Surface Action</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+
+
+
+<H2><A NAME="selbndac"></A> <A NAME="ss3.22">3.22</A> <A HREF="ayam.html#toc3.22">Selecting Boundary Curves</A>
+</H2>
+
+<P>
+<CENTER>
+<IMG SRC="pics/selbnd.gif" HEIGHT=242 WIDTH=381  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Display of Selected Boundary Curve (red) Example</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The modelling actions <CODE>"SelBnd"</CODE> (shortcut: <CODE>&lt;n&gt;</CODE>)
+and <CODE>"SelBndC"</CODE> (shortcut: <CODE>&lt;k&gt;</CODE>)
+may be applied to NURBS surfaces (objects of type NPatch or
+objects that provide NPatch objects) only.<SMALL TITLE="Since 1.29."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>These actions may be used to select a boundary curve for further
+processing by e.g.&nbsp;the various tool object creation tools (see
+section 
+<A HREF="ayam-5.html#sctools">Surface Creation Tools</A>).</P>
+<P>The selected boundaries will be drawn in red color when one of these
+actions is active. See also the image above, where a trim boundary
+of a Trim object has been selected.</P>
+<P>The selection will be stored in SB tags and thus
+survive scene saving and restoring. See also
+section 
+<A HREF="ayam-4.html#sbtag">SB (Selected Boundary) Tag</A>.</P>
+<P>Drag selection is supported by both actions. An empty drag selection
+de-selects all currently selected boundaries.</P>
+<P>Holding down the <CODE>&lt;Ctrl&gt;</CODE>-key while
+dragging the mouse removes all selected boundaries within the rectangular
+region defined by the drag from the selection.</P>
+<P>See also the table below.</P>
+<P>
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+<B>Name</B></TD><TD><B>Shortcut</B></TD><TD><B>Icon</B></TD></TR><TR><TD>
+SelBnd</TD><TD><CODE>&lt;n&gt;</CODE></TD><TD>
+<IMG SRC="pics/selbndac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+SelBndC</TD><TD><CODE>&lt;k&gt;</CODE></TD><TD>
+<IMG SRC="pics/selbndcac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">Select Boundary Curve Actions</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+
+
+
+<H2><A NAME="splitncac"></A> <A NAME="ss3.23">3.23</A> <A HREF="ayam.html#toc3.23">Interactively Splitting Curves</A>
+</H2>
+
+<P>
+<CENTER>
+<IMG SRC="pics/splitac.gif" HEIGHT=247 WIDTH=539  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Interactive Curve Splitting</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The modelling action <CODE>"Split Curve"</CODE> (shortcut <CODE>&lt;|&gt;</CODE>)
+may be applied to NURBS curves (objects of type NCurve) only.
+Using this action a NURBS curve may be split into two new curves
+at a point on the curve that is specified by picking a point
+on the curve; see also the corresponding NURBS curve tool
+<A HREF="ayam-5.html#splitt">Split Tool</A>.<BR>
+Remember to exactly pick a point on the curve or nearby otherwise
+the calculation of the parametric value for the split will fail.
+The selected curve will be changed by this action, and
+a new curve will be created. It is currently not possible to undo
+the changes of a split!</P>
+<P>This action also displays the distinct values (breakpoints) from the knot
+vector and allows to pick them just like the
+<CODE>"FindU"</CODE> action.<SMALL TITLE="Since 1.25."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+Grids are not utilised by this action.
+See also the table below.</P>
+<P>
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+<B>Name</B></TD><TD><B>Shortcut</B></TD><TD><B>Icon</B></TD></TR><TR><TD>
+Split</TD><TD><CODE>&lt;|&gt;</CODE></TD><TD>
+<IMG SRC="pics/splitncac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">Split Curve Action</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+
+
+
+<H2><A NAME="selbac"></A> <A NAME="ss3.24">3.24</A> <A HREF="ayam.html#toc3.24">Selecting/Tagging Boundary Points</A>
+</H2>
+
+<P>
+<CENTER>
+<IMG SRC="pics/selbound.gif" HEIGHT=295 WIDTH=531  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Selecting Boundary Points</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The modelling action <CODE>"Select Boundary Points"</CODE> (shortcut <CODE>&lt;B&gt;</CODE>)
+may be applied to PolyMesh objects only.<BR>
+This action can be used to select all control points of a PolyMesh
+boundary after picking a point on that
+boundary.<SMALL TITLE="Since 1.23."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+Selected boundaries are needed for the <CODE>"Connect"</CODE> polymesh tool,
+see also 
+<A HREF="ayam-2.html#polymeshtools">PolyMesh</A>.
+See also the image above.<BR>
+Note that the PolyMesh object must be optimized for best results.
+See also the table below.</P>
+<P>
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+<B>Name</B></TD><TD><B>Shortcut</B></TD><TD><B>Icon</B></TD></TR><TR><TD>
+Select Boundary</TD><TD><CODE>&lt;B&gt;</CODE></TD><TD>
+<IMG SRC="pics/tagbac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">Select Boundary Points Action</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+
+
+
+<H2><A NAME="editlocal"></A> <A NAME="ss3.25">3.25</A> <A HREF="ayam.html#toc3.25">Editing in Local Spaces</A>
+</H2>
+
+<P>Normally, all editing takes place in world space and the input
+plane of all modelling actions is constrained to the world
+XY-, ZY-, or XZ-plane (depending on the type of the
+view &ndash; <CODE>"Front"</CODE>, <CODE>"Side"</CODE>, or <CODE>"Top"</CODE> respectively).</P>
+<P>However, if a view is <EM>aligned</EM> and switched to <EM>local</EM>,
+editing in object space is possible. The input plane of an
+aligned local view will match the XY-, ZY-, or XZ-plane of the
+local object space, again depending on the type of the view.
+Editing and other modelling actions take place in that plane.</P>
+<P>This means that in an aligned local view a planar parameter curve of a
+Skin object may be edited and the parameter curve is guaranteed to
+remain planar all the time, even if both objects, curve and Skin,
+are rotated and scaled arbitrarily via their transformation attributes.</P>
+<P>Furthermore, grids will also act as if defined in local object space.
+Note that in contrast to their normal behaviour, grids can also be scaled
+differently in X-window and Y-window coordinates in aligned local views
+(if the local object space is deformed this way).</P>
+<P>To make a view <EM>object-local</EM> and aligned the object must be selected first.
+Now, pressing <CODE>&lt;l&gt;</CODE> <EM>twice</EM> makes the current view object-local
+(in external views <CODE>&lt;Ctrl+l&gt;</CODE> can also be used).
+In Ayam versions prior to 1.18 the view also needed to be aligned
+manually using <CODE>&lt;L&gt;</CODE> (or <CODE>&lt;Ctrl+a&gt;</CODE> in external
+views). Since Ayam 1.18, the view is automatically aligned to the
+selected object or current level when cycling through the
+global/local modes.
+Manually aligning a view may still be necessary after certain changes to
+the camera of the view e.g.&nbsp;by the rotate view action.
+Note that realigning is also always possible by cycling the modelling
+mode three times using <CODE>&lt;l&gt;</CODE>.
+But let us get back to our local view.</P>
+<P>To illustrate local views a little bit further, see the following example
+images:</P>
+<P>
+<CENTER>
+<IMG SRC="pics/local-1.gif" HEIGHT=332 WIDTH=402  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Global Front View with Rotated Sweep</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>A Sweep object with a circular B-Spline curve as cross section (rotated
+about the Y-axis by 90 degrees using the transformation attributes) and a
+straight standard curve as trajectory.
+The Sweep itself is rotated about the Z-axis by 30 degrees. The view is a
+front view, the cross section and trajectory are both selected.
+Note how inadequate the grid spacing would be to edit the trajectory curve
+(it is e.g.&nbsp;near impossible to edit the curve and keep it straight).</P>
+<P>&raquo;&thinsp;Press <CODE>&lt;l&gt;</CODE>.</P>
+<P>
+<CENTER>
+<IMG SRC="pics/local-2.gif" HEIGHT=332 WIDTH=402  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Local (Level) Aligned View</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The view has been switched to level-local using a single press of the
+<CODE>&lt;l&gt;</CODE> key (see the modelling mode icon, it is displaying a
+<B><CODE>L</CODE></B> in the lower right corner. The view is now aligned to
+the 30 degree rotated space of the Sweep object (note the Root object
+coordinate system, it is tilted). The grid is also rotated (with respect
+to the root coordinate system) but now much more useful for editing the
+trajectory, in fact it is perfectly aligned to the trajectory.</P>
+<P>&raquo;&thinsp;Press <CODE>&lt;l&gt;</CODE> again.</P>
+<P>
+<CENTER>
+<IMG SRC="pics/local-3.gif" HEIGHT=332 WIDTH=402  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Local (Object) Aligned View</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>Now the view is object-local and aligned to the first of the selected
+objects (the cross section curve); look at the modelling mode icon,
+it is now displaying a <B><CODE>O</CODE></B> in the lower right corner. As the selected
+cross section curve was rotated by 90 degrees around the Y-axis, the
+front view now displays a circle. Note again the orientation
+of the Root object coordinate system. The cross section curve can now
+be edited safely, it will stay planar.</P>
+<P>Note, that object-local aligned views only align to the first of multiple
+selected objects; if all selected objects share the same transformation
+attributes, everything is fine, but if not, some objects will be misaligned.</P>
+<P>Also remember: when a view is level-local, changing the current level
+does not automatically realign the view. If the view is object-local,
+changing the object selection will also possibly lead to a misaligned
+view. To realign the view after changing the current level or object
+selection simply press <CODE>&lt;L&gt;</CODE>. Note that aligning the view changes
+the aim point of the view camera to the origin of the respective local
+coordinate system which might not be appropriate for modelling purposes;
+so, after a selection change, one may want to also zoom the view to the
+newly selected object: <CODE>&lt;LO&gt;</CODE>.</P>
+<P>Finally, note that aligning views only works for spaces
+defined by the transformation attributes, it is <EM>not</EM> possible to
+align to e.g.&nbsp;a planar curve that has the default transformation
+attributes and is rotated via the control points.</P>
+
+<HR>
+<A HREF="ayam-4.html">Next</A>
+<A HREF="ayam-2.html">Previous</A>
+<A HREF="ayam.html#toc3">Contents</A>
+</BODY>
+</HTML>
+
+

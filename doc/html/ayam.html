@@ -1,0 +1,192 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="LinuxDoc-Tools 0.9.66">
+ <TITLE>Ayam</TITLE>
+ <LINK HREF="ayam-1.html" REL=next>
+
+
+</HEAD>
+<BODY>
+<A HREF="ayam-1.html">Next</A>
+Previous
+Contents
+<HR>
+<H1>Ayam</H1>
+
+<H2>Reference Manual</H2>
+<H2>Randolf Schultz <CODE>(randolf.schultz@gmail.com)</CODE></H2>24. Jun 2022
+<HR>
+<EM>This is the documentation of Ayam 1.31 &ndash; a free 3D modelling environment
+for the RenderMan interface.
+Please note, that this document is a reference manual,
+more detailed explanations of how to actually model with Ayam are
+given in the tutorials.
+This document has been written using the SGML-Tools (LinuxDoc) formatting
+system to generate files in a variety of text formats from one source file.
+There are HTML and PDF versions of this document prepared.
+In addition, the provided SGML-source can be used to generate other formats.</EM>
+<HR>
+<H2>Overview</H2>
+<P>
+<OL>
+<LI><A HREF="ayam-1.html">Introduction</A>&nbsp;&nbsp;<font size="-1"><A HREF="#toc1" title="go to Table of Contents">(TOC)</A></font></LI>
+<LI><A HREF="ayam-2.html">The Ayam GUI</A>&nbsp;&nbsp;<font size="-1"><A HREF="#toc2">(TOC)</A></font></LI>
+<LI><A HREF="ayam-3.html">Modelling Actions</A>&nbsp;&nbsp;<font size="-1"><A HREF="#toc3">(TOC)</A></font></LI>
+<LI><A HREF="ayam-4.html">Objects, Properties, and Tags</A>&nbsp;&nbsp;<font size="-1"><A HREF="#toc4">(TOC)</A></font></LI>
+<LI><A HREF="ayam-5.html">NURBS Modelling Tools</A>&nbsp;&nbsp;<font size="-1"><A HREF="#toc5">(TOC)</A></font></LI>
+<LI><A HREF="ayam-6.html">Scripting Interface</A>&nbsp;&nbsp;<font size="-1"><A HREF="#toc6">(TOC)</A></font></LI>
+<LI><A HREF="ayam-7.html">Import and Export</A>&nbsp;&nbsp;<font size="-1"><A HREF="#toc7">(TOC)</A></font></LI>
+<LI><A HREF="ayam-8.html">Miscellaneous</A>&nbsp;&nbsp;<font size="-1"><A HREF="#toc8">(TOC)</A></font></LI>
+<LI><A HREF="ayam-9.html">Index</A>&nbsp;&nbsp;<font size="-1"><A HREF="#toc9">(TOC)</A></font></LI>
+</OL>
+<P>
+<H2>Contents</H2>
+
+<P>
+<H2><A NAME="toc1">1.</A> <A HREF="ayam-1.html">Introduction</A></H2>
+
+<UL>
+<LI><A NAME="toc1.1">1.1</A> <A HREF="ayam-1.html#ss1.1">About this Manual</A>
+<LI><A NAME="toc1.2">1.2</A> <A HREF="ayam-1.html#ss1.2">About Ayam</A>
+</UL>
+<P>
+<H2><A NAME="toc2">2.</A> <A HREF="ayam-2.html">The Ayam GUI</A></H2>
+
+<UL>
+<LI><A NAME="toc2.1">2.1</A> <A HREF="ayam-2.html#ss2.1">Anatomy of the Main Window</A>
+<LI><A NAME="toc2.2">2.2</A> <A HREF="ayam-2.html#ss2.2">Main Menu</A>
+<LI><A NAME="toc2.3">2.3</A> <A HREF="ayam-2.html#ss2.3">Main Window Keyboard Shortcuts</A>
+<LI><A NAME="toc2.4">2.4</A> <A HREF="ayam-2.html#ss2.4">Anatomy of a View</A>
+<LI><A NAME="toc2.5">2.5</A> <A HREF="ayam-2.html#ss2.5">View Menu</A>
+<LI><A NAME="toc2.6">2.6</A> <A HREF="ayam-2.html#ss2.6">View Window Shortcuts and Actions</A>
+<LI><A NAME="toc2.7">2.7</A> <A HREF="ayam-2.html#ss2.7">Drawing Modes</A>
+<LI><A NAME="toc2.8">2.8</A> <A HREF="ayam-2.html#ss2.8">The Toolbox</A>
+<LI><A NAME="toc2.9">2.9</A> <A HREF="ayam-2.html#ss2.9">Object Search</A>
+<LI><A NAME="toc2.10">2.10</A> <A HREF="ayam-2.html#ss2.10">Preferences</A>
+<LI><A NAME="toc2.11">2.11</A> <A HREF="ayam-2.html#ss2.11">GUI Scaling</A>
+</UL>
+<P>
+<H2><A NAME="toc3">3.</A> <A HREF="ayam-3.html">Modelling Actions</A></H2>
+
+<UL>
+<LI><A NAME="toc3.1">3.1</A> <A HREF="ayam-3.html#ss3.1">Modelling Actions Overview</A>
+<LI><A NAME="toc3.2">3.2</A> <A HREF="ayam-3.html#ss3.2">Transforming Objects or Selected Points</A>
+<LI><A NAME="toc3.3">3.3</A> <A HREF="ayam-3.html#ss3.3">Selecting Objects by Picking</A>
+<LI><A NAME="toc3.4">3.4</A> <A HREF="ayam-3.html#ss3.4">Selecting/Tagging Points</A>
+<LI><A NAME="toc3.5">3.5</A> <A HREF="ayam-3.html#ss3.5">Setting the Mark</A>
+<LI><A NAME="toc3.6">3.6</A> <A HREF="ayam-3.html#ss3.6">Intermediate Parameter GUIs</A>
+<LI><A NAME="toc3.7">3.7</A> <A HREF="ayam-3.html#ss3.7">Moving Objects or Selected Points</A>
+<LI><A NAME="toc3.8">3.8</A> <A HREF="ayam-3.html#ss3.8">Rotating Objects or Selected Points</A>
+<LI><A NAME="toc3.9">3.9</A> <A HREF="ayam-3.html#ss3.9">Rotating Objects or Selected Points about a Point</A>
+<LI><A NAME="toc3.10">3.10</A> <A HREF="ayam-3.html#ss3.10">Scaling Objects or Selected Points</A>
+<LI><A NAME="toc3.11">3.11</A> <A HREF="ayam-3.html#ss3.11">Scaling Objects or Selected Points about a Point</A>
+<LI><A NAME="toc3.12">3.12</A> <A HREF="ayam-3.html#ss3.12">Editing Points</A>
+<LI><A NAME="toc3.13">3.13</A> <A HREF="ayam-3.html#ss3.13">Editing Weights</A>
+<LI><A NAME="toc3.14">3.14</A> <A HREF="ayam-3.html#ss3.14">Snapping Points to the Grid</A>
+<LI><A NAME="toc3.15">3.15</A> <A HREF="ayam-3.html#ss3.15">Snapping Objects to the Grid</A>
+<LI><A NAME="toc3.16">3.16</A> <A HREF="ayam-3.html#ss3.16">Snapping Points to the Mark</A>
+<LI><A NAME="toc3.17">3.17</A> <A HREF="ayam-3.html#ss3.17">Snapping Objects to the Mark</A>
+<LI><A NAME="toc3.18">3.18</A> <A HREF="ayam-3.html#ss3.18">Inserting or Deleting Points</A>
+<LI><A NAME="toc3.19">3.19</A> <A HREF="ayam-3.html#ss3.19">Manipulating the Multiplicity of Points</A>
+<LI><A NAME="toc3.20">3.20</A> <A HREF="ayam-3.html#ss3.20">Finding Points on Curves</A>
+<LI><A NAME="toc3.21">3.21</A> <A HREF="ayam-3.html#ss3.21">Finding Points on Surfaces</A>
+<LI><A NAME="toc3.22">3.22</A> <A HREF="ayam-3.html#ss3.22">Selecting Boundary Curves</A>
+<LI><A NAME="toc3.23">3.23</A> <A HREF="ayam-3.html#ss3.23">Interactively Splitting Curves</A>
+<LI><A NAME="toc3.24">3.24</A> <A HREF="ayam-3.html#ss3.24">Selecting/Tagging Boundary Points</A>
+<LI><A NAME="toc3.25">3.25</A> <A HREF="ayam-3.html#ss3.25">Editing in Local Spaces</A>
+</UL>
+<P>
+<H2><A NAME="toc4">4.</A> <A HREF="ayam-4.html">Objects, Properties, and Tags</A></H2>
+
+<UL>
+<LI><A NAME="toc4.1">4.1</A> <A HREF="ayam-4.html#ss4.1">Object Types Overview</A>
+<LI><A NAME="toc4.2">4.2</A> <A HREF="ayam-4.html#ss4.2">Scene Organization Objects</A>
+<LI><A NAME="toc4.3">4.3</A> <A HREF="ayam-4.html#ss4.3">CSG&thinsp;/&thinsp;Solid Primitives</A>
+<LI><A NAME="toc4.4">4.4</A> <A HREF="ayam-4.html#ss4.4">Freeform Curve Objects</A>
+<LI><A NAME="toc4.5">4.5</A> <A HREF="ayam-4.html#ss4.5">Curve Tool Objects</A>
+<LI><A NAME="toc4.6">4.6</A> <A HREF="ayam-4.html#ss4.6">Freeform Surface Objects</A>
+<LI><A NAME="toc4.7">4.7</A> <A HREF="ayam-4.html#ss4.7">Surface Tool Objects</A>
+<LI><A NAME="toc4.8">4.8</A> <A HREF="ayam-4.html#ss4.8">Polygonal and Subdivision Objects</A>
+<LI><A NAME="toc4.9">4.9</A> <A HREF="ayam-4.html#ss4.9">Script and Custom Objects</A>
+<LI><A NAME="toc4.10">4.10</A> <A HREF="ayam-4.html#ss4.10">Standard Properties</A>
+<LI><A NAME="toc4.11">4.11</A> <A HREF="ayam-4.html#ss4.11">Tags</A>
+</UL>
+<P>
+<H2><A NAME="toc5">5.</A> <A HREF="ayam-5.html">NURBS Modelling Tools</A></H2>
+
+<UL>
+<LI><A NAME="toc5.1">5.1</A> <A HREF="ayam-5.html#ss5.1">General Remarks</A>
+<LI><A NAME="toc5.2">5.2</A> <A HREF="ayam-5.html#ss5.2">Curve Creation Tools</A>
+<LI><A NAME="toc5.3">5.3</A> <A HREF="ayam-5.html#ss5.3">Curve Modification Tools</A>
+<LI><A NAME="toc5.4">5.4</A> <A HREF="ayam-5.html#ss5.4">Surface Creation Tools</A>
+<LI><A NAME="toc5.5">5.5</A> <A HREF="ayam-5.html#ss5.5">Surface Modification Tools</A>
+<LI><A NAME="toc5.6">5.6</A> <A HREF="ayam-5.html#ss5.6">Conversion Tools</A>
+</UL>
+<P>
+<H2><A NAME="toc6">6.</A> <A HREF="ayam-6.html">Scripting Interface</A></H2>
+
+<UL>
+<LI><A NAME="toc6.1">6.1</A> <A HREF="ayam-6.html#ss6.1">Global Variables and Arrays</A>
+<LI><A NAME="toc6.2">6.2</A> <A HREF="ayam-6.html#ss6.2">Procedures and Commands</A>
+<LI><A NAME="toc6.3">6.3</A> <A HREF="ayam-6.html#ss6.3">Expression Support in Dialog Entries</A>
+<LI><A NAME="toc6.4">6.4</A> <A HREF="ayam-6.html#ss6.4">Scripting Interface Examples</A>
+<LI><A NAME="toc6.5">6.5</A> <A HREF="ayam-6.html#ss6.5">Distributed Helper Scripts</A>
+<LI><A NAME="toc6.6">6.6</A> <A HREF="ayam-6.html#ss6.6">Distributed Script Objects</A>
+<LI><A NAME="toc6.7">6.7</A> <A HREF="ayam-6.html#ss6.7">JavaScript Scripting Interface</A>
+<LI><A NAME="toc6.8">6.8</A> <A HREF="ayam-6.html#ss6.8">Lua Scripting Interface</A>
+</UL>
+<P>
+<H2><A NAME="toc7">7.</A> <A HREF="ayam-7.html">Import and Export</A></H2>
+
+<UL>
+<LI><A NAME="toc7.1">7.1</A> <A HREF="ayam-7.html#ss7.1">Import and Export Plugin Management</A>
+<LI><A NAME="toc7.2">7.2</A> <A HREF="ayam-7.html#ss7.2">Import and Export Plugin Overview</A>
+<LI><A NAME="toc7.3">7.3</A> <A HREF="ayam-7.html#ss7.3">RenderMan Interface Bytestream (RIB) Import</A>
+<LI><A NAME="toc7.4">7.4</A> <A HREF="ayam-7.html#ss7.4">RenderMan Interface Bytestream (RIB) Export</A>
+<LI><A NAME="toc7.5">7.5</A> <A HREF="ayam-7.html#ss7.5">Mops Import</A>
+<LI><A NAME="toc7.6">7.6</A> <A HREF="ayam-7.html#ss7.6">AutoCAD DXF Import</A>
+<LI><A NAME="toc7.7">7.7</A> <A HREF="ayam-7.html#ss7.7">AutoCAD DXF Export</A>
+<LI><A NAME="toc7.8">7.8</A> <A HREF="ayam-7.html#ss7.8">Wavefront OBJ Import</A>
+<LI><A NAME="toc7.9">7.9</A> <A HREF="ayam-7.html#ss7.9">Wavefront OBJ Export</A>
+<LI><A NAME="toc7.10">7.10</A> <A HREF="ayam-7.html#ss7.10">3DMF (Apple) Import</A>
+<LI><A NAME="toc7.11">7.11</A> <A HREF="ayam-7.html#ss7.11">3DMF (Apple) Export</A>
+<LI><A NAME="toc7.12">7.12</A> <A HREF="ayam-7.html#ss7.12">3DM (Rhino) Import</A>
+<LI><A NAME="toc7.13">7.13</A> <A HREF="ayam-7.html#ss7.13">3DM (Rhino) Export</A>
+<LI><A NAME="toc7.14">7.14</A> <A HREF="ayam-7.html#ss7.14">X3D (Web3D) Import</A>
+<LI><A NAME="toc7.15">7.15</A> <A HREF="ayam-7.html#ss7.15">X3D (Web3D) Export</A>
+</UL>
+<P>
+<H2><A NAME="toc8">8.</A> <A HREF="ayam-8.html">Miscellaneous</A></H2>
+
+<UL>
+<LI><A NAME="toc8.1">8.1</A> <A HREF="ayam-8.html#ss8.1">The Undo System</A>
+<LI><A NAME="toc8.2">8.2</A> <A HREF="ayam-8.html#ss8.2">The Modelling Concept Tool-Objects</A>
+<LI><A NAME="toc8.3">8.3</A> <A HREF="ayam-8.html#ss8.3">Scene File Management</A>
+<LI><A NAME="toc8.4">8.4</A> <A HREF="ayam-8.html#ss8.4">Ayamrc File</A>
+<LI><A NAME="toc8.5">8.5</A> <A HREF="ayam-8.html#ss8.5">Command Line Arguments</A>
+<LI><A NAME="toc8.6">8.6</A> <A HREF="ayam-8.html#ss8.6">Environment Variables</A>
+<LI><A NAME="toc8.7">8.7</A> <A HREF="ayam-8.html#ss8.7">Plugins Overview</A>
+<LI><A NAME="toc8.8">8.8</A> <A HREF="ayam-8.html#ss8.8">Shader Parsing Plugins</A>
+<LI><A NAME="toc8.9">8.9</A> <A HREF="ayam-8.html#ss8.9">Automatic Instancing</A>
+<LI><A NAME="toc8.10">8.10</A> <A HREF="ayam-8.html#ss8.10">Importance Driven Rendering (IDR)</A>
+<LI><A NAME="toc8.11">8.11</A> <A HREF="ayam-8.html#ss8.11">CSG preview using the AyCSG plugin</A>
+<LI><A NAME="toc8.12">8.12</A> <A HREF="ayam-8.html#ss8.12">Increasing Drawing Speed</A>
+<LI><A NAME="toc8.13">8.13</A> <A HREF="ayam-8.html#ss8.13">Modelling Without Views</A>
+<LI><A NAME="toc8.14">8.14</A> <A HREF="ayam-8.html#ss8.14">Restrictions and Implementation Deficiencies</A>
+<LI><A NAME="toc8.15">8.15</A> <A HREF="ayam-8.html#ss8.15">How to Join the Fun</A>
+<LI><A NAME="toc8.16">8.16</A> <A HREF="ayam-8.html#ss8.16">References</A>
+<LI><A NAME="toc8.17">8.17</A> <A HREF="ayam-8.html#ss8.17">Acknowledgements</A>
+<LI><A NAME="toc8.18">8.18</A> <A HREF="ayam-8.html#ss8.18">Trademarks</A>
+</UL>
+<P>
+<H2><A NAME="toc9">9.</A> <A HREF="ayam-9.html">Index</A></H2>
+
+<HR>
+<A HREF="ayam-1.html">Next</A>
+Previous
+Contents
+</BODY>
+</HTML>
+
+

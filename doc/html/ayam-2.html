@@ -1,0 +1,3629 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="LinuxDoc-Tools 0.9.66">
+ <TITLE>Ayam: The Ayam GUI</TITLE>
+ <LINK HREF="ayam-3.html" REL=next>
+ <LINK HREF="ayam-1.html" REL=previous>
+ <LINK HREF="ayam.html#toc2" REL=contents>
+</HEAD>
+<BODY>
+<script type="text/javascript" src="ll.js"></script>
+<A HREF="ayam-3.html">Next</A>
+<A HREF="ayam-1.html">Previous</A>
+<A HREF="ayam.html#toc2">Contents</A>
+<HR>
+<H2><A NAME="ayamgui"></A> <A NAME="s2">2.</A> <A HREF="ayam.html#toc2">The Ayam GUI</A></H2>
+
+<P>This section describes the user interface of Ayam.</P>
+<P>The user interface of Ayam is composed of three types of windows:
+a main window, a toolbox and an arbitrary number of view windows.
+The main window displays the object hierarchy and allows to edit
+object properties. The toolbox window is for easy creation of
+objects and starting of modelling actions and tools. The modelling
+actions are then carried out in view windows, where also the scene
+is displayed.</P>
+<P>Until Ayam 1.14 all those windows were always separate top
+level windows &ndash; a so called <EM>floating windows GUI mode</EM>. Since
+version 1.14, a new GUI mode is available where the main window, three view
+windows and the toolbox are integrated in one top level window. This mode
+is called <EM>single window GUI mode</EM>, see also the image above.
+The new single window GUI mode is enabled by default. All sub windows are
+in panes, the space occupied by a sub window may be adjusted by dragging
+the mouse at the borderlines of the panes. The number of views is not
+limited to three, albeit all extra views will become extra top level windows.</P>
+<P>
+<CENTER>
+<IMG SRC="pics/swin.gif" HEIGHT=771 WIDTH=1027  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Single Window GUI Mode</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The next sections document the three types of windows (main, toolbox,
+and views) in detail.</P>
+
+
+
+<H2><A NAME="ss2.1">2.1</A> <A HREF="ayam.html#toc2.1">Anatomy of the Main Window</A>
+</H2>
+
+<P>The main window is split into three major areas:
+<OL>
+<LI>an area named <CODE>"Objects:"</CODE></LI>
+<LI>an area labeled <CODE>"Properties:"</CODE></LI>
+<LI>and a text widget (the so called "Console")</LI>
+</OL>
+</P>
+<P>
+<CENTER>
+<IMG SRC="pics/main.gif" HEIGHT=397 WIDTH=529  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">The Main Window</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The relative sizes of the three areas are managed by a so called paned
+geometry management. To change the relative size of the console,
+move the mouse pointer to the upper border of the console until
+the pointer changes and then drag the border.
+The same goes for the right border of the objects section.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="obj"></A> Objects</H3>
+
+<P>The default representation of the object hierarchy is a tree view.
+The second available representation is a simple listbox (as known from
+<CODE>"The Mops"</CODE>).
+The label <CODE>"Objects"</CODE> may be used to switch between the two
+representations of the object hierarchy quickly (using a double click).
+It is also possible to switch between both representations
+using the context menu.</P>
+<P>The two representations have very different properties regarding
+speed, use of resources, and versatility. The tree is, due to the
+drag and drop operations, much more versatile but also slower.</P>
+<P>Both representations manage a so called <EM>current level</EM>.
+This level is the scene level that is displayed in the object listbox.
+In the tree view the current level is drawn in black while all
+other levels are grayed out. Selection of objects
+may take place in the current level only!</P>
+<P>After the start-up of Ayam you will notice, that there is a first
+object called <CODE>"Root"</CODE> in the top level of the scene, even though the
+scene seems to be empty.
+See section 
+<A HREF="ayam-4.html#rootobj">Root Object</A> for more
+information regarding this special object, and what it is good for.
+Note, that this object can not be deleted or copied.</P>
+<P><B>Object Tree View:</B>
+<A NAME="treeview"></A> </P>
+<P>
+<CENTER>
+<IMG SRC="pics/treeview.gif" HEIGHT=256 WIDTH=140  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Object Tree View</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The object tree view is quite complex and may be slow on slow machines
+(of the Pentium 90 class), especially when dealing with scenes
+that contain many objects. This should not be a problem nowadays.
+Nevertheless, Ayam tries to keep tree update delays as low as possible,
+but this works only if the scene uses the hierarchy and changes
+happen in sub levels (not the root level). Further speedups may be achieved
+with the help of the DTree script
+(see section 
+<A HREF="ayam-6.html#dtreetcl">Dynamic Tree</A>).<SMALL TITLE="Since 1.22."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>In the tree view, objects may be selected using the left mouse button.
+Multiple selection of objects is possible by holding down the
+<CODE>&lt;Shift&gt;</CODE> or <CODE>&lt;Ctrl&gt;</CODE> key while clicking on objects.</P>
+<P>Double clicking on objects with child objects toggles display of the
+child level.
+The same may be accomplished using single clicks on the well known
+plus/minus symbols in front of the name of those objects.</P>
+<P>Drag and drop operation is also possible to move objects in the
+hierarchy and to initiate special actions like connecting materials
+to objects. However, this last feature is documented in section
+<A HREF="ayam-4.html#obandprp">Objects, Properties, and Tags</A>
+as it is object type specific.</P>
+<P>
+<A NAME="treecontm"></A> 
+The rightmost mouse button opens a context menu with basic tree and
+clipboard operations:
+<UL>
+<LI><CODE>"Tree/Rebuild"</CODE> completely removes the tree nodes, rebuilds
+the hierarchy, makes the top level current, and clears the object selection,
+</LI>
+<LI><CODE>"Tree/Expand All"</CODE> opens all nodes with child nodes,
+</LI>
+<LI><CODE>"Tree/Collapse All"</CODE> closes all nodes with child nodes,
+</LI>
+<LI><CODE>"Tree/Expand Selected"</CODE> opens all selected nodes,
+</LI>
+<LI><CODE>"Tree/Collapse Selected"</CODE> closes all selected nodes,
+</LI>
+<LI><CODE>"Switch to Listbox"</CODE> removes the tree view and replaces it
+with the object listbox (see below).
+</LI>
+<LI><CODE>"Deselect Object"</CODE> deselects the currently selected
+object(s).
+</LI>
+<LI><CODE>"Copy Object", "Cut Object", "Paste Object", "Delete Object"</CODE>
+are standard clipboard operations as documented in
+section 
+<A HREF="#mmedit">Main Menu</A>.
+</LI>
+<LI><CODE>"Help on Object"</CODE> displays the help of the selected
+object.</LI>
+</UL>
+</P>
+
+
+
+
+<P>The scene may also be navigated and objects may be selected
+using the keyboard:
+<A NAME="treesc"></A> <SMALL TITLE="Since 1.6."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+<UL>
+<LI><CODE>&lt;Up&gt;</CODE> and <CODE>&lt;Down&gt;</CODE> move the selection to the previous
+or next object in the current level.
+</LI>
+<LI><CODE>&lt;Shift-Up&gt;</CODE> and <CODE>&lt;Shift-Down&gt;</CODE> will not move the
+selection, but rather extend it in the respective
+direction.<SMALL TITLE="Since 1.7."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+</LI>
+<LI><CODE>&lt;Home&gt;</CODE> and <CODE>&lt;End&gt;</CODE> select the first
+or last object in the current level,
+</LI>
+<LI><CODE>&lt;Shift+Home&gt;</CODE> and <CODE>&lt;Shift+End&gt;</CODE>
+extend the selection to the first or last object in the current
+level respectively.<SMALL TITLE="Since 1.11."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+
+The Root object, however, will always be omitted.
+</LI>
+<LI><CODE>&lt;Right&gt;</CODE> enters the (first) selected object,
+</LI>
+<LI><CODE>&lt;Left&gt;</CODE> enters the parent level,
+</LI>
+<LI><CODE>&lt;Ctrl+a&gt;</CODE> and <CODE>&lt;Ctrl+n&gt;</CODE> select or de-select
+all objects in the current level. If the current level is the root level,
+the Root object will not be selected by <CODE>&lt;Ctrl+a&gt;</CODE>.
+</LI>
+<LI><CODE>&lt;Space&gt;</CODE> toggles display of the child objects of the
+selected object(s).
+</LI>
+<LI><CODE>&lt;Shift+Space&gt;</CODE> toggles display of all sub-levels of the
+selected object(s).<SMALL TITLE="Since 1.18."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+</LI>
+<LI><CODE>&lt;+&gt;</CODE> opens all sub-levels of the
+selected object(s).<SMALL TITLE="Since 1.21."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+</LI>
+<LI><CODE>&lt;-&gt;</CODE> closes all sub-levels of the
+selected object(s).<SMALL TITLE="Since 1.21."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+</LI>
+<LI><CODE>&lt;Alt+Up&gt;</CODE> and <CODE>&lt;Alt+Down&gt;</CODE> shuffle the
+selected objects in the current level in the respective direction,
+unless the Root object is selected and unless the first object is
+selected for up-movement or the last object for
+down-movement.<SMALL TITLE="Since 1.21."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+</LI>
+<LI><CODE>&lt;^&gt;</CODE> moves the focus to the first view
+(in single window GUI mode).<SMALL TITLE="Since 1.24."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+</LI>
+</UL>
+</P>
+<P>If those shortcuts do not work you may need to move the keyboard
+input focus away from (internal) view windows, the property GUI,
+or the console using <CODE>&lt;Tab&gt;</CODE> or <CODE>&lt;Shift+Tab&gt;</CODE>
+first.</P>
+<P>Another way of moving the focus (and cleaning up the application state)
+is by using the <CODE>&lt;Esc&gt;</CODE> key:
+In property GUIs and the console, pressing <CODE>&lt;Esc&gt;</CODE> moves the focus
+away to the main window or object selection window.</P>
+<P>Pressing <CODE>&lt;Esc&gt;</CODE> twice in a view window
+will also reset the focus to the main window&thinsp;/&thinsp;object selection
+window.<SMALL TITLE="Since 1.15."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+Pressing <CODE>&lt;Esc&gt;</CODE> twice in the object selection
+window will additionally clear the selection (this implies
+removal of the currently displayed property GUI) and change the
+current level to the root level.</P>
+<P>Thus, if you feel lost anywhere in Ayam, just press <CODE>&lt;Esc&gt;</CODE>
+twice or thrice.</P>
+
+
+<P><B>Object Listbox:</B>
+<A NAME="listbox"></A> </P>
+<P>
+<CENTER>
+<IMG SRC="pics/listbox.gif" HEIGHT=261 WIDTH=140  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Object Listbox</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The object listbox displays the object hierarchy of the current scene.
+Using this listbox you may browse through the hierarchy of the scene
+with your mouse and you may select one or more objects.</P>
+<P>Browsing and selecting should be very intuitive:
+Use a double click to enter a level (or an object with child objects),
+use a single click to select objects, multiple objects may be selected using
+click and drag, or holding down the <CODE>&lt;Shift&gt;</CODE> or <CODE>&lt;Ctrl&gt;</CODE>
+key while clicking.
+Keyboard operation is also possible if the listbox has the
+input focus.</P>
+<P>A <CODE>".."</CODE> is displayed as the first element of the current level
+if you are "inside" a level or another object.
+A double click on the <CODE>".."</CODE> takes you to the parent level.
+The buttons below the listbox may be used to change the selection or
+to quickly jump through the hierarchy. They should be self explanatory.</P>
+<P>
+<A NAME="lbcontm"></A> 
+The rightmost mouse button opens a small context menu:
+<UL>
+<LI><CODE>"Switch to Tree"</CODE> removes the listbox and replaces it
+with the tree view (see above).
+</LI>
+<LI><CODE>"Deselect Object"</CODE> deselects the currently selected
+object(s).
+</LI>
+<LI><CODE>"Copy Object", "Cut Object", "Paste Object", "Delete Object"</CODE>
+are standard clipboard operations as documented in
+section 
+<A HREF="#mmedit">Main Menu</A>.
+</LI>
+<LI><CODE>"Help on Object"</CODE> displays the help of the selected
+object.</LI>
+</UL>
+</P>
+<P>The scene may also be navigated and objects may be selected
+using the keyboard:
+<A NAME="olbsc"></A> <SMALL TITLE="Since 1.6."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+<UL>
+<LI><CODE>&lt;Up&gt;</CODE> and <CODE>&lt;Down&gt;</CODE> move the selection to the previous
+or next object in the current level.
+</LI>
+<LI><CODE>&lt;Shift-Up&gt;</CODE> and <CODE>&lt;Shift-Down&gt;</CODE> will not move the
+selection, but rather extend it in the respective
+direction.<SMALL TITLE="Since 1.7."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+</LI>
+<LI><CODE>&lt;Home&gt;</CODE> and <CODE>&lt;End&gt;</CODE> select the first
+or last object in the current level,
+</LI>
+<LI><CODE>&lt;Shift+Home&gt;</CODE> and <CODE>&lt;Shift+End&gt;</CODE> extend the selection
+to the first or last object in the current level
+respectively.<SMALL TITLE="Since 1.11."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+
+The Root object, however, will always be omitted.
+</LI>
+<LI><CODE>&lt;Right&gt;</CODE> enters the (first) selected object,
+</LI>
+<LI><CODE>&lt;Left&gt;</CODE> enters the parent level,
+</LI>
+<LI><CODE>&lt;Ctrl+a&gt;</CODE> and <CODE>&lt;Ctrl+n&gt;</CODE> select or de-select
+all objects in the current level. If the current level is the root level,
+the Root object will not be selected by <CODE>&lt;Ctrl+a&gt;</CODE>.
+</LI>
+<LI><CODE>&lt;Alt+Up&gt;</CODE> and <CODE>&lt;Alt+Down&gt;</CODE> move the
+selected objects in the current level in the respective direction,
+unless the Root object is selected and unless the first object is
+selected for up-movement or the last object for
+down-movement.<SMALL TITLE="Since 1.21."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+</LI>
+<LI><CODE>&lt;^&gt;</CODE> moves the focus to the first view
+(in single window GUI mode).<SMALL TITLE="Since 1.24."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+</LI>
+</UL>
+</P>
+<P>If those shortcuts do not work you may need to move the keyboard
+input focus away from (internal) view windows, the property GUI,
+or the console using <CODE>&lt;Tab&gt;</CODE> or <CODE>&lt;Shift+Tab&gt;</CODE>
+first.</P>
+<P>Another way of moving the focus (and cleaning up the application state)
+is by using the <CODE>&lt;Esc&gt;</CODE> key:
+In property GUIs and the console, pressing <CODE>&lt;Esc&gt;</CODE> moves the focus
+away to the main window or object selection window.</P>
+<P>Pressing <CODE>&lt;Esc&gt;</CODE> twice in a view window
+will also reset the focus to the main window&thinsp;/&thinsp;object selection
+window.<SMALL TITLE="Since 1.15."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL><BR>
+Pressing <CODE>&lt;Esc&gt;</CODE> twice in the object selection
+window will additionally clear the selection (this implies
+removal of the currently displayed property GUI) and change the
+current level to the root level.</P>
+<P>Thus, if you feel lost anywhere in Ayam, just press <CODE>&lt;Esc&gt;</CODE>
+twice or thrice.</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="propgui"></A> Properties</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/propgui.gif" HEIGHT=278 WIDTH=433  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Properties</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The listbox right next to the object hierarchy displays the properties
+of the currently selected object.</P>
+<P>If there are multiple selected objects, the properties listbox will
+display no properties at all.</P>
+<P>Unlike the object tree/listbox, where multiple entries can be selected,
+only one property may be selected.
+If a property is selected, the associated GUI will be shown in the
+appropriate area (on the right hand side).</P>
+<P>Also the keyboard may be used to select properties:
+just press one of the <CODE>&lt;0&gt;-&lt;9&gt;</CODE> keys (most comfortably
+using the numeric keypad). <CODE>&lt;0&gt;</CODE> always selects the last and
+often the only object type specific property, whereas <CODE>&lt;1&gt;</CODE>
+selects the first property, which contains the linear transformations in
+most cases.<SMALL TITLE="Since 1.8"><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+
+
+<P>
+<A NAME="plbcontm"></A> 
+The properties listbox also has a context menu. The entries in this
+menu allow to:
+<UL>
+<LI>Deselect the current property,</LI>
+<LI>Copy/Paste the currently selected property to/from the property
+clipboard (see below),</LI>
+<LI>Add/Remove a property to/from the currently selected object
+by means of NP/RP tags (see also sections
+<A HREF="ayam-4.html#nptag">NP (New Property) Tag</A> and
+<A HREF="ayam-4.html#rptag">RP (Remove Property) Tag</A>),</LI>
+<LI>display the help section of the currently selected property.</LI>
+</UL>
+</P>
+
+<H4><A NAME="s3"></A> Property GUIs</H4>
+
+<P>All property GUIs use more or less standardized GUI elements that are
+organized in list form, see also the image above. The lists may be
+scrolled if they get too long to fit into the window.</P>
+<P>What properties exactly will be shown, and how the GUIs look alike
+depends on the selected object and the selected property.
+This is documented comprehensively in section
+<A HREF="ayam-4.html#obandprp">Objects, Properties, and Tags</A>.</P>
+<P>If Ayam is in floating windows GUI mode and the elements of the current
+property GUI do not fit horizontally into the screen space that is
+defined by the main window size, Ayam can automatically resize the
+main window. This behaviour may be controlled using the preference setting
+<CODE>"AutoResize"</CODE> (see section 
+<A HREF="#prefs">Preferences</A>).</P>
+<P>If an object and a property are selected and a different object is selected,
+the property GUI that has the same index as the previously selected
+property in the properties listbox will be selected and shown. This is
+not necessarily a property of the same type.
+To avoid that or to clear the property GUI for fast browsing through the
+scene you may either double click on the "Properties" label, hit the
+<CODE>&lt;Esc&gt;</CODE> key three times, or use the context menu of the properties
+listbox to de-select the current property.</P>
+<P>The various things that may be changed using a property GUI
+will normally not be applied to the selected object until the
+<CODE>"Apply"</CODE>-button is pressed.</P>
+<P>However, holding down the <CODE>"Shift"</CODE> button while
+interacting with the property GUI or pressing the <CODE>"Return"</CODE> key
+when entry widgets have the keyboard input focus will lead
+to an instant application of all changed
+values.<SMALL TITLE="Since 1.8.3."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL><BR>
+Note that property GUIs of custom objects may offer interactive
+elements that also do an instant "Apply" operation. But most property GUI
+elements of the core objects of Ayam do not change anything until
+the <CODE>"Apply"</CODE>-button is used.</P>
+<P>All changes to the arguments of a property that have been made since
+either opening the property or the last <CODE>"Apply"</CODE> operation (whatever
+was last) can be reverted with the <CODE>"Reset"</CODE>-button.
+Mind that this does not use the undo mechanism of Ayam but rather copies
+Tcl data, just like the property clipboard.</P>
+<P>If a property GUI element has the keyboard input focus (it is then usually
+displayed with a black rim around it), all the keyboard shortcuts for
+the main menu and scene navigation will have no effect until the
+keyboard input focus is moved away from the property GUI. This may be
+accomplished easily using the <CODE>&lt;Esc&gt;</CODE> key.</P>
+
+<H4><A NAME="s3"></A> <A NAME="propclip"></A> Property Clipboard</H4>
+
+<P>With the help of the property clipboard arbitrary property data may be
+copied from one and then pasted to another object. See the
+<CODE>"Edit"</CODE> menu for access to this functionality.</P>
+<P>Pasting a property to multiple selected objects does work too.
+This is a great way to apply e.g.&nbsp;a parameterised surface shader to
+a bigger number of material objects, without going the long way of
+setting a new shader and entering parameters for it for every material
+object.</P>
+<P>Since you may not want to copy and paste whole properties all the time,
+you may even mark single parameters with a double click on the
+labels of the parameters. The selected parameters will then be preceded
+by an exclamation mark (!) in the property GUI.</P>
+<P>If this property is then copied, all marked parameters will be omitted.</P>
+<P>It is also possible to copy just the selected parameters using
+<CODE>"Copy Marked Prop"</CODE>.</P>
+
+<P>A simple example for such advanced use of the property clipboard:</P>
+<P>Our task is to give a big number of material objects the same color,
+but they already have different opacity settings. Copying the complete
+attribute property would destroy the individually adjusted opacity values.
+We can solve this by copying just the color attribute, but leave all other
+attributes as they are:
+<OL>
+<LI>Change the color of a first material object using the
+<CODE>"Attributes"</CODE> property GUI. (Do not forget the <CODE>"Apply"</CODE> button!)
+</LI>
+<LI>Mark the color parameter as to be copied using a double click
+on the text <CODE>"Color"</CODE>; it should read <CODE>"!Color"</CODE> now.
+</LI>
+<LI>Copy just the color parameter to the property clipboard,
+using <CODE>"Copy Marked Prop"</CODE> in the <CODE>"Edit"</CODE> menu or the
+hot key <CODE>&lt;Ctrl+I&gt;</CODE>.
+</LI>
+<LI>Select all other material objects.
+</LI>
+<LI>Paste the property using <CODE>"Paste Property"</CODE> or <CODE>&lt;Ctrl+V&gt;</CODE>.
+</LI>
+<LI>All done.</LI>
+</OL>
+</P>
+<P>An even more advanced application of the property clipboard is to paste
+property values to different types of properties (e.g.&nbsp;pasting parameters
+from a surface
+shader to a displacement shader, or pasting a radius value from a sphere
+to a disk). This can be done using <CODE>"Paste to selected"</CODE> in the
+<CODE>"Special/Clipboard"</CODE> sub-menu.<BR>
+However, special care must be taken when pasting incomplete properties to
+objects which do not have complete properties already. Do not paste an
+incomplete shader property to an object which does not already have the
+same shader.</P>
+
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="cons"></A> The Console</H3>
+
+<P>
+<CENTER>
+<IMG SRC="pics/console.gif" HEIGHT=87 WIDTH=578  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Console</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The third part of the main window is the console. The console is mainly
+for unobtrusive text output (informative, warning, and error messages).
+If something does not work as advertised, the console may be worth
+a look.</P>
+<P>The console captures the <CODE>stderr</CODE> and <CODE>stdout</CODE> channels of the
+Tcl-interpreter Ayam is running in. It is also possible to
+redirect all internal Tcl error messages, that would normally
+cause a Tcl error dialog window to appear, to the console using
+the preference setting <CODE>"Misc/RedirectTcl"</CODE>
+(see section 
+<A HREF="#prefmisc">Miscellaneous Preferences</A>).</P>
+<P>Furthermore, commands or even complete new Tcl procedures can be directly
+entered into the console. However, this is a feature for an advanced
+user that studied section 
+<A HREF="ayam-6.html#script">Scripting Interface</A>.
+You need to explicitly click into the console to give it the input
+focus and thus enable input.</P>
+<P>An important thing to know is that the keyboard shortcuts for the
+various main menu entries do not work if the console has the input
+focus. Instead, other keyboard shortcuts (related to the console)
+are in effect.
+How do you get out of this? Simply press <CODE>&lt;Shift+Tab&gt;</CODE> or
+<CODE>&lt;Esc&gt;</CODE> to move the focus away from the console and enable
+the main menu shortcuts again.</P>
+<P>Note that the <CODE>&lt;Tab&gt;</CODE> key alone does not move the focus away
+from the console.
+<CODE>&lt;Tab&gt;</CODE> instead completes names of files, commands (procedures),
+variables, and widgets.
+You may try this out by typing <CODE>tip</CODE> in the console,
+then press <CODE>&lt;Tab&gt;</CODE>.
+The console automagically completes <CODE>tip</CODE> to <CODE>tipoftheDay</CODE>
+(the procedure that prints out the tip of the day, just try it).</P>
+<P>Remember that many commands of the Ayam scripting interface work
+in background: without update of object selection widget, property GUI or
+redrawing of view windows. But it is possible to enforce an immediate update
+of the GUI and redrawing of all views by using <CODE>&lt;Shift-Enter&gt;</CODE>
+instead of <CODE>&lt;Enter&gt;</CODE> when entering commands.</P>
+<P>Another simple demonstration of the consoles capabilities:
+<UL>
+<LI>Create ten box objects by clicking on the box icon ten times.</LI>
+<LI>Select all ten boxes.</LI>
+<LI>Go to the console by clicking into it.</LI>
+<LI>Enter the following:
+<CODE>forAll {movOb $i 0 0; rotOb [expr $i*10] 0 0}</CODE></LI>
+</UL>
+</P>
+<P>This example uses three procedures:
+<UL>
+<LI><CODE>forAll</CODE>: allows to execute
+a command for each of the selected objects, or for each object in the
+current level if no objects are selected.</LI>
+<LI><CODE>movOb</CODE>: moves the selected object(s).</LI>
+<LI><CODE>rotOb</CODE>: rotates the selected object(s).</LI>
+</UL>
+</P>
+<P>See section 
+<A HREF="ayam-6.html#script">Scripting Interface</A> for a
+listing of all the available commands.</P>
+<P>Note that the example uses a side effect (the variable <CODE>"i"</CODE> that
+holds the index of the currently processed object) to calculate
+the amount of the movement and rotation.</P>
+
+<P>
+<A NAME="conscontm"></A> 
+For more information regarding the console, please refer to the
+appropriate documentation by the original author Jeffrey Hobbs
+(see the console context menu, that can be opened with the right
+mouse button).</P>
+
+<H2><A NAME="mm"></A> <A NAME="ss2.2">2.2</A> <A HREF="ayam.html#toc2.2">Main Menu</A>
+</H2>
+
+<P>This section discusses the main menu bar.</P>
+<P>Note that many menu entries have keyboard shortcuts that are displayed
+in each entry. But those shortcuts only work if the main window
+has the keyboard input focus <EM>and</EM> the input focus is not in the
+console or in a property GUI element (i.e.&nbsp;a data entry field).
+Hit <CODE>&lt;Esc&gt;</CODE> to set the focus to the object selection
+widget and thus enable the main menu keyboard shortcuts.</P>
+<P>These keyboard shortcuts may be adapted using the <EM>ayamrc</EM> file
+(see section 
+<A HREF="ayam-8.html#ayamrc">Ayamrc File</A>).</P>
+<P>Another way of navigating the menu is via the <CODE>&lt;Alt&gt;</CODE> or
+<CODE>&lt;Menu&gt;</CODE> key, pressed together with the various underlined
+characters in the menu entries. Once a menu is open, it may also be
+navigated with the cursor keys. The <CODE>&lt;Return&gt;</CODE> key invokes
+the currently selected menu entry and the <CODE>&lt;Esc&gt;</CODE> key closes
+the menu.</P>
+
+
+<P>
+<A NAME="mmfile"></A> 
+The <CODE>"File"</CODE> menu deals with standard file operations:
+<UL>
+<LI><CODE>"New"</CODE>, clears the current scene (deletes all objects) and reloads
+the working environment.<BR>
+This operation cannot be undone!
+<P>The standard keyboard shortcut for this operation is <CODE>&lt;Ctrl+N&gt;</CODE>.</P>
+
+</LI>
+<LI><CODE>"Open"</CODE>, clears the current scene and closes all views,
+then loads a new scene from disk.
+
+<P>All objects from the file
+will be read. A backup copy of the file will be made before loading
+(depending on the preference setting <CODE>"Main/BakOnReplace"</CODE>).
+See section 
+<A HREF="ayam-8.html#opensf">Opening Scene Files</A>
+for a more detailed discussion.<BR>
+This operation cannot be undone!</P>
+<P>The standard keyboard shortcut for this operation is <CODE>&lt;Ctrl+o&gt;</CODE>.</P>
+<P>Also files supported by any of the import plugins
+may be imported using this route.<SMALL TITLE="Since 1.13."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL><BR>
+Note that this only works if the selected file has a file name extension.
+The appropriate plugin will
+be loaded automatically (from the list of plugin directories in the
+preferences) if needed and the import options dialog of the plugin
+will be opened, with the <CODE>"FileName"</CODE> option already set.
+Mind that in this case, no backup copy of the file will be made.
+See also section 
+<A HREF="ayam-7.html#impex">Import and Export</A>.</P>
+
+</LI>
+<LI><CODE>"Insert"</CODE>, inserts the objects and views of an Ayam scene file
+into the current scene.
+
+<P>All objects from the file will be read.
+If the file to be inserted contains a Root or View objects, the new
+objects will be created in the top level of the scene.
+Otherwise, if just geometric objects are in the scene file (i.e.&nbsp;the file
+was created using <CODE>"Special/Save Selected"</CODE>), the new objects
+will be inserted in the current level of the scene.
+See section 
+<A HREF="ayam-8.html#insertsf">Inserting Scene Files</A>
+for a more detailed discussion.<BR>
+This operation cannot be undone!</P>
+<P>The standard keyboard shortcut for this operation is <CODE>&lt;Ctrl+i&gt;</CODE>.</P>
+<P>Also files supported by any of the import plugins
+may be imported using this route. See above
+(<CODE>"Open"</CODE>).<SMALL TITLE="Since 1.13."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+
+</LI>
+<LI><CODE>"Save as"</CODE>, saves the current scene to a file
+asking for a new file name.
+<P>All objects in the scene will be saved to the scene file, but
+if the current scene was loaded from a file without Root object
+(and thus without view windows), Root and views will be omitted
+from the saved scene file as well.
+See section 
+<A HREF="ayam-8.html#savesf">Saving Scene Files</A>
+for a more detailed discussion.</P>
+<P>The standard keyboard shortcut for this operation is <CODE>&lt;Ctrl+S&gt;</CODE>.</P>
+<P>Also files supported by any of the export plugins
+may be exported using this route. Just pick a file name with the
+desired extension (see above, <CODE>"Open"</CODE>).<SMALL TITLE="Since 1.13."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+
+</LI>
+<LI><CODE>"Save"</CODE>, saves the scene to a file. If the scene has not been
+saved before (the scene file name is "unnamed") Ayam will ask for a file
+name first.
+<P>All objects in the scene will be saved to the scene file, but
+if the current scene was loaded from a file without Root object
+(and thus without view windows), root and views will be omitted
+from the saved scene file as well.
+See section 
+<A HREF="ayam-8.html#savesf">Saving Scene Files</A>
+for a more detailed discussion.</P>
+<P>The standard keyboard shortcut for this operation is <CODE>&lt;Ctrl+s&gt;</CODE>.</P>
+</LI>
+</UL>
+<UL>
+<LI><CODE>"Import/"</CODE>, since Ayam 1.13 this sub menu is initially
+empty. To gain access to the menu entries described here, the
+respective plugin must be loaded.
+<UL>
+<LI><CODE>"Import/Apple 3DMF"</CODE>, import a scene from the Apple
+3DMF format, see section 
+<A HREF="ayam-7.html#imp3dmf">3DMF (Apple) Import</A>
+for more information.
+</LI>
+<LI><CODE>"Import/AutoCAD DXF"</CODE>, import a scene from the AutoCAD
+DXF format, see section 
+<A HREF="ayam-7.html#impdxf">AutoCAD DXF import</A>
+for more information.
+</LI>
+<LI><CODE>"Import/Mops"</CODE>, import a scene from The Mops,
+see section 
+<A HREF="ayam-7.html#impmops">Import of Mops Scenes</A>
+for more information.
+</LI>
+<LI><CODE>"Import/RenderMan RIB"</CODE>, import a Renderman Interface
+Bytestream, see section 
+<A HREF="ayam-7.html#imprib">RenderMan RIB Import</A>
+for more information.
+</LI>
+<LI><CODE>"Import/Rhino 3DM"</CODE>, import a scene from the Rhino
+3DM format, see section 
+<A HREF="ayam-7.html#imprhino">3DM (Rhino) Import</A>
+for more information.
+</LI>
+<LI><CODE>"Import/Wavefront OBJ"</CODE>, import a scene from the Wavefront
+OBJ format, see section 
+<A HREF="ayam-7.html#impwav">Wavefront OBJ Import</A>
+for more information.
+</LI>
+<LI><CODE>"Import/Web3D X3D"</CODE>, import a scene from the XML
+based X3D format published by the Web3D Consortium, see section
+<A HREF="ayam-7.html#impx3d">X3D (Web3D) Import</A>
+for more information.</LI>
+</UL>
+</LI>
+</UL>
+<UL>
+<LI><CODE>"Export/"</CODE>, since Ayam 1.13 this sub menu initially
+only contains the <CODE>"RenderMan RIB"</CODE> entry. To gain access
+to the other menu entries described here, the corresponding plugin
+must be loaded.
+<UL>
+<LI><CODE>"Export/RenderMan RIB"</CODE>, exports the current scene to a RIB
+file, asking which camera (which view) to use.
+The standard keyboard shortcut for this operation is <CODE>&lt;Ctrl+E&gt;</CODE>.
+</LI>
+<LI><CODE>"Export/Apple 3DMF"</CODE>, export a scene to the Apple
+3DMF format, see section 
+<A HREF="ayam-7.html#exp3dmf">3DMF (Apple) Export</A>
+for more information.
+</LI>
+<LI><CODE>"Export/Rhino 3DM"</CODE>, export a scene to the Rhino
+3DM format, see section 
+<A HREF="ayam-7.html#exprhino">3DM (Rhino) Export</A>
+for more information.
+</LI>
+<LI><CODE>"Export/Wavefront OBJ"</CODE>, exports the current scene to a
+Wavefront OBJ file, see also section
+<A HREF="ayam-7.html#expwav">Wavefront OBJ export</A>.
+</LI>
+<LI><CODE>"Export/Web3D X3D"</CODE>, export a scene to the XML
+based X3D format published by the Web3D Consortium, see section
+<A HREF="ayam-7.html#expx3d">X3D (Web3D) Export</A>
+for more information.</LI>
+</UL>
+</LI>
+</UL>
+<UL>
+<LI><CODE>"Load Plugin"</CODE>, loads a file containing a custom object or a plugin.
+Depending on the platform Ayam is running on, these are files with the
+file name extension <CODE>".so"</CODE> or <CODE>".dll"</CODE>.
+
+If loading of a plugin fails, further attempts may also fail, even
+if the cause of the initial failure is eliminated. Just restart Ayam.
+
+See section 
+<A HREF="ayam-8.html#plugov">Plugins Overview</A> for more
+information regarding Ayam plugins.</LI>
+</UL>
+<UL>
+<LI><CODE>"Save Prefs"</CODE>, save the current preference settings
+to the <EM>ayamrc</EM> file after making a backup copy of this file (see section
+<A HREF="ayam-8.html#ayamrc">Ayamrc File</A> for more information about this file).</LI>
+</UL>
+<UL>
+<LI><CODE>"1."</CODE>, <CODE>"2."</CODE>, <CODE>"3."</CODE>, <CODE>"4."</CODE>, immediately replace the
+current scene with the one in the menu entry. The menu entries
+are updated and rotated upon successful loading and saving of a scene
+so that the first entry always contains the scene that was loaded
+(or saved) last.
+<P>The standard keyboard shortcuts for this operation are <CODE>&lt;Ctrl+1&gt;</CODE>
+to <CODE>&lt;Ctrl+4&gt;</CODE>.</P>
+</LI>
+</UL>
+<UL>
+<LI><CODE>"Exit!"</CODE>, remove all temporary files, save preferences (if
+the preference setting <CODE>"Main/AutoSavePrefs"</CODE> is turned on)
+and quit the application.
+<P>The standard keyboard shortcut for this operation is <CODE>&lt;Ctrl+q&gt;</CODE>.</P>
+</LI>
+</UL>
+</P>
+
+
+
+
+<P>
+<A NAME="mmedit"></A> 
+The <CODE>"Edit"</CODE> menu contains object and property clipboard
+operations, selection and undo actions, hosts the object search,
+and lets you open the preferences editor:
+<UL>
+<LI><CODE>"Copy"</CODE>, copies the currently selected object(s) into the
+clipboard.<BR>
+This is a deep copy, reference counters of master or material objects
+may be increased and there are special rules for instances, see also
+section 
+<A HREF="ayam-4.html#instclip">Instances and the Object Clipboard</A>.<BR>
+This operation cannot be undone!
+<P>The standard keyboard shortcut for this operation is <CODE>&lt;Ctrl+c&gt;</CODE>.</P>
+
+</LI>
+<LI><CODE>"Cut"</CODE>, moves the currently selected object(s) into the
+clipboard.<BR>
+This operation cannot be undone!
+<P>The standard keyboard shortcut for this operation is <CODE>&lt;Ctrl+x&gt;</CODE>.</P>
+
+</LI>
+<LI><CODE>"Paste"</CODE>, copies the object(s) from the clipboard to the current
+level of the scene.<BR>
+This operation cannot be undone!
+
+<P>The standard keyboard shortcut for this operation is <CODE>&lt;Ctrl+v&gt;</CODE>.</P>
+<P>Note that the content of the clipboard remains intact
+after this operation, this means that the operation can be used multiple times.
+Objects can be moved out of the clipboard (clearing it) using the menu entry
+<CODE>"Special/Clipboard/Paste (Move)"</CODE>.</P>
+<P>Also note that referenced objects, when moved into the clipboard with
+<CODE>"Cut"</CODE>, can not be moved out of it using a simple <CODE>"Paste"</CODE>, use
+<CODE>"Special/Clipboard/Paste (Move)"</CODE> instead!
+See also section 
+<A HREF="ayam-4.html#instclip">Instances and the Object Clipboard</A>.</P>
+
+</LI>
+<LI><CODE>"Delete"</CODE>, removes the selected object(s) and their children
+from the scene.<BR>
+This operation may fail for referenced objects
+or for parent objects with referenced objects among their children.
+In case of failure, an error will be reported and the undeletable object(s)
+will be moved to the end of the current level.<BR>
+This operation cannot be undone!</LI>
+</UL>
+<UL>
+<LI><CODE>"Select All"</CODE>, selects all objects in the current level
+(except for the Root object).
+<P>The standard keyboard shortcut for this operation is <CODE>&lt;Ctrl+a&gt;</CODE>.</P>
+
+</LI>
+<LI><CODE>"Select None"</CODE>, de-selects all currently selected objects.
+<P>The standard keyboard shortcut for this operation is <CODE>&lt;Ctrl+n&gt;</CODE>.</P>
+
+</LI>
+</UL>
+<UL>
+<LI><CODE>"Copy Property"</CODE>, copies the currently selected property of the
+currently selected object to the property clipboard (the property
+clipboard is completely independent from the normal object clipboard).
+Marked parameters will be omitted!
+<P>The standard keyboard shortcut for this operation is <CODE>&lt;Ctrl+C&gt;</CODE>.</P>
+<P>See also
+section 
+<A HREF="#propclip">Property Clipboard</A> for more information.</P>
+
+</LI>
+<LI><CODE>"Copy Marked Prop"</CODE>, copies the currently marked parameters
+of the currently selected property of the
+currently selected object to the property clipboard (the property
+clipboard is completely independent from the normal object clipboard).
+<P>The standard keyboard shortcut for this operation is <CODE>&lt;Ctrl+I&gt;</CODE>.</P>
+
+</LI>
+<LI><CODE>"Paste Property"</CODE>, copies all property data from the property
+clipboard to the currently selected object(s). The data will get pasted
+to the property type saved by the last copy operation. It will not get
+pasted to the currently selected property; use
+<CODE>"Special/Clipboard/Paste Property to selected"</CODE> for that.
+<P>The standard keyboard shortcut for this operation is <CODE>&lt;Ctrl+V&gt;</CODE>.</P>
+
+</LI>
+</UL>
+<UL>
+<LI><CODE>"Undo"</CODE>, perform the undo operation (see section
+<A HREF="ayam-8.html#undos">The Undo System</A> for more information).
+<P>The standard keyboard shortcut for this operation is <CODE>&lt;Ctrl+z&gt;</CODE>.</P>
+
+</LI>
+<LI><CODE>"Redo"</CODE>, perform the redo operation (see section
+<A HREF="ayam-8.html#undos">The Undo System</A> for more information).
+<P>The standard keyboard shortcut for this operation is <CODE>&lt;Ctrl+y&gt;</CODE>.</P>
+
+</LI>
+</UL>
+<UL>
+<LI><CODE>"Material"</CODE>, searches for the material object currently
+associated with the selected object and selects it for editing.
+If the selected object has no material yet, a new material
+will be created: Ayam will prompt for the name of the new
+material, the material object will be created, if successful,
+the material will be linked to <EM>all</EM> currently selected objects
+(even if they are already linked to other objects),
+see also section 
+<A HREF="ayam-4.html#materialobj">Material Object</A>.
+<P>The standard keyboard shortcut for this operation is <CODE>&lt;Ctrl+m&gt;</CODE>.</P>
+
+</LI>
+</UL>
+<UL>
+<LI><CODE>"Master"</CODE>, searches for the master object of the
+currently selected instance object and selects it for editing,
+see also section 
+<A HREF="ayam-4.html#instanceobj">Instance Object</A>.
+<P>The standard keyboard shortcut for this operation is <CODE>&lt;Ctrl+M&gt;</CODE>.</P>
+
+</LI>
+</UL>
+<UL>
+<LI><CODE>"Search"</CODE>, opens the object search dialog,
+see also section 
+<A HREF="#objsearch">Object Search</A>.
+<P>The standard keyboard shortcut for this operation is <CODE>&lt;Ctrl+f&gt;</CODE>.</P>
+
+</LI>
+</UL>
+<UL>
+<LI><CODE>"Preferences"</CODE>, opens the preferences dialog (see section
+<A HREF="#prefs">Preferences</A> for more information).
+<P>The standard keyboard shortcut for this operation is <CODE>&lt;Ctrl+p&gt;</CODE>.</P>
+
+</LI>
+</UL>
+</P>
+
+
+
+
+<P>
+<A NAME="mmcreate"></A> 
+The <CODE>"Create"</CODE> menu entries let you create objects. In contrast
+to the object creation via the toolbox some menu entries open
+small dialogs, where parameters for the object to be created
+may be adjusted.
+The entry fields in those dialogs support Tcl expressions as detailed
+in section 
+<A HREF="ayam-6.html#scexpdiag">Expression Support in Dialog Entries</A>.
+Here are the entries of the <CODE>Create</CODE> menu:
+<UL>
+<LI><CODE>"NURBCurve"</CODE>, create a new NURBS curve. A small dialog box will
+pop up, where the length of the new curve may be specified. See
+also section 
+<A HREF="ayam-4.html#ncurveobj">NCurve Object</A>.
+This dialog also contains a <CODE>"AddArgs"</CODE> entry
+field where additional command line arguments to
+the <CODE>"crtOb NCurve"</CODE> command may be specified, as outlined in section
+<A HREF="ayam-6.html#sccrtnc">Creating Objects</A>.<SMALL TITLE="Since 1.19."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+</LI>
+<LI><CODE>"ICurve"</CODE>, create a new interpolating curve. A small dialog box will
+pop up, where the length of the new curve may be specified. See
+also section 
+<A HREF="ayam-4.html#icurveobj">ICurve Object</A>.
+This dialog also contains a <CODE>"AddArgs"</CODE> entry
+field where additional command line arguments to
+the <CODE>"crtOb ICurve"</CODE> command may be specified, as outlined in section
+<A HREF="ayam-6.html#sccrtic">Creating Objects</A>.<SMALL TITLE="Since 1.19."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+</LI>
+<LI><CODE>"ACurve"</CODE>, create a new approximating curve. A small dialog box will
+pop up, where the length of the new curve may be specified. See
+also section 
+<A HREF="ayam-4.html#acurveobj">ACurve Object</A>.
+This dialog also contains a <CODE>"AddArgs"</CODE> entry
+field where additional command line arguments to
+the <CODE>"crtOb ACurve"</CODE> command may be specified, as outlined in section
+<A HREF="ayam-6.html#sccrtac">Creating Objects</A>.<SMALL TITLE="Since 1.19."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+</LI>
+<LI><CODE>"NCircle"</CODE>, create a new NURBS circle (NCircle object).
+A small dialog box will pop up, where the radius, start angle, and end
+angle of the new circle may be specified.
+See also section 
+<A HREF="ayam-4.html#ncircleobj">NCircle Object</A>.
+
+<P>For the other entries see section
+<A HREF="ayam-5.html#cctools">Curve Creation Tools</A>.</P>
+</LI>
+</UL>
+<UL>
+<LI><CODE>"NURBPatch"</CODE>, create a new NURBS patch. A small dialog box will
+pop up, where the width and height of the new patch may be specified. See
+also section 
+<A HREF="ayam-4.html#npatchobj">NPatch Object</A>.
+This dialog also contains a <CODE>"AddArgs"</CODE> entry
+field where additional command line arguments to
+the <CODE>"crtOb NPatch"</CODE> command may be specified, as outlined in section
+<A HREF="ayam-6.html#sccrtnp">Creating Objects</A>.<SMALL TITLE="Since 1.19."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+</LI>
+<LI><CODE>"IPatch"</CODE>, create a new interpolating patch.<SMALL TITLE="Since 1.20."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+A small dialog box will pop up, where the width and
+height of the new patch may be specified. See also section
+<A HREF="ayam-4.html#ipatchobj">IPatch Object</A>.
+This dialog also contains a <CODE>"AddArgs"</CODE> entry
+field where additional command line arguments to
+the <CODE>"crtOb IPatch"</CODE> command may be specified, as outlined in section
+<A HREF="ayam-6.html#sccrtip">Creating Objects</A>.
+</LI>
+<LI><CODE>"APatch"</CODE>, create a new approximating patch.<SMALL TITLE="Since 1.30."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+A small dialog box will pop up, where the width and
+height of the new patch may be specified. See also section
+<A HREF="ayam-4.html#apatchobj">APatch Object</A>.
+This dialog also contains a <CODE>"AddArgs"</CODE> entry
+field where additional command line arguments to
+the <CODE>"crtOb APatch"</CODE> command may be specified, as outlined in section
+<A HREF="ayam-6.html#sccrtap">Creating Objects</A>.
+</LI>
+<LI><CODE>"BPatch"</CODE>, create a new bilinear patch. See
+also section 
+<A HREF="ayam-4.html#bpatchobj">BPatch Object</A>.
+</LI>
+<LI><CODE>"PatchMesh"</CODE>, create a new patch mesh. A small dialog box will
+pop up, where the width and height of the new patch mesh may be specified.
+See also section 
+<A HREF="ayam-4.html#patchmeshobj">PatchMesh Object</A>.
+This dialog also contains a <CODE>"AddArgs"</CODE> entry
+field where additional command line arguments to
+the <CODE>"crtOb PatchMesh"</CODE> command may be specified, as outlined in section
+<A HREF="ayam-6.html#sccrtpm">Creating Objects</A>.<SMALL TITLE="Since 1.25."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+
+<P>For the other entries see section
+<A HREF="ayam-5.html#sctools">Surface Creation Tools</A>.</P>
+</LI>
+</UL>
+<UL>
+<LI><CODE>"Solid"</CODE>, create a new solid primitive object, for use in CSG.
+<CODE>"Box"</CODE>, <CODE>"Sphere"</CODE>, <CODE>"Disk"</CODE>, <CODE>"Cone"</CODE>, <CODE>"Cylinder"</CODE>,
+<CODE>"Torus"</CODE>, <CODE>"Hyperboloid"</CODE> or <CODE>"Paraboloid"</CODE> may be selected.</LI>
+</UL>
+<UL>
+<LI><CODE>"Level"</CODE>, creates a new hierarchy object. <CODE>"Level"</CODE>
+just groups objects, <CODE>"Union"</CODE>, <CODE>"Intersection"</CODE>,
+<CODE>"Difference"</CODE>, and <CODE>"Primitive"</CODE> are CSG operations. See
+also section 
+<A HREF="ayam-4.html#levelobj">Level Object</A>.</LI>
+</UL>
+<UL>
+<LI><CODE>"Light"</CODE>, create a new light source. See
+also section 
+<A HREF="ayam-4.html#lightobj">Light Object</A>.
+</LI>
+<LI><CODE>"Custom Object"</CODE>, create a new custom object. If this sub-menu
+is empty no custom object has been loaded yet. See
+also section 
+<A HREF="ayam-4.html#customobj">Custom Object</A>.
+</LI>
+<LI><CODE>"View"</CODE>, a new View window will be opened. See
+also section 
+<A HREF="ayam-4.html#viewobj">View Object</A>.
+</LI>
+<LI><CODE>"Instance"</CODE>, create an instance of the currently selected
+object, see section 
+<A HREF="ayam-4.html#instanceobj">Instance Object</A>
+for more information regarding instances.
+</LI>
+<LI><CODE>"Clone"</CODE>, create a Clone object, see
+section 
+<A HREF="ayam-4.html#cloneobj">Clone Object</A>.
+</LI>
+<LI><CODE>"Mirror"</CODE>, create a Mirror object, see
+section 
+<A HREF="ayam-4.html#mirrorobj">Mirror Object</A>.
+</LI>
+<LI><CODE>"Material"</CODE>, create a new material. A small dialog box will
+pop up, where the name of the new material must be specified. See
+also section 
+<A HREF="ayam-4.html#materialobj">Material Object</A>.
+</LI>
+<LI><CODE>"Camera"</CODE>, create a new camera. Camera objects may be used
+to temporarily save view camera settings, see
+section 
+<A HREF="ayam-4.html#cameraobj">Camera Object</A>.
+</LI>
+<LI><CODE>"RiInc"</CODE>, create a new RIB-include object. Those objects
+may be used to include objects into your scenes
+that just exist as a piece of RIB, see
+also section 
+<A HREF="ayam-4.html#riincobj">RiInc Object</A>.
+</LI>
+<LI><CODE>"RiProc"</CODE>, create a new RI procedural object, see
+also section 
+<A HREF="ayam-4.html#riprocobj">RiProc Object</A>.
+</LI>
+<LI><CODE>"Script"</CODE>, create a new Script object, see
+also section 
+<A HREF="ayam-4.html#scriptobj">Script Object</A>.
+</LI>
+<LI><CODE>"Select"</CODE>, create a new Select object, see
+also section 
+<A HREF="ayam-4.html#selectobj">Select Object</A>.
+</LI>
+<LI><CODE>"Text"</CODE>, create a new Text object, see
+also section 
+<A HREF="ayam-4.html#textobj">Text Object</A>.</LI>
+</UL>
+</P>
+
+
+
+
+<P>
+<A NAME="mmtools"></A> 
+The <CODE>"Tools"</CODE> menu hosts modelling tools to create complex objects
+or modify existing objects. Some tools open dialog windows to request
+parameters.
+The entry fields in those dialogs support Tcl expressions as detailed
+in section 
+<A HREF="ayam-6.html#scexpdiag">Expression Support in Dialog Entries</A>.
+The entries of the <CODE>"Tools"</CODE> menu are:
+<UL>
+<LI><CODE>"Last (None)"</CODE>, this menu entry allows quick access to the
+last used entry/tool in the <CODE>"Tools"</CODE> menu
+hierarchy.<SMALL TITLE="Since 1.13."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+
+The label of the entry will be changed appropriately
+when a tool was started, e.g.&nbsp;to <CODE>"Last (Revert U)"</CODE> after the
+<CODE>"Tools/Surface/Revert U"</CODE> menu entry/tool was used.
+The corresponding keyboard shortcut is <CODE>&lt;Ctrl+t&gt;</CODE>. To repeat
+the last used tool with the same set of parameters (and without opening
+the parameter dialog window again) the shortcut <CODE>&lt;Ctrl+T&gt;</CODE> can
+be used instead.
+</LI>
+<LI><CODE>"Create"</CODE>, <CODE>"Curve"</CODE>, and
+<CODE>"Surface"</CODE>, are sub-menus with various NURBS based creation
+and modelling tools, that are explained in depth in section
+<A HREF="ayam-5.html#nmtool">NURBS Modelling Tools</A>.
+
+
+
+<A NAME="polymeshtools"></A> </LI>
+<LI><CODE>"PolyMesh"</CODE>: sub-menu for polygonal mesh related tools:
+<UL>
+<LI><CODE>"Merge"</CODE>: merges all currently selected PolyMesh objects into
+a single PolyMesh object, without checking for doubly used points,
+loops, or faces. The currently selected PolyMesh objects will not
+be changed by this tool. But the merge-tool can delete them
+immediately after the merging operation, when the <CODE>"RemoveMerged"</CODE>-option
+is enabled. If the merge fails, the original objects will not be removed.
+
+<P>If the <CODE>"OptimizeNew"</CODE>-option is enabled, the <CODE>"Optimize"</CODE>-tool
+(see below) will be started right after the merge operation with the
+newly created merged object as argument.</P>
+<P>The option <CODE>"MergePVTags"</CODE> controls wether the merge tool should also
+merge all PV tags.</P>
+
+</LI>
+<LI><CODE>"Split"</CODE>: splits the faces from the selected PolyMesh objects
+off and into a second PolyMesh object. The faces to be split off are selected
+by selecting all their control points with the select points modelling
+action (see also section 
+<A HREF="ayam-3.html#selac">Selecting Points</A>).
+The original selected PolyMesh objects will be changed, the selected
+faces will be removed.
+<P>Since the split operation does not
+create optimized new objects, the <CODE>"Optimize"</CODE>-tool (see below) may
+be started immediately after splitting using the <CODE>"OptimizeNew"</CODE>-option.</P>
+
+</LI>
+<LI><CODE>"Optimize"</CODE>: optimizes the selected PolyMesh object(s)
+by removing all multiply used (and unused) control points (if the option
+<CODE>"OptimizeCoords"</CODE> is enabled) or multiply used faces (not implemented
+yet).
+
+<P>The option <CODE>"NormalEpsilon"</CODE> additionally controls which points are
+considered equal by comparing also the vertex normals (if present):<BR>
+A value of <CODE>"0.0"</CODE> means, the normals must be bitwise identical, a value
+of <CODE>"Inf"</CODE> means, the normals are totally ignored, any other value defines
+the maximum angle (in degrees) between two
+normals to be considered equal.<SMALL TITLE="Since 1.23."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>The option <CODE>"OptimizePV"</CODE> determines whether the PV tags should also
+be optimized.<SMALL TITLE="Since 1.23."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>If <CODE>"OptimizeSelected"</CODE> is enabled, only the selected points of the
+PolyMesh are processed.</P>
+<P>Removing multiply used control points using the <CODE>"Optimize"</CODE>-tool
+may decrease the memory consumption of the control points
+by a factor of about six, depending on the connectivity of the original
+mesh.</P>
+
+</LI>
+<LI><CODE>"Connect"</CODE>: connects the first two selected PolyMesh
+objects via their selected boundaries.
+This tool can e.g.&nbsp;be used to close gaps between tesselated NURBS surfaces
+that are incompatible (watertight tesselation).
+
+<P>All control points of the respective boundary must be selected.
+The select boundary points modelling action can be used
+to easily select all those points interactively
+(see also section 
+<A HREF="ayam-3.html#selbac">Selecting Boundary Points</A>).
+The PolyMesh objects must be optimized at least in the direct
+neighborhood of the boundary (all control points used by the faces on
+the boundary).</P>
+<P>The boundary edges are first offset into the interior of the
+respective mesh along the surface tangent, then a strip of new
+triangles will be generated. The new triangles will be put into
+a new (third) PolyMesh object.</P>
+<P>The offset values can be adjusted; they are interpreted relative to
+the shortest edge incident to each control point to be moved.
+Note that too large offset values may lead to degenerate
+triangles/meshes for boundary faces with unfavourable shape.</P>
+
+</LI>
+<LI><CODE>"Quadrangulate"</CODE>: refines a purely triangular PolyMesh
+by replacing each triangle with three quads.
+
+
+
+</LI>
+<LI><CODE>"Gen.</CODE>&nbsp;<CODE>Face Normals"</CODE>: Generates face normals for the
+selected PolyMesh object(s) using the robust Newell algorithm. The generated
+normals will be stored in a PV tag.
+</LI>
+<LI><CODE>"Gen.</CODE>&nbsp;<CODE>Smooth Normals"</CODE>: Generates smooth vertex normals
+for the selected PolyMesh object(s), averaging the surrounding face normals
+of each vertex. The face normals will be weighted by the vertex
+face-centroid distance, which takes both, face area and face shape,
+into account.
+Vertices of hole loops will just get the respective face normal.
+
+<P>Already existing vertex normals will be destroyed.</P>
+<P>If face normals exist, they will be used, otherwise, new face
+normals will be generated automatically using the same algorithm
+as implemented in the <CODE>"Gen.</CODE>&nbsp;<CODE>Face Normals"</CODE> tool above.</P>
+
+</LI>
+<LI><CODE>"Rem.</CODE>&nbsp;<CODE>Smooth Normals"</CODE>: Remove all smooth vertex normals
+from the selected PolyMesh object(s). Afterwards, the objects will be shaded
+in a faceted look.
+</LI>
+<LI><CODE>"Flip Smooth Normals"</CODE>: Flips/reverts all smooth vertex normals
+of the selected PolyMesh object(s).
+</LI>
+<LI><CODE>"Flip Loops"</CODE>: Flips/reverts all loops of
+the selected PolyMesh object(s).
+</LI>
+</UL>
+
+
+
+</LI>
+<LI><CODE>"Points"</CODE>: sub-menu for tools that work on points:
+<A NAME="mmpnts"></A> 
+<UL>
+<LI><CODE>"Select All Points"</CODE>, selects all points of the currently
+selected object(s).
+</LI>
+<LI><CODE>"Deselect All Points"</CODE>, de-selects all points of the currently
+selected object(s).
+</LI>
+<LI><CODE>"Invert Selection"</CODE>, selects all points of the currently
+selected object(s) that are not selected, and de-select all points that
+are currently selected.
+</LI>
+<LI><CODE>"Collapse Points"</CODE>, collapses all currently selected points
+to one, see also 
+<A HREF="ayam-5.html#collt">Collapse Tool</A>.
+</LI>
+<LI><CODE>"Explode Points"</CODE>, explodes all currently selected multiple
+points, see also 
+<A HREF="ayam-5.html#explt">Explode Tool</A>.
+</LI>
+<LI><CODE>"Apply To All"</CODE>, applies the transformations encoded in
+the transformations property of the selected objects to all points of those
+objects.
+This will have the effect of resetting the transformations property
+to the default values without (visibly) changing the points of the
+selected objects.
+</LI>
+<LI><CODE>"Apply To Selected"</CODE>, applies the transformations
+encoded in the transformations property of the selected objects to the
+selected points.
+This will reset the transformations property without (visibly)
+changing the selected points. The points currently not selected
+will be transformed, however!
+</LI>
+<LI><CODE>"Center All Points (3D)"</CODE>, moves all points of the
+selected objects so that their common center (the center of gravity)
+is the center of the respective objects coordinate system.
+Note that, currently, this works on each of the selected objects
+separately!</LI>
+<LI><CODE>"Center All Points (2D-XY)"</CODE>,
+<CODE>"Center All Points (2D-YZ)"</CODE>,
+<CODE>"Center All Points (2D-XZ)"</CODE>: work like the center
+3D tool but just center in the designated plane.</LI>
+</UL>
+
+</LI>
+<LI><CODE>"Show"</CODE>, <CODE>"Hide"</CODE> set and unset the <CODE>"Hide"</CODE>
+attribute of the selected object(s) thus making them invisible
+or visible again.
+Note that hidden objects may be excluded from RIB-Export, when
+the preference setting <CODE>"RIB-Export/ExcludeHidden"</CODE> is
+activated.
+</LI>
+<LI><CODE>"Show All"</CODE> and <CODE>"Hide All"</CODE> set and unset the <CODE>"Hide"</CODE>
+attribute of all objects in the scene (including the Root object
+and all views!) regardless of the currently selected objects (and
+without changing the current selection). These operations can
+not be undone using the undo system.
+</LI>
+<LI><CODE>"Convert"</CODE>, starts the convert action that has been
+registered for the type of the selected object(s). The exact
+behaviour depends on the type of the selected object(s):
+a Revolve object will e.g.&nbsp;be converted to a level containing NURBS
+patches that make up the surface of revolution and the caps.
+This operation can not be undone, i.e.&nbsp;the newly created objects
+will not be removed, using the undo system.
+Potentially present <CODE>"TP"</CODE> and <CODE>"TC"</CODE> tags will be preserved.
+This can be configured via the
+hidden preference setting <CODE>"ConvertTags"</CODE>,
+see section 
+<A HREF="ayam-8.html#hidprefsc">Hidden Preference Settings</A> for
+more information.
+</LI>
+<LI><CODE>"Convert (In Place)"</CODE>, starts the convert action as
+outlined above, but replaces the original objects with the
+new converted ones. This operation, in contrast to the simple
+conversion above, can be undone.
+</LI>
+<LI><CODE>"Force Notification"</CODE>, force the notification callbacks of
+all selected objects (or all objects in the scene if no objects are
+selected) to be called. The notification callbacks are used by objects
+like e.g.&nbsp;Revolve to be informed about changes of their child
+objects to properly adapt to those changes
+(for more information on notification, see also section
+<A HREF="ayam-8.html#toolobj">The Modelling Concept Tool-Objects</A>).
+</LI>
+</UL>
+</P>
+
+
+<P>
+<A NAME="mmcustom"></A> 
+The <CODE>"Custom"</CODE> menu is initially empty. Custom objects and plugins
+may create entries here.</P>
+
+
+
+
+<P>
+<A NAME="mmspecial"></A> 
+The <CODE>"Special"</CODE> menu contains seldom used tools:
+<UL>
+<LI><CODE>"Save Selected as"</CODE>, saves just the currently selected objects
+to a scene file. Note that Ayam will not check, whether the objects are saved
+with their materials. It is also possible to save instance objects
+without their master objects. This will lead to errors while loading
+such a scene later on.
+</LI>
+<LI><CODE>"Save Environment"</CODE>, saves the Root object and all
+views to a so called environment scene file, which is read
+automatically on program startup and when the scene is reset
+using the main menu entry <CODE>"File/New"</CODE>.
+Initially, the file requester that asks for the name
+of the new environment uses the value of the preference
+setting <CODE>"Main/EnvFile"</CODE>. Note that there will be no
+check whether loading of that environment on next start up is
+enabled in the preferences. Note also, that the files saved
+using <CODE>"Save Environment"</CODE> just contain the Root object
+and all views. In order to include geometric objects in the
+environment or to exclude the Root object and just save view
+objects use <CODE>"File/Save"</CODE> or <CODE>"Special/Save Selected as"</CODE>
+respectively.</LI>
+</UL>
+<UL>
+<LI><CODE>"Clipboard/Paste (Move)"</CODE>, moves objects from the clipboard
+back to the scene (clearing the clipboard). This is the only way to
+get referenced objects out of the clipboard.<BR>
+This operation may fail, if the result is an illegal instance
+configuration.
+</LI>
+<LI><CODE>"Clipboard/Replace"</CODE>, replaces the currently selected
+object(s) with the object clipboard content, moving the replaced
+objects into the clipboard. If multiple objects are selected
+in non consecutive sequences, only the first consecutive sequence
+or single object is replaced.<BR>
+This operation may fail, if the result is an illegal instance
+configuration.</LI>
+<LI><CODE>"Clipboard/Copy (Add)"</CODE>, copies the selected objects
+to the clipboard without cleaning it beforehand.</LI>
+<LI><CODE>"Clipboard/Cut (Add)"</CODE>, moves the selected objects
+to the clipboard without cleaning it beforehand.
+</LI>
+<LI><CODE>"Clipboard/Clear"</CODE>, clears the object clipboard.<BR>
+This operation may fail if there are referenced objects (Material
+objects or master objects of instances) in the clipboard.
+</LI>
+<LI><CODE>"Clipboard/Paste Property to Selected"</CODE> paste the property
+from the property clipboard to the currently selected
+property of the currently selected object. No type check of the
+properties will take place! This way it is possible to e.g.&nbsp;copy
+a radius value from a sphere to a cylinder or to copy
+settings from a displacement shader to a surface shader (as long as the
+copied arguments of both shaders have the same names and types).</LI>
+</UL>
+<UL>
+<LI><CODE>"Instances/Resolve all Instances"</CODE>, converts all instance
+objects to copies of their respective master objects.
+If the menu entry is used, a small dialog opens
+where the scope of the resolve operation may be
+adjusted and the operation may be started<SMALL TITLE="Since 1.21."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>.
+
+In contrast to converting the selected Instance objects via
+e.g.&nbsp;the menu entry <CODE>"Tools/Convert"</CODE>, this operation
+does not stop until no Instances are left in the processed object
+hierarchies.
+</LI>
+<LI><CODE>"Instances/Automatic Instancing"</CODE>, opens a small dialog,
+where the automatic instantiation may be parameterised and started
+(this algorithm automatically creates instances from equal objects).
+See section 
+<A HREF="ayam-8.html#ai">Automatic Instancing</A>
+for more information.
+
+
+
+<A NAME="mmtags"></A> </LI>
+<LI><CODE>"Tags/Add RiOption"</CODE>, pops up a small dialog box, where
+a RiOption may be selected, parameterised, and added as tag to the Root
+object
+(see 
+<A HREF="ayam-4.html#riotag">RiOption Tag</A>). The Root object does
+not have to be selected and the current selection will not be changed
+by this action.<BR>
+The database of available RiOptions is controlled by the <EM>ayamrc</EM>
+file (see also section  
+<A HREF="ayam-8.html#rioptdb">RiOption and RiAttributes Database</A>).
+
+<A NAME="mmaddriattr"></A> </LI>
+<LI><CODE>"Tags/Add RiAttribute"</CODE>, pops up a small dialog box, where
+a RiAttribute may be selected, parameterised, and added as tag to the
+currently selected object(s) (see 
+<A HREF="ayam-4.html#riatag">RiAttribute Tag</A>)
+.<BR>
+The database of available RiAttributes is controlled by the <EM>ayamrc</EM>
+file (see also section 
+<A HREF="ayam-8.html#rioptdb">RiOption and RiAttributes Database</A>).
+</LI>
+<LI><CODE>"Tags/Edit TexCoords"</CODE>, opens the texture coordinates editor.
+(see also section 
+<A HREF="ayam-4.html#tctag">TC (Texture Coordinates) Tag</A>).
+</LI>
+<LI><CODE>"Tags/Add Property"</CODE>, opens a dialog where <CODE>"NP"</CODE>
+tags can be managed easily for all selected objects
+(see also section 
+<A HREF="ayam-4.html#nptag">NP (New Property) Tag</A>).
+</LI>
+<LI><CODE>"Tags/Remove Property"</CODE>, opens a dialog where <CODE>"RP"</CODE>
+tags can be managed easily for all selected objects
+(see also section 
+<A HREF="ayam-4.html#rptag">RP (Remove Property) Tag</A>).
+</LI>
+<LI><CODE>"Tags/Add Tag"</CODE>, opens a dialog where a new
+tag can be added to the selected objects
+(see also section 
+<A HREF="ayam-4.html#tags">Tags</A>).</LI>
+</UL>
+<UL>
+<LI><CODE>"RIB-Export/From Camera"</CODE>, writes a complete RIB of
+the current scene with the camera transformations taken from the
+currently selected Camera object. The dimensions of the rendered image will
+be taken from the RiOptions of the Root object. If those values are zero,
+default values of 400 pixels width and 300 pixels height will be used.
+The type of the projection written will be <EM>perspective</EM>.
+Otherwise the RIB looks exactly the same as if exported via
+main menu <CODE>"File/Export/RenderMan RIB"</CODE>.
+</LI>
+<LI><CODE>"RIB-Export/Selected Objects"</CODE>, exports only the
+selected objects to a RIB. Note that instances will always be resolved,
+hidden objects and objects with <CODE>"NoExport"</CODE> tags are treated
+as on normal export operations, and light objects are simply ignored.
+Note also that the created RIB, since it e.g.&nbsp;lacks camera transformation
+and WorldBegin/End directives, may not be rendered directly by a
+RenderMan compliant renderer (unless the renderer is really forgiving
+about mis-structured RIBs).<BR>
+The main use of this feature is to aid in the creation of RIBs that may be
+easily included in other RIBs using e.g.&nbsp;the ReadArchive directive.
+See also section 
+<A HREF="ayam-4.html#riincobj">RiInc Object</A>.
+</LI>
+<LI><CODE>"RIB-Export/Create All ShadowMaps"</CODE>, for each light in the scene,
+the light is selected, then the shadow map will be created
+in the same way as with the menu entry <CODE>"Create ShadowMap"</CODE>
+below (i.e.&nbsp;this creates all shadow maps for the
+current scene regardless of selection).
+See also section 
+<A HREF="ayam-4.html#shadowmaps">Using ShadowMaps</A>.
+</LI>
+<LI><CODE>"RIB-Export/Create ShadowMap"</CODE>,
+the scene is exported to a RIB file using the currently selected
+light source for the camera settings and with a <CODE>RiDisplay</CODE> statement
+that results in a shadow map to be produced when rendered; then
+the <CODE>"SMRender"</CODE> command will be called.
+See also sections 
+<A HREF="#prefrib">RIB-Export Preferences</A>
+and 
+<A HREF="ayam-4.html#shadowmaps">Using ShadowMaps</A>.
+
+<P>Note that before doing anything, Ayam will check whether shadow maps
+are enabled in the RIB export preferences and offer to adapt the
+preference setting accordingly. This must be done because <EM>only then</EM>
+exported RIBs for image rendering will actually use the shadow maps.</P>
+
+</LI>
+</UL>
+<UL>
+<LI><CODE>"Enable Scripts"</CODE> enables all disabled script tags and
+objects. Objects and tags in the object clipboard are not
+affected!</LI>
+</UL>
+<UL>
+<LI><CODE>"Select Renderer"</CODE> opens a dialog where the renderer
+for direct rendering from a view may be chosen.
+The changes will have effect on all preference settings that control
+direct rendering from a view, except whether RenderGUIs should
+be used.
+If the <CODE>"ScanShaders"</CODE> checkmark is activated, Ayam will
+additionally try to load the corresponding shader parsing plugin
+(see also section 
+<A HREF="ayam-8.html#spplugins">Shader Parsing Plugins</A>)
+and rescan for compiled shaders. Note that in order for the
+<CODE>"ScanShaders"</CODE> feature to work properly the <CODE>"Main/Shaders"</CODE>
+and <CODE>"Main/Plugins"</CODE> preference settings have to be set correctly
+(see also section 
+<A HREF="#prefmain">Main Preferences</A>).
+</LI>
+<LI><CODE>"Scan Shaders"</CODE> initiates the shader parsing with the
+built in shader parser or the currently loaded shader parsing plugin
+(see also section 
+<A HREF="ayam-8.html#spplugins">Shader Parsing Plugins</A>).
+</LI>
+<LI><CODE>"Reset Preferences"</CODE> removes the current <EM>ayamrc</EM> file,
+where the preferences are saved; after a restart of Ayam, all
+preferences will be reset to factory defaults. See also
+section 
+<A HREF="ayam-8.html#ayamrc">Ayamrc File</A> for more information
+about the <EM>ayamrc</EM> file.
+</LI>
+<LI><CODE>"Reset Layout"</CODE> resets the pane layout in single window
+GUI mode so that the upper internal views get an approximately even share
+of the available horizontal screen space and the object selection widget
+and property GUI are completely visible.
+</LI>
+<LI><CODE>"Toggle Toolbox"</CODE> closes or opens the toolbox window
+(see 
+<A HREF="#toolb">The Toolbox Window</A>).
+The state of the toolbox is also remembered in the saved
+preferences.<SMALL TITLE="Since 1.3."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL><BR>
+This option is not available if Ayam is in single window GUI mode.
+</LI>
+<LI><CODE>"Toggle TreeView"</CODE> toggles between object tree view and object
+listbox (see also section 
+<A HREF="#obj">Objects</A> for more
+information about both representations).<BR>
+This state is also remembered in the saved
+preferences.<SMALL TITLE="Since 1.3."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+</LI>
+<LI><CODE>"Zap Ayam"</CODE> iconifies all currently open windows of Ayam.
+If one of the iconified windows is de-iconified later, all other zapped
+windows will be de-iconified as well.</LI>
+</UL>
+</P>
+
+
+<P>
+<A NAME="mmhelp"></A> 
+The <CODE>"Help"</CODE> menu:
+<UL>
+<LI><CODE>"Help"</CODE>, opens a web browser and displays the documentation,
+the URL to display is taken from the <CODE>"Docs"</CODE> preference setting.
+See also section 
+<A HREF="#prefmain">Main Preferences</A>.
+<P>The standard keyboard shortcut for this operation is <CODE>&lt;F1&gt;</CODE>.</P>
+
+</LI>
+<LI><CODE>"Help on object"</CODE>, opens a web browser and displays
+documentation about the currently selected type of object,
+the URL to display is derived from the <CODE>"Docs"</CODE> preference setting.
+</LI>
+<LI><CODE>"Help on property"</CODE>, opens a web browser and displays
+documentation about the currently selected property, the URL
+is derived in the same way as for the <CODE>"Help on object"</CODE>
+entry above.
+</LI>
+<LI><CODE>"Show Shortcuts"</CODE>, displays some important shortcuts for modelling
+actions, you may leave this window open when doing your first
+steps in modelling with Ayam.
+</LI>
+<LI><CODE>"About"</CODE>, displays some version, copyright,
+and trademark information.
+</LI>
+<LI><CODE>"Show Tooltips"</CODE>, enables tool tips (balloon help)
+for various user interface elements (including the toolbox buttons).</LI>
+</UL>
+</P>
+
+
+
+<H2><A NAME="mwsc"></A> <A NAME="ss2.3">2.3</A> <A HREF="ayam.html#toc2.3">Main Window Keyboard Shortcuts</A>
+</H2>
+
+<P>An important group of shortcuts is available on the function
+keys:<BR>
+<CODE>&lt;F1&gt;</CODE> has already been mentioned, it opens a
+web browser and displays the URL from the <CODE>"Docs"</CODE>
+preference setting.<BR>
+<CODE>&lt;F2&gt;</CODE> and <CODE>&lt;F3&gt;</CODE> lower and raise the global
+GLU sampling tolerance value respectively, allowing fast
+adjustment of the NURBS drawing/shading quality.<BR>
+<CODE>&lt;F4&gt;</CODE> toggles between display of NURBS control cage and
+true curves&thinsp;/&thinsp;surface outlines.<BR>
+<CODE>&lt;F5&gt;</CODE> rebuilds the object tree and issues a complete
+notification, then all views (even those with disabled
+AutoDraw<SMALL TITLE="Since 1.26."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>)
+will be drawn. It is therefore helpful to update the complete
+GUI after changes made to the scene using the scripting interface
+in the console.<BR>
+<CODE>&lt;F6&gt;</CODE> toggles lazy notification.</P>
+<P><CODE>&lt;Ctrl+A&gt;</CODE> is bound to the <CODE>"Apply"</CODE> and
+<CODE>&lt;Ctrl+R&gt;</CODE> to the <CODE>"Reset"</CODE> button of the
+property GUI.</P>
+<P>The object selection can be manipulated by the cursor keys,
+see also section
+<A HREF="#treesc">object tree shortcuts</A> and section
+<A HREF="#olbsc">object list shortcuts</A>.</P>
+<P>The whole application with all open windows may be iconified (zapped) using
+the shortcut <CODE>&lt;Ctrl+Z&gt;</CODE>. If any of the windows iconified by zap
+is de-iconified, all other windows iconified by zap will be de-iconified
+as well.</P>
+<P>Many main menu entries have direct keyboard shortcuts, displayed
+directly in the menu entries,
+see also section 
+<A HREF="#mm">Main Menu</A>.</P>
+<P>Note that the main window keyboard shortcuts only work if the main window
+has the keyboard input focus <EM>and</EM> the input focus is not in the
+console or in a property GUI element (i.e.&nbsp;a data entry field).
+In doubt, hit <CODE>&lt;Esc&gt;</CODE> first to set the focus to the object
+selection widget and thus enable the main window keyboard shortcuts.</P>
+<P>All these shortcuts can be adapted using the <EM>ayamrc</EM> file
+(see section 
+<A HREF="ayam-8.html#ayamrc">Ayamrc File</A>).</P>
+
+
+
+<H2><A NAME="viewwin"></A> <A NAME="ss2.4">2.4</A> <A HREF="ayam.html#toc2.4">Anatomy of a View</A>
+</H2>
+
+<P>
+<CENTER>
+<IMG SRC="pics/view.gif" HEIGHT=331 WIDTH=401  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">A View Window</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The view window is split into a menu bar and a
+OpenGL-widget, where interaction and drawing takes place.
+The title of the view window gives information about
+name, current type, and the currently active modelling
+action of the view.</P>
+<P>The current modelling action, modelling mode, drawing mode and
+grid size are also displayed as a set of icons on the right hand
+side of the view menu bar.</P>
+
+<H2><A NAME="vm"></A> <A NAME="ss2.5">2.5</A> <A HREF="ayam.html#toc2.5">View Menu</A>
+</H2>
+
+<P>This section discusses the view menu bar.</P>
+<P>Note that many menu entries
+have keyboard shortcuts that are displayed in each entry.
+But those shortcuts only work if the view window
+has the keyboard input focus.
+The shortcuts are adaptable using the <EM>ayamrc</EM> file
+(see section 
+<A HREF="ayam-8.html#ayamrc">Ayamrc File</A>).</P>
+<P>Another way of navigating the menu is via the <CODE>"Menu"</CODE> or
+<CODE>"Alt"</CODE> key, pressed together with the various underlined characters
+in the menu entries.</P>
+
+
+<P>
+<A NAME="vmview"></A> 
+Here are all entries of the <CODE>"View"</CODE> menu:
+<UL>
+<LI><CODE>"Quick Render"</CODE>: the scene is exported to a RIB file using the
+camera settings of the current view; then the <CODE>"QRender"</CODE> command
+will be called.
+See also section 
+<A HREF="#prefrib">RIB-Export Preferences</A>.
+As the renderer will be executed in the background, Ayam will remain
+responsive and it is also possible to run multiple renderers in
+parallel.
+
+<P>Note that the RIB export will <EM>not</EM> use the <CODE>RiOption</CODE> settings for image
+size from the Root object but the current view window size instead.
+Also note that the environment variable <CODE>SHADERS</CODE> will be adapted
+to the current value of the preference setting <CODE>Shaders</CODE> for rendering.</P>
+
+</LI>
+<LI><CODE>"Render"</CODE>: the scene is exported to a RIB file using the
+camera settings of the current view; then the <CODE>"Render"</CODE> command
+will be called.
+See also section 
+<A HREF="#prefrib">RIB-Export Preferences</A>.
+As the renderer will be executed in the background, Ayam will remain
+responsive and it is also possible to run multiple renderers in
+parallel.
+
+<P>Note that the RIB export will <EM>not</EM> use the <CODE>RiOption</CODE> settings for image
+size from the Root object but the current view window size instead.
+Also note that the environment variable <CODE>SHADERS</CODE> will be adapted
+to the current value of the preference setting <CODE>Shaders</CODE> for rendering.</P>
+
+</LI>
+<LI><CODE>"Render to File"</CODE>: the scene is exported to a RIB file using the
+camera settings of the current view and with a <CODE>RiDisplay</CODE> statement that
+results in an image file to be produced when rendered; then
+the <CODE>"FRender"</CODE> command will be called.
+See also section 
+<A HREF="#prefrib">RIB-Export Preferences</A>.
+As the renderer will be executed in the background, Ayam will remain
+responsive and it is also possible to run multiple renderers in
+parallel.
+
+<P>The image file name will be derived from the scene file name. Note that
+the RIB export will <EM>not</EM> use the <CODE>RiOption</CODE> settings for image size
+from the Root object but the current view window size instead.
+Also note that the environment variable <CODE>SHADERS</CODE> will be adapted
+to the current value of preference setting <CODE>Shaders</CODE> for rendering.</P>
+
+</LI>
+<LI><CODE>"Export RIB"</CODE> exports the scene to a RIB file. This does exactly the
+same as the main menu entry <CODE>"File/Export/RenderMan RIB"</CODE>, except that
+the current view will already be selected in the dialog box.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"Redraw"</CODE>: forces the view window to be drawn, this is
+particularly useful if automatic redrawing of the view has been disabled.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"Reset"</CODE>: restores the camera settings of the view to those
+natural to the current view type.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"Open PPrev"</CODE>, <CODE>"Close PPrev"</CODE>: those menu entries are just
+available, if the compile time option <CODE>AYENABLEPPREV</CODE> has been set.
+This option is <EM>not</EM> set for the official Ayam binaries.
+Permanent preview (PPrev) continuously writes a RIB stream to
+a (fast) RenderMan renderer, a frame for each redraw operation
+of the view window that was used to open the preview. This way, the
+RenderMan renderer immediately displays all changes in the scene.
+This is a great way to test many different camera or light settings without
+the need to manually start a rendering process and close the preview window
+for each different setting.
+As the RIB client library usually is not able to handle multiple open
+RIB streams simultaneously, RIB-Export and direct rendering from view
+windows are not available until the permanent preview window is closed.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"Create All ShadowMaps"</CODE>: for each light in the scene,
+the light is selected, then the shadow map will be created
+in the same way as with the menu entry <CODE>"Create ShadowMap"</CODE>
+below (i.e.&nbsp;this creates all shadow maps for the
+current scene regardless of selection).
+See also section 
+<A HREF="ayam-4.html#shadowmaps">Using ShadowMaps</A>.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"Create ShadowMap"</CODE>:
+the scene is exported to a RIB file using the currently selected
+light source for the camera settings and with a <CODE>RiDisplay</CODE> statement
+that results in a shadow map to be produced when rendered; then
+the <CODE>"SMRender"</CODE> command will be called.
+See also sections 
+<A HREF="#prefrib">RIB-Export Preferences</A>
+and 
+<A HREF="ayam-4.html#shadowmaps">Using ShadowMaps</A>.
+
+<P>Note that before doing anything, Ayam will check whether shadow maps
+are enabled in the RIB export preferences and offer to adapt the
+preference setting accordingly. This must be done because <EM>only then</EM>
+exported RIBs for image rendering will actually use the shadow maps.</P>
+
+</LI>
+<LI><CODE>"Close"</CODE>: the View window will be removed. This entry is not
+available for the internal views of Ayam in single window GUI mode.</LI>
+</UL>
+</P>
+
+
+
+
+<P>
+<A NAME="vmtype"></A> 
+The <CODE>"Type"</CODE> menu entries:
+<UL>
+<LI><CODE>"Front"</CODE>
+</LI>
+<LI><CODE>"Side"</CODE>
+</LI>
+<LI><CODE>"Top"</CODE>
+</LI>
+<LI><CODE>"Perspective"</CODE>
+</LI>
+<LI><CODE>"Trim"</CODE></LI>
+</UL>
+
+may be used to change the type of the view, which restrains the scope
+of certain modelling actions. See sections
+<A HREF="ayam-4.html#viewobj">View Object</A>,
+<A HREF="#vwsc">View Window Shortcuts and Actions</A>, and
+<A HREF="ayam-3.html#iac">Modelling Actions</A>
+for more information.</P>
+
+
+<P>
+<A NAME="vmconf"></A> 
+The <CODE>"Configure"</CODE> menu may be used to change preferences of the view.
+Some preferences are outlined in greater detail in section
+<A HREF="ayam-4.html#vat">ViewAttrib</A>.
+<UL>
+<LI><CODE>"Automatic Redraw"</CODE>, toggles whether the view should
+be redrawn, whenever the scene changes. If this is disabled,
+a redraw can be enforced using the menu entry <CODE>"View/Redraw"</CODE>
+or the corresponding keyboard shortcut <CODE>&lt;Ctrl+d&gt;</CODE>.
+</LI>
+<LI><CODE>"Drawing Mode"</CODE> determines whether the view should draw a
+wire-frame representation (<CODE>"Drawing Mode/Draw"</CODE>), a shaded one
+(<CODE>"Drawing Mode/Shade"</CODE>), a representation
+where the wires of the draw mode are drawn over the shaded
+representation (<CODE>"Drawing Mode/ShadeAndDraw"</CODE>), or
+hidden wires and silhouettes (<CODE>"Drawing Mode/HiddenWire"</CODE>).
+See also section 
+<A HREF="#drawingmodes">Drawing Modes</A>.
+</LI>
+<LI><CODE>"Modelling Mode"</CODE> allows to switch the modelling
+coordinate system from world space (<CODE>"Global"</CODE>) to the
+space defined by the current parent object (<CODE>"Local (Level)"</CODE>)
+or even the space defined by the currently selected object
+(<CODE>"Local (Object)"</CODE>).
+See also section 
+<A HREF="ayam-3.html#editlocal">Editing in Local Spaces</A>.
+</LI>
+<LI><CODE>"Draw Selection only"</CODE>, if this is enabled, just the
+currently selected objects (and their children) will be drawn.
+</LI>
+<LI><CODE>"Draw Level only"</CODE>, if this is enabled, just the
+objects of the current level (and their children) will be drawn.
+</LI>
+<LI><CODE>"Draw Object CS"</CODE>, if this is enabled, small coordinate
+systems (three colored lines) will be drawn at the base of each
+objects coordinate system.
+</LI>
+<LI><CODE>"AntiAlias Lines"</CODE>, if this is enabled, all lines will
+be anti-aliased (smoothed).
+</LI>
+<LI><CODE>"Draw BGImage"</CODE>, if this is enabled, the background
+image will be drawn.
+</LI>
+<LI><CODE>"Set BGImage"</CODE>, may be used to set the current background
+image of the view, which should be a TIFF file.
+This image may also be specified using the view attribute <CODE>BGImage</CODE>.
+</LI>
+<LI><CODE>"Draw Grid"</CODE>, if this is enabled the grid will be drawn.
+</LI>
+<LI><CODE>"Use Grid"</CODE>, if this is enabled the grid will be used to
+constrain modelling actions to grid coordinates.
+See also section 
+<A HREF="ayam-3.html#iac">Modelling Actions</A>.
+</LI>
+<LI><CODE>"Set Gridsize"</CODE>, may be used to change the size of the grid
+associated with this view. Another way to change the grid size is
+to use the grid icon menu on the rightmost side, see below.
+</LI>
+<LI><CODE>"Half Size"</CODE>, change width and height to the half of the
+current values. This is not available for the internal views in
+single window GUI mode.
+</LI>
+<LI><CODE>"Double Size"</CODE>, change width and height to the double of the
+current values. This is not available for the internal views in
+single window GUI mode.
+</LI>
+<LI><CODE>"From Camera"</CODE>, copy camera settings from the currently
+selected camera object to the view.
+</LI>
+<LI><CODE>"To Camera"</CODE>, copy camera settings to the currently
+selected camera object from the view.
+</LI>
+<LI><CODE>"Set FOV"</CODE>, lets you specify a field of view value
+for the view, and adapts the zoom accordingly. This is just
+working for perspective views, of course.
+</LI>
+<LI><CODE>"Zoom to Object"</CODE>, adapt the camera settings, so that
+the currently selected objects are centered in the view.
+In addition, clipping planes and light position may be adapted for
+very small or very large objects.
+</LI>
+<LI><CODE>"Zoom to All"</CODE>, adapt the camera settings, so that
+all objects are centered in the view, regardless of current
+level and selected objects.
+</LI>
+<LI><CODE>"Align to Object"</CODE>, align the view to the coordinate
+system of the currently selected object or to the parent
+object of the current level if no object is currently selected
+(see also section 
+<A HREF="ayam-3.html#editlocal">Editing in Local Spaces</A>).</LI>
+</UL>
+</P>
+<P>Apart from the text based menus documented above, there are also some icon
+based menus in the view window menu bar:</P>
+<P>The <CODE>"Action"</CODE> icon menu hosts basic selection
+actions.<SMALL TITLE="Since 1.24."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+The menu button of this menu also always conveys the currently active
+modelling action. See also the image below:</P>
+<P>
+<CENTER>
+<IMG SRC="pics/amenu.gif" HEIGHT=219 WIDTH=171  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Action Icon Menu</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The selection actions are:
+<UL>
+<LI>Pick, see
+section 
+<A HREF="ayam-3.html#objsel">Selecting Objects by Picking</A>,</LI>
+<LI>Tag, see
+section 
+<A HREF="ayam-3.html#selac">Selecting/Tagging Points</A>,</LI>
+<LI>Mark, see
+section 
+<A HREF="ayam-3.html#markac">Setting the Mark</A>,</LI>
+<LI>None, disables all actions.</LI>
+</UL>
+</P>
+
+
+
+<P>
+<A NAME="amconf"></A> </P>
+<P>The action icon menu can be configured using a dialog that opens
+when the rightmost mouse button is pressed on the menu button or
+via the <CODE>"SetActionMenu"</CODE> entry in the <CODE>"Misc"</CODE> preference
+section.<SMALL TITLE="Since 1.29."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+See also the image below.
+<CENTER>
+<IMG SRC="pics/setactionmenu.gif" HEIGHT=356 WIDTH=383  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Action Icon Menu Configuration</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>Selected entries can be moved to the respective other side using the
+<CODE>"&lt;"</CODE> and <CODE>"&gt;"</CODE> buttons, the new entry will be inserted
+above the selected entry on the other side; the <CODE>"O"</CODE> button
+resets to the last saved configuration.
+The additional selection actions are:
+<UL>
+<LI>FindU, see
+section 
+<A HREF="ayam-3.html#finduac">Finding Points on Curves</A>,</LI>
+<LI>FindUV, see
+section 
+<A HREF="ayam-3.html#finduvac">Finding Points on Surfaces</A>,</LI>
+<LI>SelBnd, see
+section 
+<A HREF="ayam-3.html#selbndac">Selecting Boundary Curves</A>,</LI>
+<LI>SelBndC, see
+section 
+<A HREF="ayam-3.html#selbndac">Selecting Boundary Curves</A>, and</LI>
+<LI>TagB, see
+section 
+<A HREF="ayam-3.html#selbac">Selecting/Tagging Boundary Points</A>.</LI>
+</UL>
+</P>
+<P>The <CODE>"Modelling Mode"</CODE> icon menu may be used to quickly change the current
+modelling mode (global or local, see also section
+<A HREF="ayam-3.html#editlocal">Editing in Local Spaces</A>). Apart from a
+different icon, the local modes will display a <B><CODE>L</CODE></B> or <B><CODE>O</CODE></B>
+in the lower right corner of the icon.<BR>
+The icon, additionally, conveys whether objects or points would be
+modified by a modelling action: for points, a red dot will be present
+in the upper right corner of the icon (see also section
+<A HREF="ayam-3.html#objorpnt">Transforming Objects or Selected Points</A>).
+The modelling scope may also be toggled directly by clicking on the
+menu button with the rightmost mouse
+button.<SMALL TITLE="Since 1.26."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL><BR>
+Furthermore, the type of the view will be displayed in the upper left
+corner of the icon as letter <B><CODE>F</CODE></B>, <B><CODE>S</CODE></B>, <B><CODE>T</CODE></B>, or
+<B><CODE>P</CODE></B> for front, side, top, or perspective views, respectively.
+Views of type <CODE>Trim</CODE> get no designating letter in the icon.
+See also the image below:</P>
+
+
+
+<P>
+<CENTER>
+<IMG SRC="pics/mmmenu.gif" HEIGHT=184 WIDTH=172  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Modelling Mode Icon Menu</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The <CODE>"Drawing Mode"</CODE> icon menu may be used to quickly change the current
+drawing mode, drawing, shading, drawing and shading, or hidden wires.
+See also the image below:</P>
+<P>
+<CENTER>
+<IMG SRC="pics/dmmenu.gif" HEIGHT=197 WIDTH=167  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Drawing Mode Icon Menu</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>See section 
+<A HREF="#drawingmodes">Drawing Modes</A> for a discussion
+of the different drawing modes.</P>
+<P>Finally, the <CODE>"Grid"</CODE> icon menu may be used to quickly change the
+current grid size:</P>
+<P>On the right hand side in the view menu bar there is a little icon
+that displays the current grid size. You may click on the icon to
+display a menu with predefined grid size values.
+Choosing one of the values 0.1, 0.25, 0.5, or 1.0 will set the
+grid size of the view to the chosen value and will additionally
+enable drawing of the grid and snapping to the grid.
+The entry <CODE>"X"</CODE> allows to set a custom grid value.
+The last entry will set the grid size to 0.0 and disable drawing of
+and snapping to the grid.
+If a grid size other than 0.1, 0.25, 0.5, or 1.0 is in effect for the view,
+a generic icon (with a X instead of a number) will be displayed in the
+icon menu.
+See also the image below:</P>
+<P>
+<CENTER>
+<IMG SRC="pics/grmenu.gif" HEIGHT=281 WIDTH=241  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Grid Icon Menu</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+
+
+
+<H2><A NAME="vwsc"></A> <A NAME="ss2.6">2.6</A> <A HREF="ayam.html#toc2.6">View Window Shortcuts and Actions</A>
+</H2>
+
+<P>Important keyboard commands of a view window (aside from the view
+menu shortcuts) are discussed in this section.</P>
+<P>Note that the view keyboard shortcuts only work if the view window
+has the keyboard input focus.</P>
+<P>These shortcuts can be adapted using the <EM>ayamrc</EM> file
+(see section 
+<A HREF="ayam-8.html#ayamrc">Ayamrc File</A>).</P>
+<P>Keyboard shortcuts directly modifying the camera, that is associated
+with the view window, are:
+<UL>
+<LI><CODE>&lt;Left&gt;</CODE>, <CODE>&lt;Up&gt;</CODE>, <CODE>&lt;Right&gt;</CODE>,
+<CODE>&lt;Down&gt;</CODE> rotate viewer around the current camera aim point.
+</LI>
+<LI><CODE>&lt;Shift+Left&gt;</CODE>, <CODE>&lt;Shift+Up&gt;</CODE>, <CODE>&lt;Shift+Right&gt;</CODE>,
+<CODE>&lt;Shift+Down&gt;</CODE> pan the view.
+</LI>
+<LI><CODE>&lt;+&gt;</CODE>, <CODE>&lt;-&gt;</CODE>, or <CODE>&lt;Add&gt;</CODE>, <CODE>&lt;Sub&gt;</CODE>
+(on the numeric keypad) zoom the view.
+</LI>
+<LI><CODE>&lt;Ctrl+5&gt;</CODE> (on the numeric keypad!) resets the views
+camera (From and To) to the view type dependent default values.
+</LI>
+<LI><CODE>&lt;.&gt;</CODE> pans the view to the mark.</LI>
+</UL>
+</P>
+<P>See section 
+<A HREF="ayam-6.html#rctcl">Revert Cursor Key Behavior</A>
+for a script that swaps the rotate and pan cursor key bindings in parallel
+views.</P>
+<P>Interactive actions modifying the camera, that is associated with the
+view window, are:
+<UL>
+<LI>Using <CODE>&lt;v&gt;</CODE> you may move the view with your mouse.
+</LI>
+<LI>Using <CODE>&lt;V&gt;</CODE> you move the camera in the direction it is
+looking. Note that this affects both, from and to setting of the
+virtual camera. Furthermore, this movement will have no visible effect in
+parallel views.
+</LI>
+<LI><CODE>&lt;R&gt;</CODE> (note the case!) starts rotating the virtual
+camera around the point it is looking to.
+</LI>
+<LI>Rotating the view is also possible in any
+modelling mode, by holding down the <CODE>&lt;Alt&gt;</CODE>-key while dragging
+the mouse.
+</LI>
+<LI><CODE>&lt;Z&gt;</CODE> starts zooming the view. Dragging the mouse up
+zooms in and dragging the mouse down zooms out.
+</LI>
+<LI>Zooming the view into a rectangular region
+defined through a mouse drag is also possible in any
+modelling mode, by holding down the
+<CODE>&lt;Shift&gt;</CODE>-key.<SMALL TITLE="Since 1.7."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></LI>
+</UL>
+
+See also the table below.</P>
+<P>
+<CENTER>
+<TABLE ALIGN="CENTER" BORDER="1" CELLPADDING="3"><TR><TD>
+<B>Name</B></TD><TD><B>Shortcut</B></TD><TD><B>Icon</B></TD></TR><TR><TD>
+Pan View</TD><TD><CODE>&lt;v&gt;</CODE></TD><TD>
+<IMG SRC="pics/movevac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Zoom View</TD><TD><CODE>&lt;Z&gt;</CODE></TD><TD>
+<IMG SRC="pics/zoomvac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR><TR><TD>
+Rotate View</TD><TD><CODE>&lt;R&gt;</CODE></TD><TD>
+<IMG SRC="pics/rotatevac.gif" HEIGHT=25 WIDTH=25  loading="lazy">
+</TD></TR></TABLE>
+</CENTER><P><CENTER><FONT SIZE="-1">Interactive View Actions Overview</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>You may also pan/move the view by dragging with the rightmost
+mouse button and zoom the view with the middle mouse button without affecting
+any other active view or modelling action.</P>
+<P>If you have a wheel mouse and it is configured to send
+Mouse4 and Mouse5 button events, Ayam will zoom the view
+when you turn the wheel.</P>
+<P>Similarly the view can be rolled when the mouse wheel is turned with
+the <CODE>&lt;Control&gt;</CODE> key held down.<SMALL TITLE="Since 1.29."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P><CODE>&lt;PgUp&gt;</CODE> and <CODE>&lt;PgDown&gt;</CODE> allow to cycle through the view
+types.<SMALL TITLE="Since 1.15."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P><CODE>&lt;Ctrl+PgUp&gt;</CODE> and <CODE>&lt;Ctrl+PgDown&gt;</CODE>
+cycle through the drawing modes.<SMALL TITLE="Since 1.16."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P><CODE>&lt;Insert&gt;</CODE> and <CODE>&lt;Delete&gt;</CODE> cycle through the grid
+sizes.<BR>
+<CODE>&lt;Shift-Insert&gt;</CODE> and <CODE>&lt;Shift-Delete&gt;</CODE> modify the current
+grid size.<SMALL TITLE="Since 1.21."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>Using the menu entry <CODE>"Zoom to Object"</CODE> or the corresponding
+shortcut <CODE>&lt;BackSpace&gt;</CODE>
+the views camera settings can be changed so that the selected
+objects will be displayed centered in the view window. This is handy
+to search for objects or if the user is simply lost in space.</P>
+<P>Closely related to the latter is the <CODE>"Zoom to All"</CODE> action,
+bound to the <CODE>&lt;Shift-BackSpace&gt;</CODE> key. This action adjusts
+the camera settings so that all objects in the scene will be
+visible, regardless of current level and object selection.</P>
+<P>Note that both, zoom to object and zoom to all, adjust the
+clipping planes to the extents of the affected objects and
+also adapt the position of the light source used for
+shading.<SMALL TITLE="Since 1.21."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+This facilitates working with very large and very tiny objects.</P>
+<P>Using the menu entry <CODE>"Align to Object"</CODE> or the shortcut
+<CODE>&lt;Ctrl+a&gt;</CODE> (<CODE>&lt;L&gt;</CODE> for internal views)
+the views camera settings can be changed so that the view is aligned
+to the coordinate system of the currently selected object.
+This is handy for modelling in local coordinate systems
+(e.g.&nbsp;when editing the control points of some planar curve defined in the
+XY-plane that has been rotated around the Y-axis).
+See also section 
+<A HREF="ayam-3.html#editlocal">Editing in Local Spaces</A>.</P>
+<P>It is also possible to move through the scene hierarchy and
+change the selection directly in view windows:<SMALL TITLE="Since 1.18."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>
+<UL>
+<LI><CODE>&lt;Ctrl+4&gt;</CODE>, <CODE>&lt;Ctrl+6&gt;</CODE> (on the numeric keypad!)
+move up and down in the hierarchy respectively, also selecting the parent
+or first child.
+</LI>
+<LI><CODE>&lt;Ctrl+2&gt;</CODE>, <CODE>&lt;Ctrl+8&gt;</CODE> (on the numeric keypad!)
+select the next or previous object.
+</LI>
+<LI><CODE>&lt;Ctrl+Shift+2&gt;</CODE>, <CODE>&lt;Ctrl+Shift+8&gt;</CODE>
+(on the numeric keypad!)
+extend the current selection to include the next or previous object.</LI>
+</UL>
+</P>
+
+
+<H2><A NAME="drawingmodes"></A> <A NAME="ss2.7">2.7</A> <A HREF="ayam.html#toc2.7">Drawing Modes</A>
+</H2>
+
+<P>This section explains the draw modes available in Ayam.</P>
+<P>The draw mode <CODE>"Draw"</CODE> shows a simple wire-frame representation
+of the scene, see the following image:
+<CENTER>
+<IMG SRC="pics/dmdraw.gif" HEIGHT=300 WIDTH=400  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Draw Mode <CODE>"Draw"</CODE></FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+
+<P>The draw mode <CODE>"Shade"</CODE> displays the scene as shaded surface
+lit by a single headlight, see also the following image:
+<CENTER>
+<IMG SRC="pics/dmshade.gif" HEIGHT=300 WIDTH=400  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Draw Mode <CODE>"Shade"</CODE></FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+
+<P>The draw mode <CODE>"ShadeAndDraw"</CODE> combines the images of the modes
+<CODE>"Shade"</CODE> and <CODE>"Draw"</CODE>, see also the following image:
+<CENTER>
+<IMG SRC="pics/dmdrawshade.gif" HEIGHT=300 WIDTH=400  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Draw Mode <CODE>"ShadeAndDraw"</CODE></FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+
+
+<P>The drawing mode <CODE>"HiddenWire"</CODE> works like the shade and draw mode,
+where the surface shading part is only used to remove hidden bits.
+In addition, silhouette edges are detected and drawn.
+For best results, use it with anti-aliasing.</P>
+<P>The silhouette detection is shading the scene a second
+time in a special multi-colored lighting setup. Then, edges are detected
+in the Z-buffer and color buffer data. The edge detection in the Z-buffer
+profits from tight-fitting clipping planes. A good clipping plane
+setup can be easily achieved by the <CODE>"Zoom to Object"</CODE> action (shortcut
+<CODE>&lt;BackSpace&gt;</CODE>).<BR>
+If anti-aliasing is not enabled, the
+resulting edge map is processed by morphological thinning and removal
+of pixels in the direct vicinity of pixels already drawn, to get one
+pixel wide lines.<BR>
+Finally, the edge map is used as a largely transparent texture (except
+for the edges) on a full-screen quad, which is drawn as last object.
+In case of anti-aliasing, the quad will be drawn four times.
+See also the image below.</P>
+<P>
+<CENTER>
+<IMG SRC="pics/dmhiddenwire.gif" HEIGHT=300 WIDTH=400  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Draw Mode <CODE>"HiddenWire"</CODE></FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The silhouette detection is a slow process and therefore only performed
+when no interactive action is in progress.
+The following image shows what will be drawn during interactive actions,
+compare it also to the complete image above.</P>
+<P>
+<CENTER>
+<IMG SRC="pics/dmhiddenwirenosil.gif" HEIGHT=300 WIDTH=400  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Draw Mode <CODE>"HiddenWire"</CODE> without Silhouettes</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+
+
+
+<H2><A NAME="toolb"></A> <A NAME="ss2.8">2.8</A> <A HREF="ayam.html#toc2.8">The Toolbox</A>
+</H2>
+
+<P>
+<CENTER>
+<IMG SRC="pics/tools.gif" HEIGHT=123 WIDTH=406  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">The Toolbox</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The toolbox displays some buttons that start interactive
+modelling actions, modelling tools, or create objects.
+The toolbox can be opened and closed using the main menu entry
+<CODE>"Special/Toggle Toolbox"</CODE> unless Ayam is in single window
+GUI mode.</P>
+<P>Note that in contrast to the keyboard shortcuts of the
+view windows, the buttons in the toolbox may switch to the modelling
+actions for all open views. This is the case if Ayam is in single window
+GUI mode <EM>and</EM> AutoFocus is enabled or if Ayam is in multi window
+GUI mode. For more information about
+the actions see section 
+<A HREF="ayam-3.html#iac">Modelling Actions</A>.</P>
+<P>Furthermore, the modelling scope may be immediately switched to
+<EM>point</EM> when starting a transformation action using the rightmost mouse
+button.<SMALL TITLE="Since 1.26."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+See also
+section 
+<A HREF="ayam-3.html#objorpnt">Transforming Objects or Selected Points</A>.</P>
+<P>When creating objects, holding down
+the <CODE>&lt;Ctrl&gt;</CODE> key while pressing the corresponding toolbox
+button will keep the objects selected.
+This is especially useful for objects that would move the currently
+selected objects to themselves as children (Level, Revolve, Skin etc.).</P>
+<P>Several other tool buttons also change their behaviour with modifier
+keys, check the tooltips.</P>
+<P>The toolbox window may be configured by the user using the
+hidden preference setting <CODE>"toolBoxList"</CODE> in the <EM>ayamrc</EM> file.
+Using this setting you may select from certain groups of buttons
+and change the order in which they appear in the toolbox window.
+See section 
+<A HREF="ayam-8.html#hidprefst">Hidden Preference Settings</A> for
+more information.</P>
+<P>The toolbox is also open for extension by scripts, see section
+<A HREF="ayam-6.html#scextoolbox">Script Examples (Toolbox Buttons)</A> for
+examples.</P>
+<P>You may also resize the window to change from the vertical standard
+layout to a horizontal one, optimizing the use of precious screen
+space. After resizing, the toolbox will re-layout the buttons,
+warning you if the space is too small for all buttons to display.
+If the window is too big for the desired layout and the hidden
+preference setting <CODE>"ToolBoxShrink"</CODE> is switched on, the
+toolbox will shrink wrap the window to match the space occupied by
+the buttons.
+Furthermore, using the hidden preference setting <CODE>"ToolBoxTrans"</CODE>
+the toolbox window can be made transient.
+It will then (depending on the window manager or its configuration)
+get a different or no decoration, no icon, and will always be iconified
+when the main window gets iconified.</P>
+
+
+<H2><A NAME="objsearch"></A> <A NAME="ss2.9">2.9</A> <A HREF="ayam.html#toc2.9">Object Search</A>
+</H2>
+
+<P>
+<CENTER>
+<IMG SRC="pics/objsearch.gif" HEIGHT=138 WIDTH=237  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Object Search Dialog</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The object search facility allows to find objects in the scene hierarchy
+according to many different, even script defined criteria and highlight
+them in the tree view or execute arbitrary actions on
+them.<SMALL TITLE="Since 1.21."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+Object search is controlled by a dialog, see also the image above.</P>
+<P>Note, that the object search dialog is not closed immediately after a
+search operation, this allows multiple search operations with possibly
+refined parameters.</P>
+<P>The first two options <CODE>"Expression"</CODE> and <CODE>"Action"</CODE> let the
+user specify which objects to find and what to do with them, they
+are explained in depth in the respective sections below.</P>
+<P>Using the parameter <CODE>"Scope"</CODE> the search may be limited to certain
+sets of objects. By default, when scope is <CODE>"All"</CODE>, all objects in the
+scene are processed, even if the current level is not the root level
+and no objects are selected.<BR>
+If the scope is <CODE>"Selection"</CODE> just the selected objects and their
+children will be searched.<BR>
+If the scope is <CODE>"Level"</CODE> all objects of
+the current level regardless of selection but again including all children
+will be searched.<BR>
+If the scope is <CODE>"Collection"</CODE> just the objects found by the previous
+search are searched.<BR>
+Note that the clipboard is never searched.</P>
+<P>More options are made available, when the <CODE>"Advanced Options"</CODE>
+button is pressed.</P>
+<P>The option <CODE>"HighlightColor"</CODE> defines the color to be used by the
+<CODE>"Highlight"</CODE> action.</P>
+<P>If the options <CODE>"ClearHighlight"</CODE> or <CODE>"ClearClipboard"</CODE> are switched
+on, the highlights and the object clipboard are cleared before a search
+starts respectively.</P>
+<P>Finally, <CODE>"InvertMatch"</CODE> reverts the search logic: if enabled, the
+search finds all objects for whose the search expression delivers a
+negative result.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3>Search Expressions</H3>
+
+<P>When just a simple string is used as search expression, this string
+is matched against the types, names, and materials of the objects
+to be searched in a case insensitive manner.<SMALL TITLE="Since 1.22."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+The matching allows usage of <CODE>"*"</CODE> (matches any sequence of characters),
+<CODE>"?"</CODE> (matches a single character), and character ranges specified
+like this <CODE>"[A-z]"</CODE>. To match any of <CODE>*?[]</CODE> precede them with a
+backslash.</P>
+
+
+<P>If the search expression starts with a <CODE>"$"</CODE>, <CODE>"("</CODE>, or <CODE>"["</CODE> it is
+considered a special expression.</P>
+<P>The following special search expressions are defined:
+<DL>
+<DT><B>Type</B><DD>
+<P>find objects of a certain type, for example
+<BLOCKQUOTE><CODE>
+<CODE>$type == "Sphere"</CODE>
+</CODE></BLOCKQUOTE>
+
+finds all spheres.</P>
+<DT><B>Name</B><DD>
+<P>find objects of a certain name, for example
+<BLOCKQUOTE><CODE>
+<CODE>$name == "objname"</CODE>
+</CODE></BLOCKQUOTE>
+
+finds all objects with the name <CODE>objname</CODE>.</P>
+<DT><B>Material Name</B><DD>
+<P>find objects of a certain material, for example
+<BLOCKQUOTE><CODE>
+<CODE>$mat == "matname"</CODE>
+</CODE></BLOCKQUOTE>
+
+finds all objects with the material <CODE>matname</CODE>.</P>
+<DT><B>Property Value</B><DD>
+<P>find objects with a certain property value, for example
+<BLOCKQUOTE><CODE>
+<CODE>$SphereAttr(Radius) == 0.5</CODE>
+</CODE></BLOCKQUOTE>
+
+finds all spheres with radius 0.5.</P>
+<DT><B>Master</B><DD>
+<P>find the master of the currently selected instance.</P>
+<DT><B>Instances</B><DD>
+<P>find all instances of the currently selected master, or
+if the currently selected object is an instance, find all instances
+with the same master.</P>
+<DT><B>Procedure Call</B><DD>
+<P>find objects for which a procedure or command returns 1,
+for example
+<BLOCKQUOTE><CODE>
+<CODE>[hasChild]</CODE>
+</CODE></BLOCKQUOTE>
+
+finds all objects that have children.</P>
+<P>See section
+<A HREF="ayam-6.html#scintob">Interrogating Objects</A> for a listing of
+available commands.</P>
+</DL>
+</P>
+<P>Complex logical expressions may also be created, like e.g.
+<BLOCKQUOTE><CODE>
+<CODE>($type == "Sphere") &amp;&amp; ($mat == "wood")</CODE>
+</CODE></BLOCKQUOTE>
+
+which finds all wooden sphere objects. Due to the way the expressions
+are evaluated, the use of the braces is imperative even for a little
+bit more complex expressions that use the negation operator:
+<BLOCKQUOTE><CODE>
+<CODE>(![hasChild])</CODE>
+</CODE></BLOCKQUOTE>
+</P>
+<P>Also note that all string based comparisons of e.g.&nbsp;types or names
+via <CODE>"=="</CODE> are case sensitive.</P>
+<P>The default value menu of the <CODE>"Expression"</CODE> entry is pre-seeded with
+meaningful entries when the search dialog is opened.
+What exactly appears in this menu is controlled by the first of the
+selected objects.
+For instance, if the selected object is a material, the material entry
+will contain the material name fetched from this object and will be one
+of the first entries, so that searching for objects of this material is
+just a matter of two mouse clicks.
+If the object is an instance, the first two entries in this menu will
+be <CODE>"Master"</CODE> and <CODE>"Instances"</CODE>.</P>
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3>Search Actions</H3>
+
+<P>During a search, for every object that matches the given expression
+the object will be selected and an action will be executed.
+The following special actions are defined:
+<DL>
+<DT><B>Highlight</B><DD>
+<P>All found objects will be colored in the object tree, see also the
+following image.</P>
+<P>
+<CENTER>
+<IMG SRC="pics/objsearchr.gif" HEIGHT=248 WIDTH=205  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Object Search Result of Search String <CODE>"clay"</CODE></FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>Highlighted objects stay highlighted until the tree view is updated
+completely (e.g.&nbsp;via the keyboard shortcut <CODE>&lt;F5&gt;</CODE>) or partially
+(for instance after drag and drop or object clipboard operations).</P>
+<DT><B>Count</B><DD>
+<P>The objects matching the search expression will be counted and the
+result output to the console.</P>
+<DT><B>Collect</B><DD>
+<P>The node names of the found objects
+will be collected in the Tcl list <CODE>"ObjectSearch(nodes)"</CODE>.
+This list can then be used for post-processing by scripts without
+the restrictions imposed by the <CODE>"forAll"</CODE> command.</P>
+<DT><B>Copy</B><DD>
+<P>The found objects will be added to the clipboard.</P>
+<DT><B>Delete</B><DD>
+<P>The node names of the found objects will be collected, then the list of
+objects will be processed so that delete is safe, then the objects
+will be deleted from the scene.</P>
+</DL>
+
+In addition to these special actions, a command&thinsp;/&thinsp;procedure
+call, like
+e.g.<BR>
+<CODE>convOb -inplace</CODE><BR>or<BR>
+<CODE>addTag NoExport ""</CODE><BR>
+can also be specified as action.
+However, as the object search is based on the <CODE>"forAll"</CODE> scripting
+interface command, certain restrictions apply:
+<UL>
+<LI>The action must not change the scene hierarchy, i.e.&nbsp;no objects must be
+deleted, cut, or created in the command&thinsp;/&thinsp;procedure call.
+Changing the objects themselves, even converting them in-place,
+however, is allowed.</LI>
+<LI>The script has no access to global variables, unless special measures
+are taken (see section
+<A HREF="ayam-6.html#scifall">Applying Commands to a Number of Objects</A>).</LI>
+</UL>
+</P>
+<P>See also section
+<A HREF="ayam-6.html#sccomm">Procedures and Commands</A> for a listing of
+available commands.</P>
+<P>If the search action is empty, the objects will just be searched and
+a count of the matches will be reported.<SMALL TITLE="Since 1.26."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>The special action <CODE>"Highlight"</CODE> also collects the found node names
+in the global Tcl list <CODE>"ObjectSearch(nodes)"</CODE>.</P>
+
+
+<H2><A NAME="prefs"></A> <A NAME="ss2.10">2.10</A> <A HREF="ayam.html#toc2.10">Preferences</A>
+</H2>
+
+<P>
+<CENTER>
+<IMG SRC="pics/prefs.gif" HEIGHT=430 WIDTH=353  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Preferences Dialog</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P>The preferences dialog may be opened using the main menu entry
+<CODE>"Edit/Preferences"</CODE> or the shortcut <CODE>&lt;Ctrl+p&gt;</CODE>.</P>
+<P>Use
+<UL>
+<LI><CODE>"Ok"</CODE> to close the preference editor and
+apply all changes,
+</LI>
+<LI><CODE>"Apply"</CODE> to apply the changes, but leave the editor open,
+</LI>
+<LI><CODE>"Revert"</CODE> to reset everything to the state before the
+preference editor opened<SMALL TITLE="Since 1.27."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+(these are not the factory defaults, to get back to
+the factory defaults, restart Ayam with the command line option
+<CODE>"-failsafe"</CODE> or use the main menu entry
+<CODE>"Special/Reset Preferences"</CODE>),
+</LI>
+<LI><CODE>"Cancel"</CODE> to close the dialog without applying any changes.
+All changes done after the last press of <CODE>"Apply"</CODE> will be lost.</LI>
+</UL>
+</P>
+<P>Note that while the preference editor is open, AutoFocus is temporarily
+turned off and changes to the <CODE>"AutoFocus"</CODE> preference setting will
+only be realized after the editor is closed.</P>
+<P>The preferences are divided into five sections as follows.</P>
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="prefmain"></A> Main Preferences</H3>
+
+<P>The <CODE>"Main"</CODE> section contains the most important application setup
+related preference settings.</P>
+<P>Note that unused settings will not be shown, e.g.&nbsp;on the
+Win32 platform, the <CODE>"TwmCompat"</CODE> setting will be
+hidden.<SMALL TITLE="Since 1.14."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+<UL>
+<LI><CODE>"Shaders"</CODE> contains a number of paths (separated by a colon
+<CODE>":"</CODE> on Unix and by a semicolon <CODE>";"</CODE> on Win32) where Ayam looks
+for compiled shaders (e.g.&nbsp;files with the extension <CODE>".slc"</CODE> that
+have been compiled with slc from BMRT). Using the <CODE>"Add"</CODE> button,
+paths may be added with a directory chooser dialog.
+After changes to this setting (also after <CODE>"Revert"</CODE>!),
+use the <CODE>"Scan for Shaders!"</CODE> button below.
+
+<P>Note that the environment variable SHADERS will be adapted to match
+the contents of this preference setting, so that renderers started
+by Ayam see exactly the same set of shaders as Ayam.
+However, this does of course not affect any renderers that are
+started outside the Ayam context, i.e.&nbsp;when rendering exported RIB files
+from a shell.</P>
+<P>Since Ayam 1.22, the shader paths support globbing, i.e.&nbsp;it is
+possible to specify
+<BLOCKQUOTE><CODE>
+<PRE>
+"/usr/share/aqsis/shaders/*/"
+</PRE>
+</CODE></BLOCKQUOTE>
+
+to include
+<BLOCKQUOTE><CODE>
+<PRE>
+"/usr/share/aqsis/shaders/surface/"
+"/usr/share/aqsis/shaders/displacement/"
+"/usr/share/aqsis/shaders/volume/"
+"/usr/share/aqsis/shaders/light/"
+</PRE>
+</CODE></BLOCKQUOTE>
+
+etc.&nbsp;with just a single entry. More complex styles of globbing, using
+e.g.&nbsp;the question mark, are also supported.</P>
+
+</LI>
+<LI><CODE>"Scan for Shaders!"</CODE> initiates a rebuild of the internal
+shader database. All shaders in the directories specified by
+the <CODE>"Shaders"</CODE> preference setting will be scanned and entered in
+that database.
+Watch the console for error messages that may appear while scanning.
+See also sections 
+<A HREF="ayam-4.html#parseshd">Shader Parsing</A> and
+<A HREF="ayam-8.html#spplugins">Shader Parsing Plugins</A> for more
+information on scanning shaders.</LI>
+</UL>
+</P>
+<P>The next sub-section contains GUI (user interface) related
+settings.
+<A NAME="prefgui"></A> 
+<UL>
+<LI><CODE>"Locale"</CODE>, sets a language for the balloon help texts,
+the default value menu shows all currently available locales.
+
+<P>The value will have no effect until Ayam is restarted!</P>
+
+</LI>
+<LI><CODE>"SingleWindow"</CODE> toggles, whether Ayam should create just
+one main window with internal views and toolbox or use the old
+floating windows style GUI. The new single window GUI mode is enabled
+by default.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"AutoResize"</CODE> toggles, whether the main window
+should be resized horizontally according to the property GUI whenever
+a new GUI is displayed.
+
+<P>This option is not available in the single window GUI mode.</P>
+
+</LI>
+<LI><CODE>"AutoFocus"</CODE> controls whether Ayam should automatically
+move the focus to a view or the main window, when the mouse pointer
+enters it. However, depending on the operating system, window manager,
+or their settings, this may only work correctly, when a window
+of Ayam already has the focus. On some operating systems or window
+managers auto focus might not work at all. Furthermore, note that moving
+the focus to a toplevel window might also raise it.
+
+<P>In single window GUI mode, auto focus additionally manages the input
+focus of the internal views, tree view, property GUI, and console.</P>
+<P>Note that while the preference editor is open, auto focus is always
+temporarily turned off and changes to the <CODE>"AutoFocus"</CODE> preference
+setting will only be realized after the preferences editor is closed.</P>
+
+</LI>
+<LI><CODE>"TwmCompat"</CODE> changes, how Ayam tells the window manager
+new geometries of windows. This option has to be toggled if Ayam
+fails to correctly remember the geometry of the main window between
+two invocations or if the main window jumps downward when properties
+are selected.
+
+<P>This option is not available on the Win32 platform and on Mac OS X Aqua.</P>
+
+</LI>
+<LI><CODE>"AutoSavePrefs"</CODE>, if this is switched on, Ayam will write
+the preferences settings to the <EM>ayamrc</EM> file when the program quits.
+See also section 
+<A HREF="ayam-8.html#ayamrc">Ayamrc File</A>.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"BakOnReplace"</CODE>, controls whether Ayam will make
+a backup copy of each scene file loaded via the main menu entry
+<CODE>"File/Open"</CODE> or via the most recently used list.
+The backup file will be placed right next to the loaded file
+and get an additional file name extension according to the hidden
+preference setting <CODE>"BackupExt"</CODE>.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"AddExtensions"</CODE>, this option may be used to let Ayam
+automatically add file name extensions to saved files (if they
+do not have already a proper extension).
+<P> </P>
+
+
+</LI>
+<LI><CODE>"EnvFile"</CODE> specifies the working environment scene file.
+This file typically contains some view objects to create a standard
+2-, 3-, or 4-view working environment and is automatically loaded
+upon each start of Ayam (unless the hidden
+preference option <CODE>"LoadEnv"</CODE> is switched off) and upon each clearing
+of the scene using <CODE>"File/New"</CODE> (unless the hidden preference option
+<CODE>"NewLoadsEnv"</CODE> is switched off).
+See also section 
+<A HREF="ayam-8.html#hidprefsn">Hidden Preference Settings</A>.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"Scripts"</CODE> is a list of Tcl script files that will
+be executed on startup. The scripts do <EM>not</EM>
+have to be specified with full path and
+filename.<SMALL TITLE="Since 1.16."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+Furthermore, the scripts and plugins directories (as specified using the
+<CODE>"Plugins"</CODE> option below) are automatically searched, and the <CODE>".tcl"</CODE>
+file name extension is automatically added, so that a setting
+of <CODE>"colfocus;loadayslx"</CODE>
+would load the <CODE>"colfocus.tcl"</CODE> script from the scripts directory and the
+ayslx shader parsing plugin (via the <CODE>"loadayslx.tcl"</CODE> script) from the
+plugins directory.<BR>
+If non-absolute paths are used, they are considered to be relative
+to the current directory of Ayam on application startup (which is typically
+the directory where the Ayam executable resides).<BR>
+Multiple entries have to be separated by a colon (<CODE>":"</CODE>) on Unix and by
+a semicolon (<CODE>";"</CODE>) on Win32.<BR>
+If unsure about the correct syntax, just use the <CODE>"Add"</CODE> button.
+
+<P>See section 
+<A HREF="ayam-6.html#scripts">Distributed Helper Scripts</A> for
+documentation on the scripts distributed with Ayam.</P>
+
+</LI>
+<LI><CODE>"Plugins"</CODE> is a list of directories that contain custom
+objects or plugins. Those directories will e.g.&nbsp;be searched for
+custom objects when unknown object types are encountered while reading
+Ayam scene files. If a matching custom object is found, it will be
+automatically loaded into Ayam, so that scene loading may proceed without
+an error. If non-absolute paths are used they are considered to be relative
+to the directory where the Ayam executable resides.<BR>
+Thus, the default value "plugins" leads to Ayam searching for plugins
+in the directory "plugins" located in the directory, where the Ayam
+executable resides:
+<BLOCKQUOTE><CODE>
+<PRE>
+.../ayam/bin/Ayam.exe
+.../ayam/bin/plugins/
+.../ayam/bin/plugins/ayslx.dll
+</PRE>
+</CODE></BLOCKQUOTE>
+
+Multiple entries have to be separated by a colon (<CODE>":"</CODE>) on Unix and
+by a semicolon (<CODE>";"</CODE>) on Win32.<BR>
+If unsure about the correct syntax, just use the <CODE>"Add"</CODE> button.
+
+<P>See section 
+<A HREF="ayam-8.html#plugov">Plugins Overview</A> for more
+information regarding Ayam plugins.</P>
+
+</LI>
+<LI><CODE>"Docs"</CODE> is an URL that points to the documentation in
+HTML format.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"TmpDir"</CODE> is the directory, where temporary RIB files are
+created, e.g.&nbsp;when rendering directly from view windows.</LI>
+</UL>
+</P>
+<P>The preference settings <CODE>"ListTypes"</CODE>, <CODE>"MarkHidden"</CODE>,
+<CODE>"LoadEnv"</CODE>, and <CODE>"NewLoadsEnv"</CODE> are hidden preference
+settings since Ayam 1.14, see section
+<A HREF="ayam-8.html#hidprefsl">Hidden Preference Settings</A>.</P>
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="prefmodeling"></A> <A NAME="prefmodel"></A> Modelling Preferences</H3>
+
+<P>The next section of the preferences, <CODE>"Modelling"</CODE>,
+contains modelling related settings:
+<UL>
+<LI><CODE>"ScopeManagement"</CODE> controls how Ayam decides whether to
+transform selected points or objects:
+in the <CODE>"Explicit"</CODE> mode this is controlled manually using
+the keyboard shortcuts <CODE>&lt;o&gt;</CODE> and <CODE>&lt;p&gt;</CODE> respectively,
+whereas in the <CODE>"Implicit"</CODE> mode selected editable points are preferred.
+The implicit mode is the new default.<SMALL TITLE="Since 1.30."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+See also
+section 
+<A HREF="ayam-3.html#objorpnt">Transforming Objects or Selected Points</A>.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"PickEpsilon"</CODE> is used by the single point editing actions
+(see section 
+<A HREF="ayam-3.html#editac">Editing Points</A>)
+to determine which point of an object has been selected.
+A smaller <CODE>"PickEpsilon"</CODE> means more exact picking.
+The value of <CODE>"PickEpsilon"</CODE> should be positive and is expressed
+in terms of object coordinates, however, also the view zoom factor modifies
+the effective <CODE>"PickEpsilon"</CODE> value in a way that for zoomed-in views
+a smaller value will be used (and vice versa).
+
+<P>In older versions of Ayam (prior to 1.8), a value of 0.0 was
+allowed and default. This is no longer the case, the new default
+value is 0.05.</P>
+
+</LI>
+<LI><CODE>"HandleSize"</CODE> controls the drawing size of editable points. Note,
+that there is no check, whether the size value is supported by the
+OpenGL implementation used.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"LazyNotify"</CODE> determines whether notification shall
+occur on all mouse movements or just on release of the mouse button,
+for the interactive modelling actions.
+This option may also be toggled easily using the keyboard shortcut
+<CODE>&lt;F6&gt;</CODE>.
+
+<P>Notification is the mechanism used to inform objects that rely
+on certain child objects (e.g.&nbsp;the Revolve tool object) about
+changes of their child objects, so that the parent can adapt
+to the child objects automagically
+(see also section
+<A HREF="ayam-8.html#toolobj">The Modelling Concept Tool-Objects</A>).</P>
+
+</LI>
+<LI><CODE>"CompleteNotify"</CODE> determines when notification of all objects
+depending on references of changed objects takes place:
+<UL>
+<LI><CODE>"Never"</CODE>, for manual control of complete notification
+(manual complete notification can be carried out using the main
+menu entry <CODE>"Tools/Force Notification"</CODE> or using the
+keyboard shortcut <CODE>&lt;F5&gt;</CODE>);</LI>
+<LI><CODE>"Always"</CODE>, a complete notification is done whenever the
+normal notification is carried out;</LI>
+<LI><CODE>"Lazy"</CODE>, the complete notification runs
+only after a modelling action finished (when the mouse button is
+released).</LI>
+</UL>
+
+Note that complete notify also updates objects that implicitly depend on
+updated objects via instances.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"EditSnaps"</CODE> determines, whether points
+should be snapped to the grid when a grid is defined and
+in use for the single point modelling actions.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"Snap3D"</CODE> controls whether points that are snapped to
+grid coordinates (in single point editing actions and when grids are active)
+should be influenced in all three dimensions, or just the two dimensions
+determined by the type of the view.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"FlashPoints"</CODE> controls flashing of editable points in
+the single point modelling actions when they would be modified by
+a click and drag action.
+Note that a change of this preference option only takes effect for
+the next invocation of the single point editing modelling action.
+
+<P>Also note, that there is a similar, albeit hidden, preference option
+that controls the flashing of picked objects (<CODE>"FlashObjects"</CODE>);
+see also section 
+<A HREF="ayam-8.html#hidprefsf">Hidden Preference Settings</A>.</P>
+
+</LI>
+<LI><CODE>"RationalPoints"</CODE> determines the display style of rational points.<SMALL TITLE="Since 1.22."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+
+<P>In the <EM>euclidean</EM> style the weights are not multiplied in, whereas in the
+<EM>homogeneous</EM> style the weights are multiplied in prior to display.
+This preference setting also influences the control hull display of
+NURBS curves and surfaces and some modelling actions like setting the
+mark from points. See also the following image, showing two standard
+nine point NURBS circles, where every second control point has a weight
+value of 0.75, with their control hulls in euclidean and
+homogeneous style.</P>
+<P>
+<CENTER>
+<IMG SRC="pics/euchom.gif" HEIGHT=201 WIDTH=361  loading="lazy">
+</CENTER><P><CENTER><FONT SIZE="-1">Euclidean (left) vs.&nbsp;Homogeneous (right) Display of Rational Points</FONT></CENTER><P><CENTER>
+</CENTER>
+</P>
+<P> </P>
+
+
+</LI>
+<LI><CODE>"GlobalMark"</CODE> toggles whether each view should manage its
+own mark (off), or whether there should be just one global
+mark (on, default<SMALL TITLE="Since 1.21."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>).
+Note that enabling this preference setting will not
+immediately lead to a global mark set in all windows, one rather
+needs to set a new mark that will then become global.
+See also section
+<A HREF="ayam-3.html#markac">Setting the Mark</A>
+for more information about the mark.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"CreateAt"</CODE> controls the position where new objects
+are to be created. By default, this is the current mark
+position.<SMALL TITLE="Since 1.30."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+<P> </P>
+
+
+</LI>
+<LI><CODE>"CreateIn"</CODE> controls the orientation of newly created objects.
+By default, objects will be oriented according to the type of the
+view that was activated last.<SMALL TITLE="Since 1.30."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+<P> </P>
+
+
+</LI>
+<LI><CODE>"DefaultAction"</CODE> determines the modelling action
+that will be active after a press of the <CODE>&lt;Esc&gt;</CODE> key
+in a view window.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"PickCycle"</CODE> exchanges the object pick candidates dialog with
+a cycling mechanism:<SMALL TITLE="Since 1.23."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL> when multiple
+candidates are available, the first
+click selects the first object in the list and each further click on the
+same position selects the next object in the list of candidates.
+See also section
+<A HREF="ayam-3.html#objsel">Selecting Objects by Picking</A>
+for more information about picking objects.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"UndoLevels"</CODE> determines the number of modelling steps
+that should be saved in the undo buffer.
+If <CODE>"UndoLevels"</CODE> is set to 0, the undo system will be disabled
+completely.<SMALL TITLE="Since 1.21."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+<P>For more information, see also the section
+<A HREF="ayam-8.html#undos">The Undo System</A>.</P>
+</LI>
+</UL>
+</P>
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="prefdrawing"></A> <A NAME="prefdraw"></A> Drawing Preferences</H3>
+
+<P>The preferences in the <CODE>"Drawing"</CODE> section let you specify
+how objects are being drawn:
+<UL>
+<LI><CODE>"Tolerance"</CODE> controls the display quality of NURBS curves
+and surfaces. Smaller tolerance settings lead to higher quality but also
+slower display. Useful values range from 1 to 100.<BR>
+In the GLU drawing/shading modes this value is directly used as
+GLU sampling tolerance value.<BR>
+The STESS drawing/shading modes derive a quality/sampling factor from
+this setting, that leads to a sampling quality that is roughly equivalent
+to the corresponding GLU mode for a standard viewing distance.
+
+<P>Using the keyboard shortcuts <CODE>&lt;F2&gt;</CODE> and <CODE>&lt;F3&gt;</CODE>
+the tolerance may also be set easily.</P>
+<P>This setting has no effect for objects that override it
+using a local tolerance setting different from 0.</P>
+
+</LI>
+<LI><CODE>"NPDisplayMode"</CODE> sets the display mode for NURBS patches.
+Either the control hull (or control polygon) is drawn (<CODE>"ControlHull"</CODE>), or
+just the outlines of the polygons created by the tesselation
+(<CODE>"OutlinePoly"</CODE>), or just the outlines of the patch (<CODE>"OutlinePatch"</CODE>).
+The latter are available in GLU and STESS variants.
+
+<P>The GLU variants tesselate the surface according to the current
+camera transformation. Zooming into an object increases the sampling rate.
+This approach is slow, needs to be done for every view
+window separately, but delivers high quality where needed.
+In addition, surfaces
+outside the current viewing volume are culled. Due to the dynamic sampling,
+the NURBS parameterisation can not be judged easily.<BR>
+STESS, on the other hand, is tesselating in a uniform way and therefore
+the NURBS parameterisation can be inferred easily. The tesselation is
+done only once, even if there are multiple views, and then cached.
+Consequently, the startup cost and memory requirements
+of STESS are higher than those of GLU, but repeated drawing is much faster,
+even though culling in STESS is currently done on the basis of tesselated
+triangles, not entire surfaces.<BR>
+Another aspect to consider is that GLU operates on the floating point
+data type <CODE>"float"</CODE> and imposes a serious constraint on knot values:
+knots that differ in less than 10E-4 are considered equal.
+In contrast, STESS operates on the floating point data type <CODE>"double"</CODE>
+and uses a more relaxed epsilon of 10E-6.<SMALL TITLE="Ayam may be recompiled with a different epsilon if this is still limiting."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL><BR>
+Finally, the application of instancing does not speed up drawing with GLU,
+but lowers the tesselation and memory costs of STESS, as instances use
+the cached tesselation of the respective master objects.</P>
+<P>Note that the <CODE>"NPDisplayMode"</CODE> setting also influences display of
+shaded NURBS:
+ControlHull shades the control polygon<SMALL TITLE="Since 1.22."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>,
+OutlinePoly (GLU) and
+OutlinePatch (GLU) use GLU, and OutlinePatch (STESS) shades the STESS
+tesselation. The shaded STESS tesselation of non-planar trimmed NURBS
+surfaces is of low quality.</P>
+<P>Note also, that the <CODE>"NPDisplayMode"</CODE> setting has no effect for
+objects that override it locally using a <CODE>"DisplayMode"</CODE> attribute
+different from <CODE>"Global"</CODE>.</P>
+<P>Toggling between drawing of hulls and outlines may also be
+done easily using the keyboard shortcut <CODE>&lt;F4&gt;</CODE>.</P>
+
+</LI>
+<LI><CODE>"NCDisplayMode"</CODE> sets the display mode for NURBS curves;
+just like for surfaces the control hull (control polygon) or the curve or a
+combination of both may be displayed.
+
+<P>See also the discussion of GLU vs.&nbsp;STESS above.</P>
+<P>Note that this setting has no effect for objects that override it
+locally using a <CODE>"DisplayMode"</CODE> attribute different from <CODE>"Global"</CODE>.</P>
+<P>Toggling between drawing of hulls and curves may also be
+done easily using the keyboard shortcut <CODE>&lt;F4&gt;</CODE>.</P>
+
+</LI>
+<LI><CODE>"ToleranceA"</CODE> is the GLU sampling tolerance that is
+used for display of NURBS curves or patches in all interactive
+actions, i.e.&nbsp;while interactively moving objects or editing
+control points.
+
+<P>Negative values are interpreted as multiplicand in the following
+way. A value of -2 means: use the value from the <CODE>"Tolerance"</CODE> setting
+multiplied by 2, e.g.&nbsp;if the <CODE>"Tolerance"</CODE> is set to 40, a value of 80 will
+be used in actions.<SMALL TITLE="Since 1.22."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></P>
+<P>The default value 0.0 means no change from the <CODE>"Tolerance"</CODE> setting.</P>
+<P>In contrast to the <CODE>"Tolerance"</CODE> setting above, objects can
+<EM>not</EM> override this setting locally.</P>
+
+</LI>
+<LI><CODE>"NPDisplayModeA"</CODE> controls the display mode of NURBS
+patches for all interactive actions.
+The first and default value (<CODE>"NPDisplayMode"</CODE>) means: no change.
+
+<P>In contrast to the <CODE>"NPDisplayMode"</CODE> setting above, objects can
+<EM>not</EM> override this setting locally.</P>
+
+</LI>
+<LI><CODE>"NCDisplayModeA"</CODE> controls the display mode of NURBS
+curves for all interactive actions.
+The first and default value (<CODE>"NCDisplayMode"</CODE>) means: no change.
+
+<P>In contrast to the <CODE>"NCDisplayMode"</CODE> setting above, objects can
+<EM>not</EM> override this setting locally.</P>
+
+</LI>
+<LI><CODE>"UseGUIScale"</CODE> determines, whether the GUI scale factor
+shall be used to adapt the line widths, sizes of handles, and other
+annotations when drawing the scene.<SMALL TITLE="Since 1.31."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+For more information, see also the section
+<A HREF="#guiscaling">GUI Scaling</A>.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"UseMatColor"</CODE> determines, whether the shaded representation
+uses the color defined by the material of an object for
+rendering. If disabled, the color defined by the <CODE>"Shade"</CODE> option
+(below) will be used instead.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"Background"</CODE>, <CODE>"Object"</CODE>, <CODE>"Selection"</CODE>, <CODE>"Grid"</CODE>,
+<CODE>"Tag"</CODE>, <CODE>"Shade"</CODE>, and <CODE>"Light"</CODE> set the colors that
+will be used when drawing or shading the respective primitives.</LI>
+</UL>
+</P>
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="prefrib-export"></A> <A NAME="prefrib"></A> RIB-Export Preferences</H3>
+
+<P>The <CODE>"RIB-Export"</CODE> section of the preferences contains settings that
+affect how RIBs are created.
+<UL>
+<LI><CODE>"RIBFile"</CODE> allows to set the file Ayam is exporting
+RenderMan Interface Bytestreams (RIBs) to. Note that some
+file names have special meaning:
+
+<P>If <CODE>"RIBFile"</CODE> is set to <CODE>"Scene"</CODE> (this is the default)
+the RIB file name will be derived from the name of
+the currently loaded scene with the last extension replaced by
+<CODE>".rib"</CODE>. If <CODE>"RIBFile"</CODE> is set to <CODE>"Scenefile"</CODE>, the leading
+path will be stripped from the scene name additionally.
+Use <CODE>"Scenefile"</CODE>, for rendering with shadow maps.
+This way the scene will use relative paths to load the shadow maps and
+the RIBs may be moved around more easily.</P>
+
+<P><CODE>"Ask"</CODE> is another special setting, that allows
+to select a different file name each time the scene is exported.
+A file selection dialog will pop up, after the selection of the
+view to export.
+The same effect may be achieved by leaving <CODE>"RIBFile"</CODE> totally
+empty.</P>
+<P>If <CODE>"RIBFile"</CODE> is set to <CODE>"rendrib"</CODE>,
+libribout.a does not create a RIB file at all, but immediately pipes the
+resulting byte stream into rendrib (the BMRT renderer) for rendering.
+The same goes for <CODE>"rgl"</CODE>.
+Moreover, file names that start with a pipe symbol <CODE>"|"</CODE> will
+cause the program after the pipe symbol to be started by libribout
+and the written RIB to be piped into. This works e.g.&nbsp;with
+Photorealistic RenderMan, try it out with <CODE>"|render"</CODE>.
+In the latter cases of direct rendering, you will probably want to set
+up the RIB to render to the display (read leave the <CODE>"Image"</CODE>
+preference setting empty.
+However, when you use these options of direct rendering, be warned, that
+for the time of the rendering Ayam will be frozen (it will neither
+respond to mouse clicks nor will it update any windows), until the
+rendering is finished and the display window of the renderer is closed.</P>
+
+</LI>
+<LI><CODE>"Image"</CODE> specifies the image file that will be created,
+when the exported RIB file is rendered.
+When this option is set to <CODE>"RIB"</CODE>, rendering will create image
+files that are named as the exported RIB file (with the last
+file extension replaced by <CODE>".tif"</CODE>). Again, setting
+it to <CODE>"Ask"</CODE> will cause a dialog box to appear,
+each time the scene is exported to RIB.
+
+<P>Note that in contrast to the <CODE>"RIBFile"</CODE> option, leaving the field
+totally empty is not equal to entering <CODE>"Ask"</CODE> but generates
+RIB files that will be set up to render to the display.</P>
+
+</LI>
+<LI><CODE>"ResInstances"</CODE>, if this is enabled all instance
+objects are resolved (temporarily) before being written to the RIB file.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"CheckLights"</CODE>, if this is enabled Ayam will
+check the current scene for lights before RIB export. If no lights or
+no lights that are actually switched on are to be found in
+the scene, a distant headlight will be added to the scene
+automatically for RIB export.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"DefaultMat"</CODE> determines a default material setting
+that should be written in the top level of the RIB, so that it
+is in effect for all objects, that are not connected to a material
+object. Many RenderMan compliant renderers will not render the
+objects at all, if no material is defined.
+The default <CODE>"matte"</CODE>, writes just a simple
+<CODE>RiSurface "matte"</CODE> (without parameters) to the RIB.
+The setting <CODE>"default"</CODE> looks for a material object named
+<CODE>"default"</CODE> and writes it's complete shaders and attributes,
+if it does not find such a material it falls back to <CODE>"matte"</CODE>.
+The setting <CODE>"none"</CODE> does not write any default material setting.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"RIStandard"</CODE> determines whether Ayam
+should omit all non standard RenderMan interface options and
+attributes on RIB export.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"WriteIdent"</CODE> determines, whether Ayam should
+write special RiAttributes
+(<CODE>RiAttribute "identifier" ["name"]</CODE>)
+with the names of the objects to the RIB to aid in RIB file debugging.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"ExcludeHidden"</CODE> causes hidden objects not to be
+exported to RIB files.
+<P> </P>
+
+<P>The following sub-section of preference settings is concerned with
+settings for rendering directly from Ayam.</P>
+<P> </P>
+
+
+</LI>
+<LI><CODE>"SetRenderer"</CODE> allows to select which renderer preferences
+to edit (Preview, QuickPreview, File, ShadowMaps, or All).
+Depending on the selection, different sets of options will be shown below
+for the respective renderer.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"RenderMode"</CODE> allows to switch between different methods
+of forcing the preview renderer to render to the screen:
+<UL>
+<LI><CODE>"CommandLineArg"</CODE> via a command line argument,
+e.g.&nbsp;<CODE>-d</CODE> for rendrib from BMRT,</LI>
+<LI><CODE>"RiDisplay"</CODE> via a RiDisplay statement in the exported RIB,
+necessary for e.g.&nbsp;PRMan and RDC,</LI>
+<LI><CODE>"Viewport"</CODE> via a RenderMan display driver as specified
+below.</LI>
+</UL>
+
+The <CODE>"Viewport"</CODE> rendering will directly appear in the Ayam view
+window.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"Render"</CODE> determines the command that should be executed
+upon preview rendering of a view using the view menu <CODE>"View/Render"</CODE>
+or the keyboard shortcut <CODE>&lt;Ctrl+R&gt;</CODE>. The placeholder <CODE>%s</CODE>
+denotes the name of the RIB file.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"RenderUI"</CODE> enables the preview renderer user interface
+(Rendering GUI), which consists of a simple progress bar, a label that
+displays the estimated or elapsed rendering time, a checkbutton to control
+ringing the bell when the rendering is finished,
+and a cancel button. This GUI is displayed
+when a renderer is invoked directly from a view window
+using the <CODE>"Render"</CODE> view menu entry (or the equivalent keyboard shortcut).
+Proper work of this feature depends on the existence of
+two external programs: <CODE>"cat"</CODE> and <CODE>"kill"</CODE> (those programs
+should be available on every Unix platform). If you do not have
+those programs in your path, do not enable the RenderUI option.<BR>
+On the Win32 platform a working <CODE>"cat.exe"</CODE> is distributed with Ayam
+and Ayam is set up to use an internal kill command
+<CODE>"w32kill"</CODE>.<SMALL TITLE="Since 1.4."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+See also section 
+<A HREF="ayam-8.html#hidprefsk">Hidden Preference Settings</A>.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"RenderPT"</CODE> is a string that contains a progress output
+template used by Ayam to determine the current percentage of completion
+of the rendering for display in the Rendering GUI. The special symbol <CODE>"%d"</CODE>
+denotes the position of the percentage number in the output of the renderer.
+For <CODE>rendrib</CODE> from BMRT 2.6 this should be set to <CODE>"R90000 %d"</CODE> and
+the special command line option <CODE>"-Progress"</CODE> should be used for
+the renderer command (see <CODE>"Render"</CODE> above).
+For <CODE>rendrib</CODE> from BMRT 2.5 it should be set to <CODE>"Done computing %d"</CODE>
+and no special option has to be given to the renderer.<BR>
+If the output of the renderer contains variable strings before
+the progress number or the renderer uses terminal control characters,
+a second variant of parsing the output using
+regular expressions is available.<SMALL TITLE="Since 1.6."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+In this case, the progress template should be a complete regexp command
+for Tcl that parses the output of the renderer with a regular expression and
+puts the extracted progress number into a variable named <CODE>"percent"</CODE>.
+The output to parse will be inserted
+in the regexp command template in place of <CODE>"string"</CODE>.
+The dummy output variable is needed, because Tcl regexp always outputs the
+complete matching line into the first variable.<BR>
+Here is an example that works with Pixie-1.2.1, which outputs
+strings like
+<BLOCKQUOTE><CODE>
+<PRE>
+fish.rib (222):  - 10.00 percent
+</PRE>
+</CODE></BLOCKQUOTE>
+
+(note the variable component containing the RIB name):
+<BLOCKQUOTE><CODE>
+<PRE>
+regexp -- {^.* - (\[0-9\]+)} string dummy percent
+</PRE>
+</CODE></BLOCKQUOTE>
+
+
+This regexp command eats the variable component away and then looks for the
+single dash right in front of the percent number.<BR>
+
+Gelato output looks like this
+<BLOCKQUOTE><CODE>
+<PRE>
+Elapsed:    10.1440s  Done:  64%  |********************           |
+</PRE>
+</CODE></BLOCKQUOTE>
+
+and uses terminal control characters to render the progress bar in ASCII;
+this calls for a different approach that parses backwards (hence
+the use of <CODE>$</CODE> at the end):
+<BLOCKQUOTE><CODE>
+<PRE>
+regexp -- {(\[0-9\]+)%(\[ |*\]+)$} string dummy percent
+</PRE>
+</CODE></BLOCKQUOTE>
+
+
+This regexp command eats away all pipe symbols, asterisks, and spaces
+<EM>backwards</EM>, starting from the last character and including the percent
+sign, which comes right behind the sought after percentage number.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"DisplayDriver"</CODE> sets the RenderMan display driver to use
+for the <CODE>"Viewport"</CODE> render mode, at the moment the only
+sensible settings of this are <CODE>"fifodspy"</CODE> and <CODE>"pixiefifodspy"</CODE>.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"QRenderMode"</CODE> see <CODE>"RenderMode"</CODE> above.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"QRender"</CODE> determines the command that should be executed
+upon quick rendering a view using the view menu <CODE>"View/Quick Render"</CODE>
+or the keyboard shortcut <CODE>&lt;Ctrl+r&gt;</CODE>. The placeholder <CODE>%s</CODE>
+denotes the name of the RIB file.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"QRenderUI"</CODE>, enables the Rendering GUI for quick rendering,
+see discussion of <CODE>"RenderUI"</CODE> below.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"QRenderPT"</CODE>, progress template for quick rendering,
+see discussion of <CODE>"RenderPT"</CODE> below.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"QDisplayDriver"</CODE> sets the RenderMan display driver to use
+for the <CODE>"Viewport"</CODE> render mode, at the moment the only
+sensible setting of this is <CODE>"fifodspy"</CODE>.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"FRenderMode"</CODE> see <CODE>"RenderMode"</CODE> above.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"FRender"</CODE>, renderer command to use for direct rendering to image
+files (via view menu entry <CODE>"Render to File"</CODE>). The placeholder <CODE>%s</CODE>
+denotes the name of the RIB file.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"FRenderUI"</CODE>, enables the Rendering GUI for the direct rendering
+to image files, see discussion of <CODE>"RenderUI"</CODE> above.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"FRenderPT"</CODE>, progress template for the direct rendering to
+image files, see discussion of <CODE>"RenderPT"</CODE> above.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"FDisplay"</CODE> sets the RenderMan display to use for rendering
+to an image file, the syntax of this string is equivalent to the value
+string of a RiDisplay tag
+see also section 
+<A HREF="ayam-4.html#ridtag">RiDisplay Tag</A>.
+If this string starts with <CODE>"image"</CODE>, the image part will be replaced
+by the image file name that would be used for normal RIB export.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"SMRender"</CODE>, renderer command to use for the rendering of shadow maps
+(e.g.&nbsp;view menu entry <CODE>"View/Create All ShadowMaps"</CODE>),
+see also section 
+<A HREF="ayam-4.html#shadowmaps">Using ShadowMaps</A>.
+The placeholder <CODE>%s</CODE> denotes the name of the RIB file.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"SMRenderUI"</CODE>, enables the Rendering GUI for the rendering
+of shadow maps, see discussion of <CODE>"RenderUI"</CODE> above.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"SMRenderPT"</CODE>, progress template for the rendering
+of shadow maps, see discussion of <CODE>"RenderPT"</CODE> above.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"AutoCloseUI"</CODE> controls whether the Rendering GUI dialog
+window should be closed automatically when the renderer signals
+that the rendering finished.
+<P> </P>
+
+<P>The following sub-section of preference settings is concerned with
+shadow maps.</P>
+<P> </P>
+
+
+</LI>
+<LI><CODE>"ShadowMaps"</CODE> determines, whether shadow maps should
+be created/used:
+<UL>
+<LI><CODE>"Never"</CODE> shadow maps will not be created/used, and shadows
+will be created by the renderer using algorithms like ray tracing.</LI>
+<LI><CODE>"Automatic"</CODE> shadow maps will be created and used each time
+the exported RIB is rendered.</LI>
+<LI><CODE>"Manual"</CODE>, shadow maps will be used each time
+the exported RIB is rendered. The shadow maps will be created/rendered on
+user request only (e.g.&nbsp;using the view menu entry:
+<CODE>"View/Create All ShadowMaps"</CODE>).</LI>
+</UL>
+
+
+The mode <CODE>"Manual"</CODE> should be used,
+when rendering directly from view windows with rendering mode
+<CODE>"CommandLineArg"</CODE>.
+
+Note that it is not sufficient to enable this option for an arbitrary
+scene to render using shadow maps, individual light sources
+that shall use shadow maps have to be parameterised for this
+as well, see section 
+<A HREF="ayam-4.html#shadowmaps">Using ShadowMaps</A>.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"SMFileFormat"</CODE>, designates the file format of the shadow maps,
+use <CODE>"zfile"</CODE> for RenderMan and <CODE>"shadow"</CODE> for Gelato.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"SMFileType"</CODE>, type of shadow maps to be created, currently
+available types are <CODE>"z"</CODE> &ndash; normal shadow maps (for RenderMan
+renderers and Gelato), <CODE>"avgz"</CODE> &ndash; Woo shadow maps (for Gelato only!),
+and <CODE>"volz"</CODE> &ndash; volume shadow maps (for Gelato only!).
+<P> </P>
+
+
+</LI>
+<LI><CODE>"SMChangeShaders"</CODE>, toggles, whether Ayam should automatically
+prepend a "shader" to light shader names for lights that use shadow maps
+upon RIB export. Not changing the shader names is necessary for Gelato.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"PPRender"</CODE> is the name of the renderer to use for the
+permanent preview feature (see also section 
+<A HREF="#vm">View Menu</A>).
+This setting is just available, if the compile
+time option <CODE>AYENABLEPPREV</CODE> has been set.
+This option is <EM>not</EM> set for the official Ayam binaries.</LI>
+</UL>
+</P>
+<P>Note that many renderer related preferences can be set at once using the
+select renderer tool via the main menu <CODE>"Special/Select Renderer"</CODE>
+(see also section 
+<A HREF="#mmspecial">Special Menu</A>). In fact,
+using <CODE>"Special/Select Renderer"</CODE> first, then fine tuning the
+renderer setup using the preferences editor is the suggested way to
+switch Ayam to a certain RenderMan renderer.</P>
+
+
+<div style="height: 0.5em">&nbsp;</div>
+<H3><A NAME="prefmisc"></A> Miscellaneous Preferences</H3>
+
+<P>The <CODE>"Misc"</CODE> section of the preferences contains the dreaded
+miscellaneous settings.</P>
+<P>The first sub-section deals with error message handling:
+<UL>
+<LI><CODE>"RedirectTcl"</CODE> controls whether error messages
+stemming from Tcl/Tk should be redirected to the console,
+rather than be handled by Tcls sometimes annoying error
+handling dialog box. However, this dialog box with the built in
+stack trace can also become very handy, while writing and debugging
+Tcl scripts.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"Logging"</CODE> determines, whether error messages should
+be written to the file specified by the <CODE>"LogFile"</CODE> option.
+If this is enabled, you should clear the log manually from time
+to time, as Ayam will always append to <CODE>"LogFile"</CODE>.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"LogFile"</CODE>; see above.
+<P> </P>
+
+
+</LI>
+<LI><CODE>"ErrorLevel"</CODE>, this option controls how many messages
+should be written to the Ayam console. Available
+values are:<BR>
+<CODE>"Silence"</CODE> no output,<BR>
+<CODE>"Errors"</CODE> only error messages,<BR>
+<CODE>"Warnings"</CODE> only error and warning messages,
+and finally<BR>
+<CODE>"All"</CODE> (default) all messages, even informative,
+should be written to the console.</LI>
+</UL>
+</P>
+<P>The last sub-section contains miscellaneous user interface
+related preferences:
+<UL>
+<LI><CODE>"SaveAddsMRU"</CODE>; if this is switched on, saving to a file
+will add that file to the most recently used files list in the
+main menu for quick access.
+<P> </P>
+
+</LI>
+<LI><CODE>"ExportSetsCD"</CODE>: controls whether or not the current directory of
+Ayam should be set by an export operation.
+<P> </P>
+
+</LI>
+<LI><CODE>"ImportSetsCD"</CODE>: controls whether or not the current directory of
+Ayam should be set by an import operation.
+<P> </P>
+
+</LI>
+<LI><CODE>"SetActionMenu"</CODE>; opens the action icon menu configuration
+dialog, see also section 
+<A HREF="#amconf">Action Icon Menu</A>.
+<P> </P>
+
+</LI>
+<LI><CODE>"TclPrecision"</CODE>; this is the precision Tcl handles floating
+point number to string conversions with. You may want to decrease this
+value to about 5 if any numbers in the entry fields are represented
+in an exact, but also too lengthy and hard to read fashion,
+like 0.4999999 instead of 0.5. Note that some model precision is lost
+in doing so. The default value used by Tcl is 12 and results in no
+loss of precision. The default value used by Ayam is 6 and should
+result in a good balance between precision and readability.
+
+<P>Related hidden preference options are <CODE>"NormalizeDigits"</CODE>,
+<CODE>"NormalizePoints"</CODE>, and <CODE>"NormalizeTrafos"</CODE>, see also
+section 
+<A HREF="ayam-8.html#hidprefsn">Hidden Preference Settings</A>.</P>
+
+</LI>
+<LI><CODE>"SaveDialogGeom"</CODE> controls whether the geometry of various dialog
+windows should be remembered by Ayam, the settings available are<BR>
+<CODE>"Never"</CODE>: the dialog windows are
+always opened in standard size, centered on the screen;<BR>
+<CODE>"WhileRunning"</CODE>:
+the window geometry will be remembered as long as Ayam is
+running;<BR>
+<CODE>"Always"</CODE>: the window geometry will be stored
+in the saved preferences, thus, also surviving a restart of Ayam.
+
+<P>Note that the height of the preferences dialog window will always be adapted
+to the currently open preferences section, no matter how <CODE>"SaveDialogGeom"</CODE>
+is set.</P>
+<P>For more geometry saving related information, see also sections
+<A HREF="ayam-4.html#savemaingeomtag">SaveMainGeom</A> and
+<A HREF="ayam-4.html#savepanelayouttag">SavePaneLayout</A>.</P>
+
+
+
+<P>
+<A NAME="smethod"></A> </P>
+</LI>
+<LI><CODE>"SMethod"</CODE>; is the sampling method used by the NURBS tesselation
+facility that converts NURBS surfaces to PolyMesh objects.
+
+Six sampling methods are available:
+<OL>
+<LI><CODE>"ParametricError"</CODE>
+ensures that the distance between the tesselated surface and the original
+surface is no point bigger than the value specified by <CODE>"SParamU"</CODE>.
+</LI>
+<LI>The sampling method <CODE>"PathLength"</CODE> ensures that no edge of a
+polygon generated by the tesselation is longer than the value specified
+by <CODE>"SParamU"</CODE> and the tesselation method
+</LI>
+<LI><CODE>"DomainDistance"</CODE> (the default in Ayam up to version 1.22) simply
+tesselates
+the NURBS surface into equally sized pieces with regard to parametric
+space; <CODE>"SParamU"</CODE> and <CODE>"SParamV"</CODE> control the number of sampling
+points in U and V direction respectively per unit length in parameter
+space.
+However, this leads to different numbers of samples for knot vectors
+of different total length.
+</LI>
+<LI><CODE>"NormalizedDomainDistance"</CODE>
+ensures that the tesselation creates the same number of sample
+points (as given via <CODE>"SParamU"</CODE> and <CODE>"SParamV"</CODE>) for
+knot vectors of any total length in parameter
+space<SMALL TITLE="Since 1.9."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+and
+</LI>
+<LI><CODE>"AdaptiveDomainDistance"</CODE> additionally adds
+sample points depending on the number of control points (width or
+height of the patch) to provide a better adaptation to complex
+patches.<SMALL TITLE="Since 1.9."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL>
+</LI>
+<LI><CODE>"AdaptiveKnotDistance"</CODE>, finally, normalizes the number of sample
+points to the number of knot intervals and the total length of
+the knot vector.<SMALL TITLE="Since 1.23."><SUP>&lsqb;&lowast;&rsqb;</SUP></SMALL></LI>
+</OL>
+
+The sampling method <CODE>"AdaptiveKnotDistance"</CODE> is the default
+since Ayam 1.23.
+
+<P>Note that the sampling method controlled by this preference option
+is <EM>not</EM> used for NURBS display in Ayam.
+See also 
+<A HREF="#prefdraw">Drawing Preferences</A>.</P>
+
+</LI>
+<LI><CODE>"SParamU"</CODE>; is a parameter for the sampling method above.<BR>
+The default value for the sampling method <CODE>"AdaptiveKnotDistance"</CODE> is 3.
+Bigger values lead to better quality and more tesselated polygons.<BR>
+The default value for the sampling method <CODE>"DomainDistance"</CODE> is 8. Bigger
+values lead to better quality and more tesselated polygons.<BR>
+The default value for the sampling method <CODE>"PathLength"</CODE> is 1.5.
+Smaller values lead to better quality and more tesselated polygons.<BR>
+The default value for the sampling method <CODE>"ParametricError"</CODE> is 0.25.
+Smaller values lead to better quality and more tesselated polygons.
+
+<P>Note that <CODE>"SParamU"</CODE> is expressed in object space units for the
+<CODE>"PathLength"</CODE> and <CODE>"ParametricError"</CODE> sampling methods.</P>
+
+</LI>
+<LI><CODE>"SParamV"</CODE>; is just available for the sampling methods
+<CODE>"DomainDistance"</CODE>, <CODE>"NormalizedDomainDistance"</CODE>,
+<CODE>"AdaptiveDomainDistance"</CODE>, and<BR>
+<CODE>"AdaptiveKnotDistance"</CODE>.<BR>
+The default value is equal to the respective value of the <CODE>"SParamU"</CODE>
+parameter above.</LI>
+</UL>
+</P>
+<P>See also section 
+<A HREF="ayam-5.html#tesst">Tesselation Tool</A> for example
+tesselations.</P>
+
+
+<H2><A NAME="guiscaling"></A> <A NAME="ss2.11">2.11</A> <A HREF="ayam.html#toc2.11">GUI Scaling</A>
+</H2>
+
+<P>Since version 1.31 the Ayam GUI can be scaled to better accomodate
+to high resolution displays. The scaling is fractional with the
+exception of all pixel based GUI elements (icon images).</P>
+<P>The GUI scale factor must be set using the command line option
+<CODE>"-guiscale"</CODE>,
+see also section 
+<A HREF="ayam-8.html#comlineargs">Command Line Arguments</A>.
+If a value greater than 1.0 is specified, the GUI will be scaled
+as follows:
+<UL>
+<LI>the fonts used by Ayam will be scaled using the GUI scale
+directly; however note, that as font sizes are integer values, not every change
+in scale factor will lead to a different font size,</LI>
+<LI>Tk is instructed to adapt by setting a <CODE>"tk scaling"</CODE> value that
+is manipulated using the GUI scale factor directly,</LI>
+<LI>icons (and therefore the tool buttons) will be scaled to double
+size when the GUI scale value reaches 1.5,</LI>
+<LI>the handles of the panes will be enlarged when the icons
+scale,</LI>
+<LI>object tree graphics will be enlarged when the GUI scale value
+is larger than 1.5,</LI>
+<LI>cascade menu indicators and scrollbars will be sized according
+to the new default font sizes,</LI>
+<LI>the keyboard focus ring width will be enlarged when the icons scale,</LI>
+<LI>if the drawing preference option <CODE>"UseGUIScale"</CODE> is enabled,
+line widths, handle sizes, and other annotations will also be adapted
+to the scale factor.</LI>
+</UL>
+</P>
+
+
+
+<HR>
+<A HREF="ayam-3.html">Next</A>
+<A HREF="ayam-1.html">Previous</A>
+<A HREF="ayam.html#toc2">Contents</A>
+</BODY>
+</HTML>
+
+
